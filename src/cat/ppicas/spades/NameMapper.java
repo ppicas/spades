@@ -49,6 +49,8 @@ public class NameMapper {
 	 * @see #alias(Column)
 	 */
 	public Column parseColumnName(String name) {
+		// TODO Compare performace with other techniques as regex parsing
+		// or precalculated column aliases.
 		if (!name.startsWith(PREFIX)) {
 			return null;
 		};

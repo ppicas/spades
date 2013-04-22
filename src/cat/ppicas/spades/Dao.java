@@ -9,6 +9,12 @@ import android.database.sqlite.SQLiteDatabase;
 
 public abstract class Dao<T extends Entity> {
 
+	public static interface EntityConsumer<T extends Entity> {
+
+		public void accept(T entity, Cursor cursor);
+
+	}
+
 	protected SQLiteDatabase mDb;
 	private Table<T> mTable;
 	private EntityMapper<T> mMapper;
@@ -113,10 +119,6 @@ public abstract class Dao<T extends Entity> {
 
 	public List<T> fetchAll(Query query) {
 		return fetchAll(query.execute(mDb), true, query.getMappings());
-	}
-
-	public static interface EntityConsumer<T extends Entity> {
-		public void accept(T entity, Cursor cursor);
 	}
 
 }
