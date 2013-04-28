@@ -68,16 +68,16 @@ public class Table<T extends Entity> {
 		db.execSQL(SqlHelper.genDropTable(getName()));
 	}
 
-	public void updateTables(SQLiteDatabase db, int oldVersion, int newVersion) {
+	public void upgradeTables(SQLiteDatabase db, int oldVersion, int newVersion) {
 		dropTables(db);
 		createTables(db);
 	}
 
-	public int nextColumnIndex() {
+	int nextColumnIndex() {
 		return mColumns.size();
 	}
 
-	public void addColumn(Column column) {
+	void addColumn(Column column) {
 		mColumns.add(column);
 	}
 
