@@ -74,7 +74,7 @@ public abstract class Dao<T extends Entity> {
 
 	public T fetchFirst(Cursor cursor, boolean close, int[][] mappings) {
 		try {
-			if (!cursor.moveToFirst() || mappings.length <= mTable.index || mappings[mTable.index] == null) {
+			if (!cursor.moveToFirst() || mTable.index >= mappings.length  || mappings[mTable.index] == null) {
 				return null;
 			}
 

@@ -14,6 +14,8 @@ public class CompanyDao extends Dao<Company> {
 
 	public static final Column ID = TABLE.columnId();
 	public static final Column NAME = TABLE.column().auto("mName").notNull().end();
+	public static final Column FUNDATION_YEAR = TABLE.column().auto("mFundationYear").notNull().end();
+	public static final Column REGISTRATION = TABLE.column().auto("mRegistration").end();
 
 	public static final EntityMapper<Company> MAPPER = new EntityMapper<Company>(TABLE) {
 
