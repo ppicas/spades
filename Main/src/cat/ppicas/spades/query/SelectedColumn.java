@@ -8,11 +8,11 @@ class SelectedColumn {
 	private String mCustomExpression;
 	private Column[] mCustomColumns;
 
-	protected SelectedColumn(Column column) {
+	public SelectedColumn(Column column) {
 		mColumn = column;
 	}
 
-	protected SelectedColumn(String expression, Column... columns) {
+	public SelectedColumn(String expression, Column... columns) {
 		mCustomExpression = expression;
 		mCustomColumns = columns;
 	}

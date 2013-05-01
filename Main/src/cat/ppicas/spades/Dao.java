@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import cat.ppicas.spades.query.Query;
 
 public abstract class Dao<T extends Entity> {
 

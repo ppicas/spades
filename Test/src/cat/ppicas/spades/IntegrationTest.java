@@ -9,6 +9,7 @@ import android.test.AndroidTestCase;
 import cat.ppicas.spades.models.Company;
 import cat.ppicas.spades.models.CompanyDao;
 import cat.ppicas.spades.models.OpenHelper;
+import cat.ppicas.spades.query.Query;
 
 public class IntegrationTest extends AndroidTestCase {
 

@@ -1,8 +1,11 @@
-package cat.ppicas.spades;
+package cat.ppicas.spades.query;
 
 import java.util.List;
 
 import android.database.Cursor;
+import cat.ppicas.spades.Column;
+import cat.ppicas.spades.Table;
+import cat.ppicas.spades.Tables;
 
 public class NameMapper {
 

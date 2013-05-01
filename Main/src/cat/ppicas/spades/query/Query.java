@@ -1,4 +1,4 @@
-package cat.ppicas.spades;
+package cat.ppicas.spades.query;
 
 import static android.text.TextUtils.join;
 
@@ -7,7 +7,10 @@ import java.util.Arrays;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import cat.ppicas.spades.Column;
 import cat.ppicas.spades.Column.ColumnId;
+import cat.ppicas.spades.MappingsBuilder;
+import cat.ppicas.spades.Table;
 
 public class Query {
 
