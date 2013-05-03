@@ -4,6 +4,8 @@ import java.util.List;
 
 import cat.ppicas.spades.models.BuildingDao;
 import cat.ppicas.spades.models.CompanyDao;
+import cat.ppicas.spades.query.SelectedColumn.CountColumn;
+import cat.ppicas.spades.query.SelectedColumn.RowIdColumn;
 import junit.framework.TestCase;
 
 public class ColumnSelectorTest extends TestCase {
@@ -101,9 +103,27 @@ public class ColumnSelectorTest extends TestCase {
 		List<SelectedColumn> selected = mSelector.getSelectedColumns();
 		// Then the two selected columns are returned.
 		assertEquals(2, selected.size());
+		// And the last one is a custom our custom column.
 		assertTrue(selected.get(1).isCustom());
 		assertEquals("%s + 1 AS custom", selected.get(1).getCustomExpression());
 		assertEquals(1, selected.get(1).getCustomColumns().length);
+	}
+
+	public void test__Should_get_columns_for_count() throws Exception {
+		// Given one table added.
+		mSelector.addTable(CompanyDao.TABLE);
+		// And on table column selected.
+		mSelector.selectColumn("length(%s)", CompanyDao.NAME);
+		// And one custom column selected.
+		mSelector.selectColumn("length(%s)", CompanyDao.NAME);
+		// When get the selected columns.
+		List<SelectedColumn> selected = mSelector.getSelectedColumnsForCount();
+		// Then first column is count.
+		assertTrue(selected.get(0) instanceof CountColumn);
+		// And the next column is the selected custom column.
+		assertTrue(selected.get(1).isCustom());
+		assertEquals("length(%s)", selected.get(1).getCustomExpression());
+		assertEquals(CompanyDao.NAME, selected.get(1).getCustomColumns()[0]);
 	}
 
 	public void test__Should_auto_add_entities_ids__When_one_is_necessary() throws Exception {
@@ -118,28 +138,11 @@ public class ColumnSelectorTest extends TestCase {
 		mSelector.setAutoEntitiesId(true);
 		// When get the selected columns.
 		List<SelectedColumn> selected = mSelector.getSelectedColumns();
-		// Then 3 columns are returned.
+		// Then returns the selected columns plus the ID columns from first table.
 		assertEquals(3, selected.size());
-		assertEquals(CompanyDao.ID, selected.get(0).getColumn());
-		assertEquals(CompanyDao.NAME, selected.get(1).getColumn());
-		assertEquals(BuildingDao.ID, selected.get(2).getColumn());
-	}
-
-	public void test__Should_auto_add_entities_ids__When_has_custom_columns() throws Exception {
-		// Given two tables added.
-		mSelector.addTable(CompanyDao.TABLE);
-		mSelector.addTable(BuildingDao.TABLE);
-		// And add a custom column.
-		mSelector.selectColumn("%s + 1 AS custom", BuildingDao.FLOORS);
-		// And auto entities ID enabled.
-		mSelector.setAutoEntitiesId(true);
-		// When get the selected columns.
-		List<SelectedColumn> selected = mSelector.getSelectedColumns();
-		// Then 3 columns are returned.
-		assertEquals(3, selected.size());
-		assertEquals(CompanyDao.ID, selected.get(0).getColumn());
+		assertEquals(CompanyDao.NAME, selected.get(0).getColumn());
 		assertEquals(BuildingDao.ID, selected.get(1).getColumn());
-		assertTrue(selected.get(2).isCustom());
+		assertEquals(CompanyDao.ID, selected.get(2).getColumn());
 	}
 
 	public void test__Should_auto_add_entities_ids__When_is_not_necessary() throws Exception {
@@ -156,7 +159,7 @@ public class ColumnSelectorTest extends TestCase {
 		mSelector.setAutoEntitiesId(true);
 		// When get the selected columns.
 		List<SelectedColumn> selected = mSelector.getSelectedColumns();
-		// Then 3 columns are returned.
+		// Then only returns the selected columns.
 		assertEquals(4, selected.size());
 		assertEquals(CompanyDao.NAME, selected.get(0).getColumn());
 		assertEquals(CompanyDao.ID, selected.get(1).getColumn());
@@ -164,48 +167,39 @@ public class ColumnSelectorTest extends TestCase {
 		assertEquals(BuildingDao.ID, selected.get(3).getColumn());
 	}
 
-	public void test__Should_auto_add_rows_id__When_first_column_not_row_id() throws Exception {
-		// Given one table added.
+	public void test__Should_auto_add_rows_id__When_all_selected() throws Exception {
+		// Given two tables added.
+		// And no columns are selected.
 		mSelector.addTable(CompanyDao.TABLE);
-		// And first column is not row id.
+		mSelector.addTable(BuildingDao.TABLE);
+		// And auto rows ID is enabled.
+		mSelector.setAutoRowsId(true);
+		// When get the selected columns.
+		List<SelectedColumn> selected = mSelector.getSelectedColumns();
+		// Then will return all tables columns plus a RowId.
+		assertEquals(11, selected.size());
+		// And the last column will be a RowId of ID column from first table.
+		assertEquals(CompanyDao.ID, selected.get(10).getCustomColumns()[0]);
+		assertTrue(selected.get(10) instanceof RowIdColumn);
+	}
+
+	public void test__Should_auto_add_rows_id__When_columns_selected() throws Exception {
+		// Given two tables added.
+		mSelector.addTable(CompanyDao.TABLE);
+		mSelector.addTable(BuildingDao.TABLE);
+		// And various columns selected.
 		mSelector.selectColumn(CompanyDao.NAME);
+		mSelector.selectColumn(BuildingDao.ADDRESS);
+		mSelector.selectColumn("%s > 10", BuildingDao.FLOORS);
 		// And auto rows ID is enabled.
 		mSelector.setAutoRowsId(true);
 		// When get the selected columns.
 		List<SelectedColumn> selected = mSelector.getSelectedColumns();
-		// Then extra columns ID will be added.
-		assertEquals(2, selected.size());
-		assertEquals(CompanyDao.ID, selected.get(0).getColumn());
-		assertEquals(CompanyDao.NAME, selected.get(1).getColumn());
-	}
-
-	public void test__Should_auto_add_rows_id__When_first_column_id_but_not_row_id() throws Exception {
-		// Given two tables added.
-		mSelector.addTable(CompanyDao.TABLE);
-		mSelector.addTable(BuildingDao.TABLE);
-		// And first column is an ID but first table ID.
-		mSelector.selectColumn(BuildingDao.ID);
-		// And auto rows ID is enabled.
-		mSelector.setAutoRowsId(true);
-		// When get the selected columns.
-		List<SelectedColumn> selected = mSelector.getSelectedColumns();
-		// Then extra columns ID will be added.
-		assertEquals(2, selected.size());
-		assertEquals(CompanyDao.ID, selected.get(0).getColumn());
-		assertEquals(BuildingDao.ID, selected.get(1).getColumn());
-	}
-
-	public void test__Should_auto_add_rows_id__When_is_not_necessary() throws Exception {
-		// Given two tables added.
-		// And first column is row id because no columns are selected.
-		mSelector.addTable(CompanyDao.TABLE);
-		mSelector.addTable(BuildingDao.TABLE);
-		// And auto rows ID is enabled.
-		mSelector.setAutoRowsId(true);
-		// When get the selected columns.
-		List<SelectedColumn> selected = mSelector.getSelectedColumns();
-		// Then no extra columns will be added.
-		assertEquals(10, selected.size());
+		// Then will return all selected columns plus a RowId.
+		assertEquals(4, selected.size());
+		// And the last column will be a RowId of ID column from first table.
+		assertEquals(CompanyDao.ID, selected.get(3).getCustomColumns()[0]);
+		assertTrue(selected.get(3) instanceof RowIdColumn);
 	}
 
 	public void test__Should_auto_add_rows_id__When_auto_entity_id_was_added() throws Exception {
@@ -222,12 +216,16 @@ public class ColumnSelectorTest extends TestCase {
 		mSelector.setAutoEntitiesId(true);
 		// When get the selected columns.
 		List<SelectedColumn> selected = mSelector.getSelectedColumns();
-		// Then only extra columns of auto add entities will be added.
-		assertEquals(4, selected.size());
-		assertEquals(CompanyDao.ID, selected.get(0).getColumn());
-		assertEquals(BuildingDao.ID, selected.get(1).getColumn());
-		assertEquals(CompanyDao.NAME, selected.get(2).getColumn());
-		assertEquals(CompanyDao.NAME, selected.get(3).getColumn());
+		// Then will return 5 columns.
+		assertEquals(5, selected.size());
+		// And the first columns will be the expected.
+		assertEquals(CompanyDao.NAME, selected.get(0).getColumn());
+		assertEquals(CompanyDao.NAME, selected.get(1).getColumn());
+		assertEquals(CompanyDao.ID, selected.get(2).getColumn());
+		assertEquals(BuildingDao.ID, selected.get(3).getColumn());
+		// And the last column will be a RowId of ID column from first table.
+		assertEquals(CompanyDao.ID, selected.get(4).getCustomColumns()[0]);
+		assertTrue(selected.get(4) instanceof RowIdColumn);
 	}
 
 }
