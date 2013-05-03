@@ -56,7 +56,7 @@ public class NameMapper {
 		// or precalculated column aliases.
 		if (!name.startsWith(PREFIX)) {
 			return null;
-		};
+		}
 		name = name.substring(PREFIX.length());
 		StringBuilder builder = new StringBuilder();
 		int tableIndex = -1;

@@ -33,7 +33,7 @@ public class Column {
 	public static class ColumnId extends Column {
 
 		ColumnId(Table<?> table, int index) {
-			super(table, index, "_id", "INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL", true, null);
+			super(table, index, "id", "INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL", true, null);
 		}
 
 	}

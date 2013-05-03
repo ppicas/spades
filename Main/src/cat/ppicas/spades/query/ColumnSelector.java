@@ -5,6 +5,8 @@ import java.util.List;
 
 import cat.ppicas.spades.Column;
 import cat.ppicas.spades.Table;
+import cat.ppicas.spades.query.SelectedColumn.CountColumn;
+import cat.ppicas.spades.query.SelectedColumn.RowIdColumn;
 
 class ColumnSelector {
 
@@ -18,18 +20,26 @@ class ColumnSelector {
 	}
 
 	public void addTable(Table<?> table) {
+		if (mTables.contains(table)) {
+			throw new IllegalStateException("Table already selected");
+		}
 		mTables.add(table);
 	}
 
+	public boolean hasTable(Table<?> table) {
+		return mTables.contains(table);
+	}
+
 	public void selectColumn(Column column) {
-		if (!mTables.contains(column.table)) {
-			throw new IllegalArgumentException("The selected Column dosen't belongs to an added Table");
-		}
+		checkColumn(column);
 		mColumns.add(column);
 		mSelected.add(new SelectedColumn(column));
 	}
 
 	public void selectColumn(String expression, Column... columns) {
+		for (Column column : columns) {
+			checkColumn(column);
+		}
 		mSelected.add(new SelectedColumn(expression, columns));
 	}
 
@@ -48,13 +58,24 @@ class ColumnSelector {
 			if (mAutoEntitiesId) {
 				addAutoTableIds(selected);
 			}
-
-			if (mAutoRowsId && !mTables.isEmpty() && (selected.isEmpty()
-					|| selected.get(0).getColumn() != mTables.get(0).getColumnId())) {
-				selected.add(0, new SelectedColumn(mTables.get(0).getColumnId()));
-			}
 		}
 
+		if (mAutoRowsId && !mTables.isEmpty()) {
+			selected.add(new RowIdColumn(mTables.get(0).getColumnId()));
+		}
+
+		return selected;
+	}
+
+	public List<SelectedColumn> getSelectedColumnsForCount() {
+		List<SelectedColumn> selected = new ArrayList<SelectedColumn>();
+
+		selected.add(new CountColumn());
+		for (SelectedColumn sel : mSelected) {
+			if (sel.isCustom()) {
+				selected.add(sel);
+			}
+		}
 
 		return selected;
 	}
@@ -67,6 +88,13 @@ class ColumnSelector {
 		mAutoRowsId = autoRowsId;
 	}
 
+	private void checkColumn(Column column) {
+		if (!mTables.contains(column.table)) {
+			throw new IllegalArgumentException("The selected Column dosen't belongs to a table "
+					+ "added before");
+		}
+	}
+
 	private void addAutoTableIds(List<SelectedColumn> selected) {
 		List<SelectedColumn> addList = new ArrayList<SelectedColumn>();
 		for (Table<?> table : mTables) {
@@ -74,7 +102,7 @@ class ColumnSelector {
 				addList.add(new SelectedColumn(table.getColumnId()));
 			}
 		}
-		selected.addAll(0, addList);
+		selected.addAll(addList);
 	}
 
 }
