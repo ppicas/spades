@@ -30,6 +30,10 @@ class ColumnSelector {
 		return mTables.contains(table);
 	}
 
+	public boolean hasTables() {
+		return !mTables.isEmpty();
+	}
+
 	public void selectColumn(Column column) {
 		checkColumn(column);
 		mColumns.add(column);
@@ -53,7 +57,7 @@ class ColumnSelector {
 				}
 			}
 		} else {
-			selected = mSelected;
+			selected.addAll(mSelected);
 
 			if (mAutoEntitiesId) {
 				addAutoTableIds(selected);
@@ -80,8 +84,16 @@ class ColumnSelector {
 		return selected;
 	}
 
+	public boolean isAutoEntitiesId() {
+		return mAutoEntitiesId;
+	}
+
 	public void setAutoEntitiesId(boolean autoEntitiesId) {
 		mAutoEntitiesId = autoEntitiesId;
+	}
+
+	public boolean isAutoRowsId() {
+		return mAutoRowsId;
 	}
 
 	public void setAutoRowsId(boolean autoRowsId) {

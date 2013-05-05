@@ -1,5 +1,6 @@
 package cat.ppicas.spades;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class MappingsBuilder {
@@ -34,6 +35,7 @@ public class MappingsBuilder {
 		if (mMappings[tableIndex] == null) {
 			Table<?> table = mTables.getTable(tableIndex);
 			mMappings[tableIndex] = new int[table.getColumnsNumber()];
+			Arrays.fill(mMappings[tableIndex], -1);
 		}
 
 		mMappings[tableIndex][column.index] = mOffset++;

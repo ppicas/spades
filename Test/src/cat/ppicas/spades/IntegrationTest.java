@@ -1,11 +1,14 @@
 package cat.ppicas.spades;
 
-import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
+import cat.ppicas.spades.models.Building;
+import cat.ppicas.spades.models.BuildingDao;
 import cat.ppicas.spades.models.Company;
 import cat.ppicas.spades.models.CompanyDao;
 import cat.ppicas.spades.models.OpenHelper;
@@ -15,7 +18,10 @@ public class IntegrationTest extends AndroidTestCase {
 
 	private SQLiteDatabase mDb;
 	private CompanyDao mCompanyDao;
+	private BuildingDao mBuildingDao;
 	private Company mCompany;
+	private long mCompanyId;
+	private Building mBuildingA;
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -23,9 +29,23 @@ public class IntegrationTest extends AndroidTestCase {
 		OpenHelper helper = new OpenHelper(getContext());
 		mDb = helper.getWritableDatabase();
 		mCompanyDao = new CompanyDao(mDb);
+		mBuildingDao = new BuildingDao(mDb);
 
 		mCompany = new Company();
 		mCompany.setName("Google");
+		mCompany.setFundationYear(1998);
+		mCompany.setRegistration(new GregorianCalendar(1998, Calendar.SEPTEMBER, 4).getTime());
+
+		mCompanyId = mCompanyDao.insert(mCompany);
+
+		mBuildingA = new Building();
+		mBuildingA.setCompanyId(mCompany.getEntityId());
+		mBuildingA.setAddress("1600 Amphitheatre Parkway, Mountain View, CA 94043");
+		mBuildingA.setPhone("+1 650-253-0000");
+		mBuildingA.setFloors(8);
+		mBuildingA.setSurface(1024);
+
+		mBuildingDao.insert(mBuildingA);
 	}
 
 	@Override
@@ -34,33 +54,74 @@ public class IntegrationTest extends AndroidTestCase {
 		mDb.close();
 	}
 
-	public void testInsertReturnAndSetsEntityId() throws Exception {
+	public void test__Insert_return_and_sets_entity_id() throws Exception {
 		long id = mCompanyDao.insert(mCompany);
 		assertTrue(id > 0);
 		assertEquals(id,  mCompany.getEntityId());
 	}
 
-	public void testGetById() throws Exception {
-		long id = mCompanyDao.insert(mCompany);
-		Company company = mCompanyDao.get(id);
-		assertEquals(id, company.getEntityId());
+	public void test__Get_by_id() throws Exception {
+		Company company = mCompanyDao.get(mCompanyId);
+
+		assertEquals(mCompanyId, company.getEntityId());
 		assertEquals("Google", company.getName());
+		assertEquals(1998, company.getFundationYear());
+		assertEquals(new GregorianCalendar(1998, Calendar.SEPTEMBER, 4).getTime(),
+				company.getRegistration());
 	}
 
-	public void testSimpleQuery() throws Exception {
-		mCompanyDao.insert(mCompany);
+	public void test__Simple_query() throws Exception {
 		Query query = new Query(CompanyDao.TABLE).where(CompanyDao.NAME, "=?").params("Google");
 		List<Company> companies = mCompanyDao.fetchAll(query);
+
 		assertEquals(1, companies.size());
 	}
 
-	public void testSimpleQueryCursor() throws Exception {
-		mCompanyDao.insert(mCompany);
+	public void test__Simple_query_cursor() throws Exception {
 		Query query = new Query(CompanyDao.TABLE).where(CompanyDao.NAME, "=?").params("Google");
 		Cursor cursor = query.execute(mDb);
-		System.out.println(Arrays.toString(cursor.getColumnNames()));
 		int[][] mappings = query.getMappings();
 		List<Company> companies = mCompanyDao.fetchAll(cursor, false, mappings);
+
+		assertEquals(1, companies.size());
+		Company company = companies.get(0);
+		assertEquals(mCompanyId, company.getEntityId());
+		assertEquals("Google", company.getName());
+		assertEquals(1998, company.getFundationYear());
+		assertEquals(new GregorianCalendar(1998, Calendar.SEPTEMBER, 4).getTime(),
+				company.getRegistration());
+	}
+
+	public void test__Query_with_column_selected_and_auto_entities_id() throws Exception {
+		Company company = mCompanyDao.fetchFirst(new Query(CompanyDao.TABLE)
+				.select(CompanyDao.FUNDATION_YEAR));
+		assertEquals(mCompanyId, company.getEntityId());
+		assertEquals("", company.getName());
+		assertEquals(1998, company.getFundationYear());
+		assertEquals(null, company.getRegistration());
+	}
+
+	public void test__Query_with_column_selected_and_no_auto_entities_id() throws Exception {
+		Company company = mCompanyDao.fetchFirst(new Query(CompanyDao.TABLE)
+				.setAutoEntitiesId(false)
+				.select(CompanyDao.FUNDATION_YEAR));
+		assertEquals(0, company.getEntityId());
+		assertEquals("", company.getName());
+		assertEquals(1998, company.getFundationYear());
+		assertEquals(null, company.getRegistration());
+	}
+
+	public void test__Query_with_left_join() throws Exception {
+		Query query = new Query(BuildingDao.TABLE)
+				.leftJoin(CompanyDao.TABLE, "%s = %s", BuildingDao.COMPANY_ID, CompanyDao.ID);
+
+		Cursor cursor = query.execute(mDb);
+		int[][] mappings = query.getMappings();
+		List<Building> buildings = mBuildingDao.fetchAll(cursor, false, mappings);
+		List<Company> companies = mCompanyDao.fetchAll(cursor, false, mappings);
+		cursor.close();
+
+		assertEquals(1, buildings.size());
 		assertEquals(1, companies.size());
 	}
 

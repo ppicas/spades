@@ -13,11 +13,13 @@ public class OpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		CompanyDao.TABLE.createTables(db);
+		BuildingDao.TABLE.createTables(db);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		CompanyDao.TABLE.upgradeTables(db, oldVersion, newVersion);
+		BuildingDao.TABLE.upgradeTables(db, oldVersion, newVersion);
 	}
 
 }

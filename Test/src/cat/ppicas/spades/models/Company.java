@@ -7,7 +7,7 @@ import cat.ppicas.spades.Entity;
 public class Company implements Entity {
 
 	private long mId;
-	private String mName;
+	private String mName = "";
 	private int mFundationYear;
 	private Date mRegistration;
 
