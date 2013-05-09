@@ -74,6 +74,13 @@ public class Query {
 		from(fromTable);
 	}
 
+	public Query select(Table<?> table) {
+		for (Column column : table.getColumns()) {
+			mSelector.selectColumn(column);
+		}
+		return this;
+	}
+
 	public Query select(Column... cols) {
 		for (Column column : cols) {
 			mSelector.selectColumn(column);
