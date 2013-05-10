@@ -17,10 +17,11 @@ public class RelatedMapper implements ValueMapper {
 		if (type != Related.class) {
 			throw new IllegalArgumentException("Invalid Field type");
 		}
-		field.setAccessible(true);
 		mRelatedField = field;
+		mRelatedField.setAccessible(true);
 		try {
 			mField = Related.class.getField("mValue");
+			mField.setAccessible(true);
 		} catch (NoSuchFieldException e) {
 			throw new RuntimeException(e);
 		}
