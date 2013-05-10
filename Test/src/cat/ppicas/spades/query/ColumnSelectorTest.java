@@ -26,7 +26,7 @@ public class ColumnSelectorTest extends TestCase {
 		// When get the selected columns.
 		List<SelectedColumn> selected = mSelector.getSelectedColumns();
 		// Then all both table columns are returned in order of aggregation.
-		assertEquals(10, selected.size());
+		assertEquals(11, selected.size());
 		assertEquals(CompanyDao.ID, selected.get(0).getColumn());
 		assertEquals(CompanyDao.NAME, selected.get(1).getColumn());
 		assertEquals(CompanyDao.FUNDATION_YEAR, selected.get(2).getColumn());
@@ -34,6 +34,10 @@ public class ColumnSelectorTest extends TestCase {
 		assertEquals(BuildingDao.ID, selected.get(4).getColumn());
 		assertEquals(BuildingDao.COMPANY_ID, selected.get(5).getColumn());
 		assertEquals(BuildingDao.ADDRESS, selected.get(6).getColumn());
+		assertEquals(BuildingDao.PHONE, selected.get(7).getColumn());
+		assertEquals(BuildingDao.FLOORS, selected.get(8).getColumn());
+		assertEquals(BuildingDao.SURFACE, selected.get(9).getColumn());
+		assertEquals(BuildingDao.MAIN, selected.get(10).getColumn());
 	}
 
 	public void test__Should_get_selected_columns__When_one_table_added() throws Exception {
@@ -43,13 +47,14 @@ public class ColumnSelectorTest extends TestCase {
 		// When get the selected columns.
 		List<SelectedColumn> selected = mSelector.getSelectedColumns();
 		// Then all table columns are returned.
-		assertEquals(6, selected.size());
+		assertEquals(7, selected.size());
 		assertEquals(BuildingDao.ID, selected.get(0).getColumn());
 		assertEquals(BuildingDao.COMPANY_ID, selected.get(1).getColumn());
 		assertEquals(BuildingDao.ADDRESS, selected.get(2).getColumn());
 		assertEquals(BuildingDao.PHONE, selected.get(3).getColumn());
 		assertEquals(BuildingDao.FLOORS, selected.get(4).getColumn());
 		assertEquals(BuildingDao.SURFACE, selected.get(5).getColumn());
+		assertEquals(BuildingDao.MAIN, selected.get(6).getColumn());
 	}
 
 	public void test__Should_get_selected_columns__When_one_table_added_with_columns_selected() throws Exception {
@@ -177,10 +182,10 @@ public class ColumnSelectorTest extends TestCase {
 		// When get the selected columns.
 		List<SelectedColumn> selected = mSelector.getSelectedColumns();
 		// Then will return all tables columns plus a RowId.
-		assertEquals(11, selected.size());
+		assertEquals(12, selected.size());
 		// And the last column will be a RowId of ID column from first table.
-		assertEquals(CompanyDao.ID, selected.get(10).getCustomColumns()[0]);
-		assertTrue(selected.get(10) instanceof RowIdColumn);
+		assertEquals(CompanyDao.ID, selected.get(11).getCustomColumns()[0]);
+		assertTrue(selected.get(11) instanceof RowIdColumn);
 	}
 
 	public void test__Should_auto_add_rows_id__When_columns_selected() throws Exception {

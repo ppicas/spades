@@ -3,6 +3,8 @@ package cat.ppicas.spades.models;
 import java.util.Date;
 
 import cat.ppicas.spades.Entity;
+import cat.ppicas.spades.Related;
+import cat.ppicas.spades.query.Query;
 
 public class Company implements Entity {
 
@@ -10,6 +12,8 @@ public class Company implements Entity {
 	private String mName = "";
 	private int mFundationYear;
 	private Date mRegistration;
+	private Related<Building> mBuilding = new Related<Building>(BuildingDao.COMPANY_ID,
+			BuildingDao.MAPPER, Query.expr("%s", BuildingDao.MAIN));
 
 	@Override
 	public long getEntityId() {
@@ -43,6 +47,10 @@ public class Company implements Entity {
 
 	public void setRegistration(Date registration) {
 		mRegistration = registration;
+	}
+
+	public Related<Building> getBuilding() {
+		return mBuilding;
 	}
 
 }

@@ -6,16 +6,24 @@ import cat.ppicas.spades.query.Query;
 
 public class Related<T extends Entity> {
 
-	private boolean mFetched;
-	private Entity mEntity;
-	private T mRelated;
-
-	private EntityMapper<T> mMapper;
 	private Column mRelatedColumn;
-	private Column mOwnColumn;
+	private Table<?> mRelatedTable;
+	private EntityMapper<T> mMapper;
+	private String mExtraWhere;
 
-	public Related(Entity entity) {
-		mEntity = entity;
+	private boolean mFetched;
+	private long mValue;
+	private T mEntity;
+
+	public Related(Column relatedColumn, EntityMapper<T> mapper) {
+		mRelatedColumn = relatedColumn;
+		mRelatedTable = mRelatedColumn.table;
+		mMapper = mapper;
+	}
+
+	public Related(Column relatedColumn, EntityMapper<T> mapper, String extraWhere) {
+		this(relatedColumn, mapper);
+		mExtraWhere = extraWhere;
 	}
 
 	public boolean isFetched() {
@@ -24,32 +32,40 @@ public class Related<T extends Entity> {
 
 	public T fetch(SQLiteDatabase db) {
 		if (!mFetched) {
-			Query query = new Query(mOwnColumn.table)
-					.select(mRelatedColumn.table)
-					.leftJoin(mRelatedColumn.table, "%s = %s", mOwnColumn, mRelatedColumn)
-					.where(mOwnColumn.table.getColumnId(), "=" + mEntity.getEntityId());
+			Query query = new Query(mRelatedTable).where(mRelatedColumn, "=" + getKey()).limit(1);
+			if (mExtraWhere != null) {
+				query.where(mExtraWhere);
+			}
 			int[][] tableMaps = query.getMappings();
-			int[] maps = tableMaps[mRelatedColumn.table.index];
+			int[] maps = tableMaps[mRelatedTable.index];
 			Cursor cursor = query.execute(db);
 			if (maps != null && cursor.moveToFirst()) {
-				mRelated = mMapper.createFromCursor(cursor, maps);
+				mEntity = mMapper.createFromCursor(cursor, maps);
 			} else {
-				mRelated = null;
+				mEntity = null;
 			}
 			cursor.close();
 			mFetched = true;
 		}
 
-		return mRelated;
+		return mEntity;
 	}
 
 	public T get() {
-		return mRelated;
+		return mEntity;
 	}
 
 	public void set(T entity) {
-		mRelated = entity;
+		mEntity = entity;
 		mFetched = true;
+	}
+
+	public long getKey() {
+		return mValue;
+	}
+
+	public void setKey(long value) {
+		mValue = value;
 	}
 
 }

@@ -1,15 +1,17 @@
 package cat.ppicas.spades.models;
 
 import cat.ppicas.spades.Entity;
+import cat.ppicas.spades.Related;
 
 public class Building implements Entity {
 
 	private long mId;
-	private long mCompanyId;
+	private Related<Company> mCompany = new Related<Company>(CompanyDao.ID, CompanyDao.MAPPER);
 	private String mAddress;
 	private String mPhone;
 	private int mFloors;
 	private double mSurface;
+	private boolean mMain;
 
 	@Override
 	public long getEntityId() {
@@ -21,12 +23,8 @@ public class Building implements Entity {
 		mId = id;
 	}
 
-	public long getCompanyId() {
-		return mCompanyId;
-	}
-
-	public void setCompanyId(long companyId) {
-		mCompanyId = companyId;
+	public Related<Company> getCompany() {
+		return mCompany;
 	}
 
 	public String getAddress() {
@@ -59,6 +57,14 @@ public class Building implements Entity {
 
 	public void setSurface(double surface) {
 		mSurface = surface;
+	}
+
+	public boolean isMain() {
+		return mMain;
+	}
+
+	public void setMain(boolean main) {
+		mMain = main;
 	}
 
 }

@@ -18,6 +18,7 @@ public class BuildingDao extends Dao<Building> {
 	public static final Column PHONE = TABLE.column().text("phone").end();
 	public static final Column FLOORS = TABLE.column().integer("floors").notNull("0").end();
 	public static final Column SURFACE = TABLE.column().real("surface").notNull("0").end();
+	public static final Column MAIN = TABLE.column().integer("main").notNull("0").end();
 
 	public static final EntityMapper<Building> MAPPER = new EntityMapper<Building>(TABLE) {
 
@@ -31,7 +32,7 @@ public class BuildingDao extends Dao<Building> {
 			int index;
 			index = maps[COMPANY_ID.index];
 			if (index != -1) {
-				building.setCompanyId(cursor.getLong(index));
+				building.getCompany().setKey(cursor.getLong(index));
 			}
 			index = maps[ADDRESS.index];
 			if (index != -1) {
@@ -49,17 +50,22 @@ public class BuildingDao extends Dao<Building> {
 			if (index != -1) {
 				building.setSurface(cursor.getDouble(index));
 			}
+			index = maps[MAIN.index];
+			if (index != -1) {
+				building.setMain(cursor.getInt(index) == 1);
+			}
 		}
 
 		@Override
 		protected void mapContentValues(Building building, ContentValues values) {
-			values.put(COMPANY_ID.name, building.getCompanyId());
+			values.put(COMPANY_ID.name, building.getCompany().getKey());
 			if (building.getAddress() != null) {
 				values.put(ADDRESS.name, building.getAddress());
 			}
 			values.put(PHONE.name, building.getPhone());
 			values.put(FLOORS.name, building.getFloors());
 			values.put(SURFACE.name, building.getSurface());
+			values.put(MAIN.name, building.isMain());
 		}
 
 	};

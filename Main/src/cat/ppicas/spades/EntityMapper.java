@@ -44,6 +44,9 @@ public abstract class EntityMapper<T extends Entity> {
 		}
 
 		T entity = newInstance(cursor, mappings);
+		if (colIdIndex != -1) {
+			entity.setEntityId(cursor.getLong(colIdIndex));
+		}
 		for (Column column : mMappedColumns) {
 			int index = mappings[column.index];
 			if (index != -1) {
@@ -51,9 +54,6 @@ public abstract class EntityMapper<T extends Entity> {
 			}
 		}
 		mapCursorValues(entity, cursor, mappings);
-		if (colIdIndex != -1) {
-			entity.setEntityId(cursor.getLong(colIdIndex));
-		}
 
 		return entity;
 	}

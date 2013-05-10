@@ -22,6 +22,9 @@ public class IntegrationTest extends AndroidTestCase {
 	private Company mCompany;
 	private long mCompanyId;
 	private Building mBuildingA;
+	private long mBuildingAId;
+	private Building mBuildingB;
+	private long mBuildingBId;
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -39,13 +42,24 @@ public class IntegrationTest extends AndroidTestCase {
 		mCompanyId = mCompanyDao.insert(mCompany);
 
 		mBuildingA = new Building();
-		mBuildingA.setCompanyId(mCompany.getEntityId());
-		mBuildingA.setAddress("1600 Amphitheatre Parkway, Mountain View, CA 94043");
-		mBuildingA.setPhone("+1 650-253-0000");
-		mBuildingA.setFloors(8);
-		mBuildingA.setSurface(1024);
+		mBuildingA.setMain(false);
+		mBuildingA.getCompany().setKey(mCompany.getEntityId());
+		mBuildingA.setAddress("76 Ninth Avenue, New York, NY 10011");
+		mBuildingA.setPhone("+1 212-565-0000");
+		mBuildingA.setFloors(4);
+		mBuildingA.setSurface(256.64);
 
-		mBuildingDao.insert(mBuildingA);
+		mBuildingAId = mBuildingDao.insert(mBuildingA);
+
+		mBuildingB = new Building();
+		mBuildingB.setMain(true);
+		mBuildingB.getCompany().setKey(mCompany.getEntityId());
+		mBuildingB.setAddress("1600 Amphitheatre Parkway, Mountain View, CA 94043");
+		mBuildingB.setPhone("+1 650-253-0000");
+		mBuildingB.setFloors(8);
+		mBuildingB.setSurface(1024.512);
+
+		mBuildingBId = mBuildingDao.insert(mBuildingB);
 	}
 
 	@Override
@@ -113,7 +127,8 @@ public class IntegrationTest extends AndroidTestCase {
 
 	public void test__Query_with_left_join() throws Exception {
 		Query query = new Query(BuildingDao.TABLE)
-				.leftJoin(CompanyDao.TABLE, "%s = %s", BuildingDao.COMPANY_ID, CompanyDao.ID);
+				.leftJoin(CompanyDao.TABLE, "%s = %s", BuildingDao.COMPANY_ID, CompanyDao.ID)
+				.where(BuildingDao.ID, "=" + mBuildingAId);
 
 		Cursor cursor = query.execute(mDb);
 		int[][] mappings = query.getMappings();
@@ -125,4 +140,24 @@ public class IntegrationTest extends AndroidTestCase {
 		assertEquals(1, companies.size());
 	}
 
+	public void test__Related_fetch_from_many_to_one() throws Exception {
+		Company company = mBuildingA.getCompany().fetch(mDb);
+		assertEquals(mCompanyId, company.getEntityId());
+		assertEquals("Google", company.getName());
+		assertEquals(1998, company.getFundationYear());
+		assertEquals(new GregorianCalendar(1998, Calendar.SEPTEMBER, 4).getTime(),
+				company.getRegistration());
+	}
+
+	public void test__Related_fetch_from_inverse_side() throws Exception {
+		Company company = mCompanyDao.get(mCompanyId);
+		Building building = company.getBuilding().fetch(mDb);
+		assertEquals(mBuildingBId, building.getEntityId());
+		assertEquals(mCompanyId, building.getCompany().getKey());
+		assertEquals("1600 Amphitheatre Parkway, Mountain View, CA 94043", building.getAddress());
+		assertEquals("+1 650-253-0000", building.getPhone());
+		assertEquals(8, building.getFloors());
+		assertEquals(1024.512, building.getSurface());
+		assertTrue(building.isMain());
+	}
 }

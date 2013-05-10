@@ -10,6 +10,7 @@ import cat.ppicas.spades.map.DateMapper;
 import cat.ppicas.spades.map.DoubleMapper;
 import cat.ppicas.spades.map.IntegerMapper;
 import cat.ppicas.spades.map.LongMapper;
+import cat.ppicas.spades.map.RelatedMapper;
 import cat.ppicas.spades.map.StringMapper;
 import cat.ppicas.spades.map.ValueMapper;
 
@@ -48,7 +49,7 @@ public class ColumnBuilder {
 	}
 
 	public ColumnBuilder auto(String fieldName) {
-		// TODO Transform fieldName to name
+		// TODO Transform fieldName to name.
 		return auto(fieldName, fieldName);
 	}
 
@@ -57,6 +58,7 @@ public class ColumnBuilder {
 			Field field = mTable.getEntity().getDeclaredField(fieldName);
 			Class<?> type = field.getType();
 
+			// TODO Refactor this to a ValueMapperFactory.
 			if (type == Integer.TYPE || type == Integer.class) {
 				integer(name);
 				mValueMapper = new IntegerMapper(field);
@@ -75,6 +77,9 @@ public class ColumnBuilder {
 			} else if (type == Date.class) {
 				integer(name);
 				mValueMapper = new DateMapper(field);
+			} else if (type == Related.class) {
+				integer(name);
+				mValueMapper = new RelatedMapper(field);
 			} else {
 				throw new IllegalArgumentException("Field type not supported");
 			}
