@@ -22,4 +22,10 @@ public class OpenHelper extends SQLiteOpenHelper {
 		BuildingDao.TABLE.upgradeTables(db, oldVersion, newVersion);
 	}
 
+	@Override
+	public void onConfigure(SQLiteDatabase db) {
+		super.onConfigure(db);
+		db.setForeignKeyConstraintsEnabled(true);
+	}
+
 }

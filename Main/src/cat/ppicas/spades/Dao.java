@@ -105,7 +105,7 @@ public abstract class Dao<T extends Entity> {
 			cursor.moveToPosition(-1);
 			while (cursor.moveToNext()) {
 				T entity = mMapper.createFromCursor(cursor, mappings[mTable.index]);
-				if (consumer != null) {
+				if (consumer != null && entity != null) {
 					consumer.accept(entity, cursor);
 				}
 				list.add(entity);
@@ -119,7 +119,11 @@ public abstract class Dao<T extends Entity> {
 	}
 
 	public List<T> fetchAll(Query query) {
-		return fetchAll(query.execute(mDb), true, query.getMappings());
+		return fetchAll(query.execute(mDb), true, query.getMappings(), null);
+	}
+
+	public List<T> fetchAll(Query query, EntityConsumer<T> consumer) {
+		return fetchAll(query.execute(mDb), true, query.getMappings(), consumer);
 	}
 
 }

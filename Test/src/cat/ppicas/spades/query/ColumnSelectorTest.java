@@ -37,7 +37,7 @@ public class ColumnSelectorTest extends TestCase {
 		assertEquals(BuildingDao.PHONE, selected.get(7).getColumn());
 		assertEquals(BuildingDao.FLOORS, selected.get(8).getColumn());
 		assertEquals(BuildingDao.SURFACE, selected.get(9).getColumn());
-		assertEquals(BuildingDao.MAIN, selected.get(10).getColumn());
+		assertEquals(BuildingDao.IS_MAIN, selected.get(10).getColumn());
 	}
 
 	public void test__Should_get_selected_columns__When_one_table_added() throws Exception {
@@ -54,7 +54,7 @@ public class ColumnSelectorTest extends TestCase {
 		assertEquals(BuildingDao.PHONE, selected.get(3).getColumn());
 		assertEquals(BuildingDao.FLOORS, selected.get(4).getColumn());
 		assertEquals(BuildingDao.SURFACE, selected.get(5).getColumn());
-		assertEquals(BuildingDao.MAIN, selected.get(6).getColumn());
+		assertEquals(BuildingDao.IS_MAIN, selected.get(6).getColumn());
 	}
 
 	public void test__Should_get_selected_columns__When_one_table_added_with_columns_selected() throws Exception {

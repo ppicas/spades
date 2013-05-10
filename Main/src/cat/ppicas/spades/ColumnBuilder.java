@@ -16,6 +16,19 @@ import cat.ppicas.spades.map.ValueMapper;
 
 public class ColumnBuilder {
 
+	public enum OnDelete {
+		CASCADE,
+		SET_NULL,
+		SET_DEFAULT,
+		RESTRICT
+	}
+
+	public static final String DEFAULT_EMTPY = "''";
+	public static final String DEFAULT_ZERO = "0";
+	public static final String DEFAULT_ONE = "1";
+	public static final String DEFAULT_FALSE = "0";
+	public static final String DEFAULT_TRUE = "1";
+
 	private Table<?> mTable;
 	private String mName;
 	private String mDefinition;
@@ -104,6 +117,16 @@ public class ColumnBuilder {
 
 	public ColumnBuilder defaultVal(String val) {
 		mDefinition += " DEFAULT " + val;
+		return this;
+	}
+
+	public ColumnBuilder foreignKey(Column column) {
+		return foreignKey(column, OnDelete.CASCADE);
+	}
+
+	public ColumnBuilder foreignKey(Column column, OnDelete onDelete) {
+		mDefinition += " REFERENCES " + column.table.getName() + "(" + column.name + ") "
+				+ "ON DELETE " + onDelete.name().replace('_', ' ');
 		return this;
 	}
 

@@ -30,21 +30,40 @@ public class Related<T extends Entity> {
 		return mFetched;
 	}
 
+	public void reset() {
+		mFetched = false;
+		mEntity = null;
+	}
+
 	public T fetch(SQLiteDatabase db) {
 		if (!mFetched) {
 			Query query = new Query(mRelatedTable).where(mRelatedColumn, "=" + getKey()).limit(1);
 			if (mExtraWhere != null) {
 				query.where(mExtraWhere);
 			}
-			int[][] tableMaps = query.getMappings();
-			int[] maps = tableMaps[mRelatedTable.index];
 			Cursor cursor = query.execute(db);
-			if (maps != null && cursor.moveToFirst()) {
-				mEntity = mMapper.createFromCursor(cursor, maps);
+			if (cursor.moveToFirst()) {
+				int[][] mappings = query.getMappings();
+				int[] tableMappings = mappings[mRelatedTable.index];
+				mEntity = mMapper.createFromCursor(cursor, tableMappings);
 			} else {
 				mEntity = null;
 			}
 			cursor.close();
+			mFetched = true;
+		}
+
+		return mEntity;
+	}
+
+	public T fetch(Cursor cursor, int[][] mappings) {
+		if (!mFetched) {
+			int[] tableMappings = mappings[mRelatedTable.index];
+			if (tableMappings != null) {
+				mEntity = mMapper.createFromCursor(cursor, tableMappings);
+			} else {
+				mEntity = null;
+			}
 			mFetched = true;
 		}
 

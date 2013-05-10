@@ -12,8 +12,9 @@ public class Company implements Entity {
 	private String mName = "";
 	private int mFundationYear;
 	private Date mRegistration;
+
 	private Related<Building> mBuilding = new Related<Building>(BuildingDao.COMPANY_ID,
-			BuildingDao.MAPPER, Query.expr("%s", BuildingDao.MAIN));
+			BuildingDao.MAPPER, Query.expr("%s", BuildingDao.IS_MAIN));
 
 	@Override
 	public long getEntityId() {
