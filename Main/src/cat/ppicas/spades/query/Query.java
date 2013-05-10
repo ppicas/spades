@@ -61,12 +61,12 @@ public class Query {
 	protected ColumnSelector mSelector = new ColumnSelector();
 
 	protected ArrayList<String> mFromClauses = new ArrayList<String>();
-	protected boolean mMagicColumns = false;
 	protected ArrayList<String> mWhereClauses = new ArrayList<String>();
 	protected ArrayList<String> mWhereArgs = new ArrayList<String>();
 	protected ArrayList<String> mOrderBy = new ArrayList<String>();
 	protected String mLimit;
 	private boolean mDistinct;
+	protected boolean mMagicColumns = false;
 
 	public Query(Table<?> fromTable) {
 		mSelector.setAutoEntitiesId(true);
@@ -179,15 +179,15 @@ public class Query {
 		return mDistinct;
 	}
 
-	public boolean isMagicColumns() {
+	public boolean hasMagicColumns() {
 		return mMagicColumns;
 	}
 
-	public boolean isAutoEntitiesId() {
+	public boolean hasAutoEntitiesId() {
 		return mSelector.isAutoEntitiesId();
 	}
 
-	public boolean isAutoRowsId() {
+	public boolean hasAutoRowsId() {
 		return mSelector.isAutoRowsId();
 	}
 
