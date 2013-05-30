@@ -26,7 +26,7 @@ public class CompanyDao extends Dao<Company> {
 
 		@Override
 		protected void mapCursorValues(Company entity, Cursor cursor, int[] mappings) {
-			entity.getBuilding().setKey(entity.getEntityId());
+			entity.getMainBuilding().setKey(entity.getEntityId());
 		}
 
 		@Override

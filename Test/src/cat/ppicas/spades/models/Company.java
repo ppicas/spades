@@ -13,7 +13,7 @@ public class Company implements Entity {
 	private int mFundationYear;
 	private Date mRegistration;
 
-	private Related<Building> mBuilding = new Related<Building>(BuildingDao.COMPANY_ID,
+	private Related<Building> mMainBuilding = new Related<Building>(BuildingDao.COMPANY_ID,
 			BuildingDao.MAPPER, Query.expr("%s", BuildingDao.IS_MAIN));
 
 	@Override
@@ -50,8 +50,8 @@ public class Company implements Entity {
 		mRegistration = registration;
 	}
 
-	public Related<Building> getBuilding() {
-		return mBuilding;
+	public Related<Building> getMainBuilding() {
+		return mMainBuilding;
 	}
 
 }

@@ -151,7 +151,7 @@ public class IntegrationTest extends AndroidTestCase {
 
 	public void test__Related_fetch_from_inverse_side() throws Exception {
 		Company company = mCompanyDao.get(mCompanyId);
-		Building building = company.getBuilding().fetch(mDb);
+		Building building = company.getMainBuilding().fetch(mDb);
 		assertEquals(mBuildingBId, building.getEntityId());
 		assertEquals(mCompanyId, building.getCompany().getKey());
 		assertEquals("1600 Amphitheatre Parkway, Mountain View, CA 94043", building.getAddress());

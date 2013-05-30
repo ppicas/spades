@@ -12,6 +12,7 @@ public class ColumnSelectorTest extends TestCase {
 
 	private ColumnSelector mSelector;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 
@@ -90,7 +91,7 @@ public class ColumnSelectorTest extends TestCase {
 		mSelector.selectColumn("%s + 1 AS custom", BuildingDao.FLOORS);
 		// When get the selected columns.
 		List<SelectedColumn> selected = mSelector.getSelectedColumns();
-		// Then the two selected columns are returned.
+		// Then the custom column is returned.
 		assertEquals(1, selected.size());
 		assertTrue(selected.get(0).isCustom());
 		assertEquals("%s + 1 AS custom", selected.get(0).getCustomExpression());
@@ -121,7 +122,7 @@ public class ColumnSelectorTest extends TestCase {
 		mSelector.selectColumn("length(%s)", CompanyDao.NAME);
 		// And one custom column selected.
 		mSelector.selectColumn("length(%s)", CompanyDao.NAME);
-		// When get the selected columns.
+		// When get the selected columns for count.
 		List<SelectedColumn> selected = mSelector.getSelectedColumnsForCount();
 		// Then first column is count.
 		assertTrue(selected.get(0) instanceof CountColumn);
