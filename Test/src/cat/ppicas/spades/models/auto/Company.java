@@ -1,4 +1,4 @@
-package cat.ppicas.spades.models;
+package cat.ppicas.spades.models.auto;
 
 import java.util.Date;
 

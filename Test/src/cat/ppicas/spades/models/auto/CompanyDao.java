@@ -1,4 +1,4 @@
-package cat.ppicas.spades.models;
+package cat.ppicas.spades.models.auto;
 
 import android.content.ContentValues;
 import android.database.Cursor;

@@ -7,14 +7,14 @@ import java.util.List;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
-import cat.ppicas.spades.models.Building;
-import cat.ppicas.spades.models.BuildingDao;
-import cat.ppicas.spades.models.Company;
-import cat.ppicas.spades.models.CompanyDao;
 import cat.ppicas.spades.models.OpenHelper;
+import cat.ppicas.spades.models.auto.Building;
+import cat.ppicas.spades.models.auto.BuildingDao;
+import cat.ppicas.spades.models.auto.Company;
+import cat.ppicas.spades.models.auto.CompanyDao;
 import cat.ppicas.spades.query.Query;
 
-public class IntegrationTest extends AndroidTestCase {
+public class AutoModelsIntegrationTest extends AndroidTestCase {
 
 	private SQLiteDatabase mDb;
 	private CompanyDao mCompanyDao;
@@ -26,6 +26,7 @@ public class IntegrationTest extends AndroidTestCase {
 	private Building mBuildingB;
 	private long mBuildingBId;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 

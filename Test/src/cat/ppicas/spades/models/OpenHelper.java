@@ -1,5 +1,7 @@
 package cat.ppicas.spades.models;
 
+import cat.ppicas.spades.models.manual.BuildingDao;
+import cat.ppicas.spades.models.manual.CompanyDao;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;

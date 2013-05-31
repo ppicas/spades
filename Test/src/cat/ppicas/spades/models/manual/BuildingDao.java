@@ -1,4 +1,4 @@
-package cat.ppicas.spades.models;
+package cat.ppicas.spades.models.manual;
 
 import static cat.ppicas.spades.ColumnBuilder.DEFAULT_EMTPY;
 import static cat.ppicas.spades.ColumnBuilder.DEFAULT_ZERO;

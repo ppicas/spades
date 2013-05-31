@@ -2,8 +2,8 @@ package cat.ppicas.spades.query;
 
 import java.util.List;
 
-import cat.ppicas.spades.models.BuildingDao;
-import cat.ppicas.spades.models.CompanyDao;
+import cat.ppicas.spades.models.manual.BuildingDao;
+import cat.ppicas.spades.models.manual.CompanyDao;
 import cat.ppicas.spades.query.SelectedColumn.CountColumn;
 import cat.ppicas.spades.query.SelectedColumn.RowIdColumn;
 import junit.framework.TestCase;
