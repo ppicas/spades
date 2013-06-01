@@ -27,6 +27,10 @@ public class RelatedMapper implements ValueMapper {
 		}
 	}
 
+	public Field getRelatedField() {
+		return mRelatedField;
+	}
+
 	@Override
 	public void putContetValue(Object object, ContentValues values, String key, boolean notNull) {
 		try {

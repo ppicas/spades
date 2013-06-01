@@ -33,8 +33,7 @@ public class MappingsBuilder {
 	public MappingsBuilder add(Column column) {
 		int tableIndex = column.table.index;
 		if (mMappings[tableIndex] == null) {
-			Table<?> table = mTables.getTable(tableIndex);
-			mMappings[tableIndex] = new int[table.getColumnsNumber()];
+			mMappings[tableIndex] = new int[column.table.getColumnsNumber()];
 			Arrays.fill(mMappings[tableIndex], -1);
 		}
 

@@ -1,11 +1,13 @@
 package cat.ppicas.spades;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import cat.ppicas.spades.map.RelatedMapper;
 import cat.ppicas.spades.query.Query;
 
 public abstract class Dao<T extends Entity> {
@@ -19,11 +21,18 @@ public abstract class Dao<T extends Entity> {
 	protected SQLiteDatabase mDb;
 	private Table<T> mTable;
 	private EntityMapper<T> mMapper;
+	private List<Field> mRelatedFields = new ArrayList<Field>();
 
 	public Dao(SQLiteDatabase db, Table<T> table, EntityMapper<T> mapper) {
 		mDb = db;
 		mTable = table;
 		mMapper = mapper;
+
+		for (Column column : table.getColumns()) {
+			if (column.valueMapper instanceof RelatedMapper) {
+				mRelatedFields.add(((RelatedMapper) column.valueMapper).getRelatedField());
+			}
+		}
 	}
 
 	public long insert(T entity) {
@@ -86,9 +95,11 @@ public abstract class Dao<T extends Entity> {
 				|| mappings[mTable.index] == null) {
 			return null;
 		}
-		T object = mMapper.createFromCursor(cursor, mappings[mTable.index]);
 
-		return object;
+		T entity = mMapper.createFromCursor(cursor, mappings[mTable.index]);
+		fetchRelatedFields(cursor, mappings, entity);
+
+		return entity;
 	}
 
 	public T fetchFirst(Query query) {
@@ -111,6 +122,7 @@ public abstract class Dao<T extends Entity> {
 			cursor.moveToPosition(-1);
 			while (cursor.moveToNext()) {
 				T entity = mMapper.createFromCursor(cursor, mappings[mTable.index]);
+				fetchRelatedFields(cursor, mappings, entity);
 				if (consumer != null && entity != null) {
 					consumer.accept(entity, cursor);
 				}
@@ -136,6 +148,18 @@ public abstract class Dao<T extends Entity> {
 			return fetchAll(cursor, query.getMappings(), consumer);
 		} finally {
 			cursor.close();
+		}
+	}
+
+	protected void fetchRelatedFields(Cursor cursor, int[][] mappings, T entity) {
+		for (Field relatedField : mRelatedFields) {
+			try {
+				@SuppressWarnings("unchecked")
+				Related<T> related = (Related<T>) relatedField.get(entity);
+				related.fetch(cursor, mappings);
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 

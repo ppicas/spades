@@ -61,10 +61,8 @@ public class Related<T extends Entity> {
 			int[] tableMappings = mappings[mRelatedTable.index];
 			if (tableMappings != null) {
 				mEntity = mMapper.createFromCursor(cursor, tableMappings);
-			} else {
-				mEntity = null;
+				mFetched = true;
 			}
-			mFetched = true;
 		}
 
 		return mEntity;
