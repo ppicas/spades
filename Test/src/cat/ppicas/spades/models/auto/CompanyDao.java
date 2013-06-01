@@ -10,7 +10,7 @@ import cat.ppicas.spades.Table;
 
 public class CompanyDao extends Dao<Company> {
 
-	public static final Table<Company> TABLE = new Table<Company>("companies", Company.class);
+	public static final Table<Company> TABLE = new Table<Company>("companies_auto", Company.class);
 
 	public static final Column ID = TABLE.columnId();
 	public static final Column NAME = TABLE.column().auto("mName").notNull().end();

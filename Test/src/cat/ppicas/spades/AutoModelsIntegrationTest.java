@@ -96,7 +96,8 @@ public class AutoModelsIntegrationTest extends AndroidTestCase {
 		Query query = new Query(CompanyDao.TABLE).where(CompanyDao.NAME, "=?").params("Google");
 		Cursor cursor = query.execute(mDb);
 		int[][] mappings = query.getMappings();
-		List<Company> companies = mCompanyDao.fetchAll(cursor, false, mappings);
+		List<Company> companies = mCompanyDao.fetchAll(cursor, mappings);
+		cursor.close();
 
 		assertEquals(1, companies.size());
 		Company company = companies.get(0);
@@ -133,8 +134,8 @@ public class AutoModelsIntegrationTest extends AndroidTestCase {
 
 		Cursor cursor = query.execute(mDb);
 		int[][] mappings = query.getMappings();
-		List<Building> buildings = mBuildingDao.fetchAll(cursor, false, mappings);
-		List<Company> companies = mCompanyDao.fetchAll(cursor, false, mappings);
+		List<Building> buildings = mBuildingDao.fetchAll(cursor, mappings);
+		List<Company> companies = mCompanyDao.fetchAll(cursor, mappings);
 		cursor.close();
 
 		assertEquals(1, buildings.size());

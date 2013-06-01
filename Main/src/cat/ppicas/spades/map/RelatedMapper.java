@@ -20,7 +20,7 @@ public class RelatedMapper implements ValueMapper {
 		mRelatedField = field;
 		mRelatedField.setAccessible(true);
 		try {
-			mField = Related.class.getField("mValue");
+			mField = Related.class.getDeclaredField("mValue");
 			mField.setAccessible(true);
 		} catch (NoSuchFieldException e) {
 			throw new RuntimeException(e);
@@ -30,7 +30,7 @@ public class RelatedMapper implements ValueMapper {
 	@Override
 	public void putContetValue(Object object, ContentValues values, String key, boolean notNull) {
 		try {
-			values.put(key, (Integer) mField.get(mRelatedField.get(object)));
+			values.put(key, (Long) mField.get(mRelatedField.get(object)));
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
@@ -39,7 +39,7 @@ public class RelatedMapper implements ValueMapper {
 	@Override
 	public void setFieldValue(Object object, Cursor cursor, int index) {
 		try {
-			mField.setInt(mRelatedField.get(object), cursor.getInt(index));
+			mField.setLong(mRelatedField.get(object), cursor.getLong(index));
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}

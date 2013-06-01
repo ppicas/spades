@@ -16,7 +16,7 @@ import cat.ppicas.spades.query.Query;
 
 public class BuildingDao extends Dao<Building> {
 
-	public static final Table<Building> TABLE = new Table<Building>("buildings", Building.class);
+	public static final Table<Building> TABLE = new Table<Building>("buildings_manual", Building.class);
 
 	public static final Column ID = TABLE.columnId();
 

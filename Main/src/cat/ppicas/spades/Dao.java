@@ -65,43 +65,49 @@ public abstract class Dao<T extends Entity> {
 	public T get(long id) {
 		Cursor cursor = mDb.query(mTable.getName(), new String[] { "*" },
 				mTable.getColumnId().name + "=" + id, null, null, null, null, "1");
-		return fetchFirst(cursor, true, mMapper.getDefaultMappings());
+		try {
+			return fetchFirst(cursor, mMapper.getDefaultMappings());
+		} finally {
+			cursor.close();
+		}
 	}
 
 	public List<T> getAll() {
 		Cursor cursor = mDb.query(mTable.getName(), new String[] { "*" }, null, null, null, null, null);
-		return fetchAll(cursor, true, mMapper.getDefaultMappings());
-	}
-
-	public T fetchFirst(Cursor cursor, boolean close, int[][] mappings) {
 		try {
-			if (!cursor.moveToFirst() || mTable.index >= mappings.length  || mappings[mTable.index] == null) {
-				return null;
-			}
-
-			T object = mMapper.createFromCursor(cursor, mappings[mTable.index]);
-
-			return object;
+			return fetchAll(cursor, mMapper.getDefaultMappings());
 		} finally {
-			if (close) {
-				cursor.close();
-			}
+			cursor.close();
 		}
 	}
 
+	public T fetchFirst(Cursor cursor, int[][] mappings) {
+		if (!cursor.moveToFirst() || mTable.index >= mappings.length
+				|| mappings[mTable.index] == null) {
+			return null;
+		}
+		T object = mMapper.createFromCursor(cursor, mappings[mTable.index]);
+
+		return object;
+	}
+
 	public T fetchFirst(Query query) {
-		return fetchFirst(query.execute(mDb), true, query.getMappings());
+		Cursor cursor = query.execute(mDb);
+		try {
+			return fetchFirst(cursor, query.getMappings());
+		} finally {
+			cursor.close();
+		}
 	}
 
-	public List<T> fetchAll(Cursor cursor, boolean close, int[][] mappings) {
-		return fetchAll(cursor, close, mappings, null);
+	public List<T> fetchAll(Cursor cursor, int[][] mappings) {
+		return fetchAll(cursor, mappings, null);
 	}
 
-	public List<T> fetchAll(Cursor cursor, boolean close, int[][] mappings,
-			EntityConsumer<T> consumer) {
+	public List<T> fetchAll(Cursor cursor, int[][] mappings, EntityConsumer<T> consumer) {
 		ArrayList<T> list = new ArrayList<T>();
 
-		if (mappings.length > mTable.index && mappings[mTable.index] != null) {
+		if (mTable.index < mappings.length && mappings[mTable.index] != null) {
 			cursor.moveToPosition(-1);
 			while (cursor.moveToNext()) {
 				T entity = mMapper.createFromCursor(cursor, mappings[mTable.index]);
@@ -111,19 +117,26 @@ public abstract class Dao<T extends Entity> {
 				list.add(entity);
 			}
 		}
-		if (close) {
-			cursor.close();
-		}
 
 		return list;
 	}
 
 	public List<T> fetchAll(Query query) {
-		return fetchAll(query.execute(mDb), true, query.getMappings(), null);
+		Cursor cursor = query.execute(mDb);
+		try {
+			return fetchAll(cursor, query.getMappings(), null);
+		} finally {
+			cursor.close();
+		}
 	}
 
 	public List<T> fetchAll(Query query, EntityConsumer<T> consumer) {
-		return fetchAll(query.execute(mDb), true, query.getMappings(), consumer);
+		Cursor cursor = query.execute(mDb);
+		try {
+			return fetchAll(cursor, query.getMappings(), consumer);
+		} finally {
+			cursor.close();
+		}
 	}
 
 }

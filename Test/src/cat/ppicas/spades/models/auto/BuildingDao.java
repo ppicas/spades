@@ -14,7 +14,7 @@ import cat.ppicas.spades.Table;
 
 public class BuildingDao extends Dao<Building> {
 
-	public static final Table<Building> TABLE = new Table<Building>("buildings", Building.class);
+	public static final Table<Building> TABLE = new Table<Building>("buildings_auto", Building.class);
 
 	public static final Column ID = TABLE.columnId();
 
@@ -24,6 +24,12 @@ public class BuildingDao extends Dao<Building> {
 	public static final Column FLOORS = TABLE.column().auto("mFloors").notNull(DEFAULT_ZERO).end();
 	public static final Column SURFACE = TABLE.column().auto("mSurface").notNull(DEFAULT_ZERO).end();
 	public static final Column IS_MAIN = TABLE.column().auto("mMain").notNull(DEFAULT_FALSE).end();
+
+	static {
+		/*
+		TABLE.related();
+		*/
+	}
 
 	public static final EntityMapper<Building> MAPPER = new EntityMapper<Building>(TABLE) {
 
