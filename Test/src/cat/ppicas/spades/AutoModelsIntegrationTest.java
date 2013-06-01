@@ -127,7 +127,7 @@ public class AutoModelsIntegrationTest extends AndroidTestCase {
 		assertEquals(null, company.getRegistration());
 	}
 
-	public void test__Query_with_left_join() throws Exception {
+	public void test__Many_to_one_related_fetched_manually() throws Exception {
 		Query query = new Query(BuildingDao.TABLE)
 				.leftJoin(CompanyDao.TABLE, "%s = %s", BuildingDao.COMPANY_ID, CompanyDao.ID)
 				.where(BuildingDao.ID, "=" + mBuildingAId);
@@ -142,8 +142,20 @@ public class AutoModelsIntegrationTest extends AndroidTestCase {
 		assertEquals(1, companies.size());
 	}
 
-	public void test__Related_fetch_from_many_to_one() throws Exception {
+	public void test__Many_to_one_related_fetched_automatically() throws Exception {
+		Query query = new Query(BuildingDao.TABLE)
+				.leftJoin(CompanyDao.TABLE, "%s = %s", BuildingDao.COMPANY_ID, CompanyDao.ID)
+				.where(BuildingDao.ID, "=" + mBuildingAId);
+		List<Building> buildings = mBuildingDao.fetchAll(query);
+
+		assertEquals(1, buildings.size());
+		Company company = buildings.get(0).getCompany().get();
+		assertEquals(mCompanyId, company.getEntityId());
+	}
+
+	public void test__Many_to_one_related_fetched_from_entity() throws Exception {
 		Company company = mBuildingA.getCompany().fetch(mDb);
+
 		assertEquals(mCompanyId, company.getEntityId());
 		assertEquals("Google", company.getName());
 		assertEquals(1998, company.getFundationYear());
@@ -151,15 +163,17 @@ public class AutoModelsIntegrationTest extends AndroidTestCase {
 				company.getRegistration());
 	}
 
-	public void test__Related_fetch_from_inverse_side() throws Exception {
+	public void test__Many_to_one_related_fetched_from_inverse_entity() throws Exception {
 		Company company = mCompanyDao.get(mCompanyId);
 		Building building = company.getMainBuilding().fetch(mDb);
+
 		assertEquals(mBuildingBId, building.getEntityId());
-		assertEquals(mCompanyId, building.getCompany().getKey());
+		assertEquals(mCompanyId, (long) building.getCompany().getKey());
 		assertEquals("1600 Amphitheatre Parkway, Mountain View, CA 94043", building.getAddress());
 		assertEquals("+1 650-253-0000", building.getPhone());
 		assertEquals(8, building.getFloors());
 		assertEquals(1024.512, building.getSurface());
 		assertTrue(building.isMain());
 	}
+
 }

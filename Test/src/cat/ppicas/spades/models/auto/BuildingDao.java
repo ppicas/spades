@@ -25,12 +25,6 @@ public class BuildingDao extends Dao<Building> {
 	public static final Column SURFACE = TABLE.column().auto("mSurface").notNull(DEFAULT_ZERO).end();
 	public static final Column IS_MAIN = TABLE.column().auto("mMain").notNull(DEFAULT_FALSE).end();
 
-	static {
-		/*
-		TABLE.related();
-		*/
-	}
-
 	public static final EntityMapper<Building> MAPPER = new EntityMapper<Building>(TABLE) {
 
 		@Override

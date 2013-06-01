@@ -3,8 +3,6 @@ package cat.ppicas.spades.models.manual;
 import static cat.ppicas.spades.ColumnBuilder.DEFAULT_EMTPY;
 import static cat.ppicas.spades.ColumnBuilder.DEFAULT_ZERO;
 
-import java.util.List;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,7 +10,6 @@ import cat.ppicas.spades.Column;
 import cat.ppicas.spades.Dao;
 import cat.ppicas.spades.EntityMapper;
 import cat.ppicas.spades.Table;
-import cat.ppicas.spades.query.Query;
 
 public class BuildingDao extends Dao<Building> {
 
@@ -81,14 +78,10 @@ public class BuildingDao extends Dao<Building> {
 		super(db, TABLE, MAPPER);
 	}
 
-	public List<Building> fetchAllRelated(Query query) {
-		final int[][] mappings = query.getMappings();
-		return fetchAll(query, new EntityConsumer<Building>() {
-			@Override
-			public void accept(Building building, Cursor cursor) {
-				building.getCompany().fetch(cursor, mappings);
-			}
-		});
+	@Override
+	protected void fetchRelatedFields(Cursor cursor, int[][] mappings, Building entity) {
+		super.fetchRelatedFields(cursor, mappings, entity);
+		entity.getCompany().fetch(cursor, mappings);
 	}
 
 }

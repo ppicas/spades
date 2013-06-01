@@ -12,7 +12,7 @@ public class Related<T extends Entity> {
 	private String mExtraWhere;
 
 	private boolean mFetched;
-	private long mValue;
+	private Long mValue;
 	private T mEntity;
 
 	public Related(Column relatedColumn, EntityMapper<T> mapper) {
@@ -77,11 +77,11 @@ public class Related<T extends Entity> {
 		mFetched = true;
 	}
 
-	public long getKey() {
+	public Long getKey() {
 		return mValue;
 	}
 
-	public void setKey(long value) {
+	public void setKey(Long value) {
 		mValue = value;
 	}
 

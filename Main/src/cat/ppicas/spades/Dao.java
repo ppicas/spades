@@ -40,7 +40,7 @@ public abstract class Dao<T extends Entity> {
 		mMapper.putContentValues(entity, values);
 		values.putNull(mTable.getColumnId().name);
 
-		long newId = mDb.insert(mTable.getName(), null, values);
+		long newId = mDb.insertOrThrow(mTable.getName(), null, values);
 		if (newId != -1) {
 			entity.setEntityId(newId);
 		}
@@ -97,7 +97,9 @@ public abstract class Dao<T extends Entity> {
 		}
 
 		T entity = mMapper.createFromCursor(cursor, mappings[mTable.index]);
-		fetchRelatedFields(cursor, mappings, entity);
+		if (entity != null) {
+			fetchRelatedFields(cursor, mappings, entity);
+		}
 
 		return entity;
 	}
@@ -122,9 +124,11 @@ public abstract class Dao<T extends Entity> {
 			cursor.moveToPosition(-1);
 			while (cursor.moveToNext()) {
 				T entity = mMapper.createFromCursor(cursor, mappings[mTable.index]);
-				fetchRelatedFields(cursor, mappings, entity);
-				if (consumer != null && entity != null) {
-					consumer.accept(entity, cursor);
+				if (entity != null) {
+					fetchRelatedFields(cursor, mappings, entity);
+					if (consumer != null) {
+						consumer.accept(entity, cursor);
+					}
 				}
 				list.add(entity);
 			}

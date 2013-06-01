@@ -34,7 +34,10 @@ public class RelatedMapper implements ValueMapper {
 	@Override
 	public void putContetValue(Object object, ContentValues values, String key, boolean notNull) {
 		try {
-			values.put(key, (Long) mField.get(mRelatedField.get(object)));
+			Long value = (Long) mField.get(mRelatedField.get(object));
+			if (value != null || (value == null && !notNull)) {
+				values.put(key, value);
+			}
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
@@ -43,7 +46,8 @@ public class RelatedMapper implements ValueMapper {
 	@Override
 	public void setFieldValue(Object object, Cursor cursor, int index) {
 		try {
-			mField.setLong(mRelatedField.get(object), cursor.getLong(index));
+			mField.set(mRelatedField.get(object),
+					cursor.isNull(index) ? null : cursor.getLong(index));
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
