@@ -2,6 +2,7 @@ package cat.ppicas.spades.models.manual;
 
 import static cat.ppicas.spades.ColumnBuilder.DEFAULT_EMTPY;
 import static cat.ppicas.spades.ColumnBuilder.DEFAULT_ZERO;
+import static cat.ppicas.spades.ColumnBuilder.DEFAULT_FALSE;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -22,7 +23,7 @@ public class BuildingDao extends Dao<Building> {
 	public static final Column PHONE = TABLE.column().text("phone").end();
 	public static final Column FLOORS = TABLE.column().integer("floors").notNull(DEFAULT_ZERO).end();
 	public static final Column SURFACE = TABLE.column().real("surface").notNull(DEFAULT_ZERO).end();
-	public static final Column IS_MAIN = TABLE.column().integer("is_main").notNull(DEFAULT_ZERO).end();
+	public static final Column IS_MAIN = TABLE.column().integer("is_main").notNull(DEFAULT_FALSE).end();
 
 	public static final EntityMapper<Building> MAPPER = new EntityMapper<Building>(TABLE) {
 
