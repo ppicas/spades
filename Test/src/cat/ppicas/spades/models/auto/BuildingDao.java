@@ -1,9 +1,8 @@
 package cat.ppicas.spades.models.auto;
 
 import static cat.ppicas.spades.ColumnBuilder.DEFAULT_EMTPY;
-import static cat.ppicas.spades.ColumnBuilder.DEFAULT_ZERO;
 import static cat.ppicas.spades.ColumnBuilder.DEFAULT_FALSE;
-
+import static cat.ppicas.spades.ColumnBuilder.DEFAULT_ZERO;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,9 +11,9 @@ import cat.ppicas.spades.Dao;
 import cat.ppicas.spades.EntityMapper;
 import cat.ppicas.spades.Table;
 
-public class BuildingDao extends Dao<Building> {
+public class BuildingDao extends Dao<BuildingAuto> {
 
-	public static final Table<Building> TABLE = new Table<Building>("buildings_auto", Building.class);
+	public static final Table<BuildingAuto> TABLE = new Table<BuildingAuto>("buildings_auto", BuildingAuto.class);
 
 	public static final Column ID = TABLE.columnId();
 
@@ -25,19 +24,19 @@ public class BuildingDao extends Dao<Building> {
 	public static final Column SURFACE = TABLE.column().auto("mSurface").notNull(DEFAULT_ZERO).end();
 	public static final Column IS_MAIN = TABLE.column().auto("mMain").notNull(DEFAULT_FALSE).end();
 
-	public static final EntityMapper<Building> MAPPER = new EntityMapper<Building>(TABLE) {
+	public static final EntityMapper<BuildingAuto> MAPPER = new EntityMapper<BuildingAuto>(TABLE) {
 
 		@Override
-		protected Building newInstance(Cursor cursor, int[] mappings) {
-			return new Building();
+		protected BuildingAuto newInstance(Cursor cursor, int[] mappings) {
+			return new BuildingAuto();
 		}
 
 		@Override
-		protected void mapCursorValues(Building building, Cursor cursor, int[] maps) {
+		protected void mapCursorValues(BuildingAuto building, Cursor cursor, int[] maps) {
 		}
 
 		@Override
-		protected void mapContentValues(Building building, ContentValues values) {
+		protected void mapContentValues(BuildingAuto building, ContentValues values) {
 		}
 
 	};

@@ -8,9 +8,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
 import cat.ppicas.spades.models.OpenHelper;
-import cat.ppicas.spades.models.auto.Building;
+import cat.ppicas.spades.models.auto.BuildingAuto;
 import cat.ppicas.spades.models.auto.BuildingDao;
-import cat.ppicas.spades.models.auto.Company;
+import cat.ppicas.spades.models.auto.CompanyAuto;
 import cat.ppicas.spades.models.auto.CompanyDao;
 import cat.ppicas.spades.query.Query;
 
@@ -19,11 +19,11 @@ public class AutoModelsIntegrationTest extends AndroidTestCase {
 	private SQLiteDatabase mDb;
 	private CompanyDao mCompanyDao;
 	private BuildingDao mBuildingDao;
-	private Company mCompany;
+	private CompanyAuto mCompany;
 	private long mCompanyId;
-	private Building mBuildingA;
+	private BuildingAuto mBuildingA;
 	private long mBuildingAId;
-	private Building mBuildingB;
+	private BuildingAuto mBuildingB;
 	private long mBuildingBId;
 
 	@Override
@@ -35,14 +35,14 @@ public class AutoModelsIntegrationTest extends AndroidTestCase {
 		mCompanyDao = new CompanyDao(mDb);
 		mBuildingDao = new BuildingDao(mDb);
 
-		mCompany = new Company();
+		mCompany = new CompanyAuto();
 		mCompany.setName("Google");
 		mCompany.setFundationYear(1998);
 		mCompany.setRegistration(new GregorianCalendar(1998, Calendar.SEPTEMBER, 4).getTime());
 
 		mCompanyId = mCompanyDao.insert(mCompany);
 
-		mBuildingA = new Building();
+		mBuildingA = new BuildingAuto();
 		mBuildingA.setMain(false);
 		mBuildingA.getCompany().setKey(mCompany.getEntityId());
 		mBuildingA.setAddress("76 Ninth Avenue, New York, NY 10011");
@@ -52,7 +52,7 @@ public class AutoModelsIntegrationTest extends AndroidTestCase {
 
 		mBuildingAId = mBuildingDao.insert(mBuildingA);
 
-		mBuildingB = new Building();
+		mBuildingB = new BuildingAuto();
 		mBuildingB.setMain(true);
 		mBuildingB.getCompany().setKey(mCompany.getEntityId());
 		mBuildingB.setAddress("1600 Amphitheatre Parkway, Mountain View, CA 94043");
@@ -76,7 +76,7 @@ public class AutoModelsIntegrationTest extends AndroidTestCase {
 	}
 
 	public void test__Get_by_id() throws Exception {
-		Company company = mCompanyDao.get(mCompanyId);
+		CompanyAuto company = mCompanyDao.get(mCompanyId);
 
 		assertEquals(mCompanyId, company.getEntityId());
 		assertEquals("Google", company.getName());
@@ -87,7 +87,7 @@ public class AutoModelsIntegrationTest extends AndroidTestCase {
 
 	public void test__Simple_query() throws Exception {
 		Query query = new Query(CompanyDao.TABLE).where(CompanyDao.NAME, "=?").params("Google");
-		List<Company> companies = mCompanyDao.fetchAll(query);
+		List<CompanyAuto> companies = mCompanyDao.fetchAll(query);
 
 		assertEquals(1, companies.size());
 	}
@@ -96,11 +96,11 @@ public class AutoModelsIntegrationTest extends AndroidTestCase {
 		Query query = new Query(CompanyDao.TABLE).where(CompanyDao.NAME, "=?").params("Google");
 		Cursor cursor = query.execute(mDb);
 		int[][] mappings = query.getMappings();
-		List<Company> companies = mCompanyDao.fetchAll(cursor, mappings);
+		List<CompanyAuto> companies = mCompanyDao.fetchAll(cursor, mappings);
 		cursor.close();
 
 		assertEquals(1, companies.size());
-		Company company = companies.get(0);
+		CompanyAuto company = companies.get(0);
 		assertEquals(mCompanyId, company.getEntityId());
 		assertEquals("Google", company.getName());
 		assertEquals(1998, company.getFundationYear());
@@ -109,7 +109,7 @@ public class AutoModelsIntegrationTest extends AndroidTestCase {
 	}
 
 	public void test__Query_with_column_selected_and_auto_entities_id() throws Exception {
-		Company company = mCompanyDao.fetchFirst(new Query(CompanyDao.TABLE)
+		CompanyAuto company = mCompanyDao.fetchFirst(new Query(CompanyDao.TABLE)
 				.select(CompanyDao.FUNDATION_YEAR));
 		assertEquals(mCompanyId, company.getEntityId());
 		assertEquals("", company.getName());
@@ -118,7 +118,7 @@ public class AutoModelsIntegrationTest extends AndroidTestCase {
 	}
 
 	public void test__Query_with_column_selected_and_no_auto_entities_id() throws Exception {
-		Company company = mCompanyDao.fetchFirst(new Query(CompanyDao.TABLE)
+		CompanyAuto company = mCompanyDao.fetchFirst(new Query(CompanyDao.TABLE)
 				.setAutoEntitiesId(false)
 				.select(CompanyDao.FUNDATION_YEAR));
 		assertEquals(0, company.getEntityId());
@@ -134,8 +134,8 @@ public class AutoModelsIntegrationTest extends AndroidTestCase {
 
 		Cursor cursor = query.execute(mDb);
 		int[][] mappings = query.getMappings();
-		List<Building> buildings = mBuildingDao.fetchAll(cursor, mappings);
-		List<Company> companies = mCompanyDao.fetchAll(cursor, mappings);
+		List<BuildingAuto> buildings = mBuildingDao.fetchAll(cursor, mappings);
+		List<CompanyAuto> companies = mCompanyDao.fetchAll(cursor, mappings);
 		cursor.close();
 
 		assertEquals(1, buildings.size());
@@ -146,15 +146,15 @@ public class AutoModelsIntegrationTest extends AndroidTestCase {
 		Query query = new Query(BuildingDao.TABLE)
 				.leftJoin(CompanyDao.TABLE, "%s = %s", BuildingDao.COMPANY_ID, CompanyDao.ID)
 				.where(BuildingDao.ID, "=" + mBuildingAId);
-		List<Building> buildings = mBuildingDao.fetchAll(query);
+		List<BuildingAuto> buildings = mBuildingDao.fetchAll(query);
 
 		assertEquals(1, buildings.size());
-		Company company = buildings.get(0).getCompany().get();
+		CompanyAuto company = buildings.get(0).getCompany().get();
 		assertEquals(mCompanyId, company.getEntityId());
 	}
 
 	public void test__Many_to_one_related_fetched_from_entity() throws Exception {
-		Company company = mBuildingA.getCompany().fetch(mDb);
+		CompanyAuto company = mBuildingA.getCompany().fetch(mDb);
 
 		assertEquals(mCompanyId, company.getEntityId());
 		assertEquals("Google", company.getName());
@@ -164,8 +164,8 @@ public class AutoModelsIntegrationTest extends AndroidTestCase {
 	}
 
 	public void test__Many_to_one_related_fetched_from_inverse_entity() throws Exception {
-		Company company = mCompanyDao.get(mCompanyId);
-		Building building = company.getMainBuilding().fetch(mDb);
+		CompanyAuto company = mCompanyDao.get(mCompanyId);
+		BuildingAuto building = company.getMainBuilding().fetch(mDb);
 
 		assertEquals(mBuildingBId, building.getEntityId());
 		assertEquals(mCompanyId, (long) building.getCompany().getKey());

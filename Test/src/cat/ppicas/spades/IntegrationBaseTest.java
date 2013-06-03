@@ -7,23 +7,25 @@ import java.util.List;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
+import cat.ppicas.spades.models.Building;
+import cat.ppicas.spades.models.Company;
 import cat.ppicas.spades.models.OpenHelper;
-import cat.ppicas.spades.models.manual.BuildingManual;
-import cat.ppicas.spades.models.manual.BuildingDao;
-import cat.ppicas.spades.models.manual.CompanyManual;
-import cat.ppicas.spades.models.manual.CompanyDao;
+import cat.ppicas.spades.models.auto.BuildingDao;
+import cat.ppicas.spades.models.auto.CompanyDao;
 import cat.ppicas.spades.query.Query;
 
-public class ManualModelsIntegrationTest extends AndroidTestCase {
+public abstract class IntegrationBaseTest extends AndroidTestCase {
 
 	private SQLiteDatabase mDb;
-	private CompanyDao mCompanyDao;
-	private BuildingDao mBuildingDao;
-	private CompanyManual mCompany;
+
+	private Dao<Company> mCompanyDao;
+	private Dao<Building> mBuildingDao;
+
+	private Company mCompany;
 	private long mCompanyId;
-	private BuildingManual mBuildingA;
+	private Building mBuildingA;
 	private long mBuildingAId;
-	private BuildingManual mBuildingB;
+	private Building mBuildingB;
 	private long mBuildingBId;
 
 	@Override
@@ -32,17 +34,18 @@ public class ManualModelsIntegrationTest extends AndroidTestCase {
 
 		OpenHelper helper = new OpenHelper(getContext());
 		mDb = helper.getWritableDatabase();
-		mCompanyDao = new CompanyDao(mDb);
-		mBuildingDao = new BuildingDao(mDb);
 
-		mCompany = new CompanyManual();
+		mCompanyDao = newCompanyDao();
+		mBuildingDao = newBuildingDao();
+
+		mCompany = newCompany();
 		mCompany.setName("Google");
 		mCompany.setFundationYear(1998);
 		mCompany.setRegistration(new GregorianCalendar(1998, Calendar.SEPTEMBER, 4).getTime());
 
 		mCompanyId = mCompanyDao.insert(mCompany);
 
-		mBuildingA = new BuildingManual();
+		mBuildingA = newBuilding();
 		mBuildingA.setMain(false);
 		mBuildingA.getCompany().setKey(mCompany.getEntityId());
 		mBuildingA.setAddress("76 Ninth Avenue, New York, NY 10011");
@@ -52,7 +55,7 @@ public class ManualModelsIntegrationTest extends AndroidTestCase {
 
 		mBuildingAId = mBuildingDao.insert(mBuildingA);
 
-		mBuildingB = new BuildingManual();
+		mBuildingB = newBuilding();
 		mBuildingB.setMain(true);
 		mBuildingB.getCompany().setKey(mCompany.getEntityId());
 		mBuildingB.setAddress("1600 Amphitheatre Parkway, Mountain View, CA 94043");
@@ -76,7 +79,7 @@ public class ManualModelsIntegrationTest extends AndroidTestCase {
 	}
 
 	public void test__Get_by_id() throws Exception {
-		CompanyManual company = mCompanyDao.get(mCompanyId);
+		Company company = mCompanyDao.get(mCompanyId);
 
 		assertEquals(mCompanyId, company.getEntityId());
 		assertEquals("Google", company.getName());
@@ -87,7 +90,7 @@ public class ManualModelsIntegrationTest extends AndroidTestCase {
 
 	public void test__Simple_query() throws Exception {
 		Query query = new Query(CompanyDao.TABLE).where(CompanyDao.NAME, "=?").params("Google");
-		List<CompanyManual> companies = mCompanyDao.fetchAll(query);
+		List<Company> companies = mCompanyDao.fetchAll(query);
 
 		assertEquals(1, companies.size());
 	}
@@ -96,11 +99,11 @@ public class ManualModelsIntegrationTest extends AndroidTestCase {
 		Query query = new Query(CompanyDao.TABLE).where(CompanyDao.NAME, "=?").params("Google");
 		Cursor cursor = query.execute(mDb);
 		int[][] mappings = query.getMappings();
-		List<CompanyManual> companies = mCompanyDao.fetchAll(cursor, mappings);
+		List<Company> companies = mCompanyDao.fetchAll(cursor, mappings);
 		cursor.close();
 
 		assertEquals(1, companies.size());
-		CompanyManual company = companies.get(0);
+		Company company = companies.get(0);
 		assertEquals(mCompanyId, company.getEntityId());
 		assertEquals("Google", company.getName());
 		assertEquals(1998, company.getFundationYear());
@@ -109,7 +112,7 @@ public class ManualModelsIntegrationTest extends AndroidTestCase {
 	}
 
 	public void test__Query_with_column_selected_and_auto_entities_id() throws Exception {
-		CompanyManual company = mCompanyDao.fetchFirst(new Query(CompanyDao.TABLE)
+		Company company = mCompanyDao.fetchFirst(new Query(CompanyDao.TABLE)
 				.select(CompanyDao.FUNDATION_YEAR));
 		assertEquals(mCompanyId, company.getEntityId());
 		assertEquals("", company.getName());
@@ -118,7 +121,7 @@ public class ManualModelsIntegrationTest extends AndroidTestCase {
 	}
 
 	public void test__Query_with_column_selected_and_no_auto_entities_id() throws Exception {
-		CompanyManual company = mCompanyDao.fetchFirst(new Query(CompanyDao.TABLE)
+		Company company = mCompanyDao.fetchFirst(new Query(CompanyDao.TABLE)
 				.setAutoEntitiesId(false)
 				.select(CompanyDao.FUNDATION_YEAR));
 		assertEquals(0, company.getEntityId());
@@ -134,8 +137,8 @@ public class ManualModelsIntegrationTest extends AndroidTestCase {
 
 		Cursor cursor = query.execute(mDb);
 		int[][] mappings = query.getMappings();
-		List<BuildingManual> buildings = mBuildingDao.fetchAll(cursor, mappings);
-		List<CompanyManual> companies = mCompanyDao.fetchAll(cursor, mappings);
+		List<Building> buildings = mBuildingDao.fetchAll(cursor, mappings);
+		List<Company> companies = mCompanyDao.fetchAll(cursor, mappings);
 		cursor.close();
 
 		assertEquals(1, buildings.size());
@@ -146,15 +149,15 @@ public class ManualModelsIntegrationTest extends AndroidTestCase {
 		Query query = new Query(BuildingDao.TABLE)
 				.leftJoin(CompanyDao.TABLE, "%s = %s", BuildingDao.COMPANY_ID, CompanyDao.ID)
 				.where(BuildingDao.ID, "=" + mBuildingAId);
-		List<BuildingManual> buildings = mBuildingDao.fetchAll(query);
+		List<Building> buildings = mBuildingDao.fetchAll(query);
 
 		assertEquals(1, buildings.size());
-		CompanyManual company = buildings.get(0).getCompany().get();
+		Company company = buildings.get(0).getCompany().get();
 		assertEquals(mCompanyId, company.getEntityId());
 	}
 
 	public void test__Many_to_one_related_fetched_from_entity() throws Exception {
-		CompanyManual company = mBuildingA.getCompany().fetch(mDb);
+		Company company = mBuildingA.getCompany().fetch(mDb);
 
 		assertEquals(mCompanyId, company.getEntityId());
 		assertEquals("Google", company.getName());
@@ -164,8 +167,8 @@ public class ManualModelsIntegrationTest extends AndroidTestCase {
 	}
 
 	public void test__Many_to_one_related_fetched_from_inverse_entity() throws Exception {
-		CompanyManual company = mCompanyDao.get(mCompanyId);
-		BuildingManual building = company.getMainBuilding().fetch(mDb);
+		Company company = mCompanyDao.get(mCompanyId);
+		Building building = company.getMainBuilding().fetch(mDb);
 
 		assertEquals(mBuildingBId, building.getEntityId());
 		assertEquals(mCompanyId, (long) building.getCompany().getKey());
@@ -175,5 +178,13 @@ public class ManualModelsIntegrationTest extends AndroidTestCase {
 		assertEquals(1024.512, building.getSurface());
 		assertTrue(building.isMain());
 	}
+
+	protected abstract Dao<Company> newCompanyDao();
+
+	protected abstract Dao<Building> newBuildingDao();
+
+	protected abstract Company newCompany();
+
+	protected abstract Building newBuilding();
 
 }

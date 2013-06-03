@@ -3,7 +3,7 @@ package cat.ppicas.spades.models;
 import cat.ppicas.spades.Entity;
 import cat.ppicas.spades.Related;
 
-public abstract class BaseBuilding implements Entity {
+public abstract class Building implements Entity {
 
 	private long mId;
 	private String mAddress;
@@ -12,7 +12,7 @@ public abstract class BaseBuilding implements Entity {
 	private double mSurface;
 	private boolean mMain;
 
-	public BaseBuilding() {
+	public Building() {
 		super();
 	}
 
@@ -26,7 +26,7 @@ public abstract class BaseBuilding implements Entity {
 		mId = id;
 	}
 
-	public abstract Related<? extends BaseCompany> getCompany();
+	public abstract Related<? extends Company> getCompany();
 
 	public String getAddress() {
 		return mAddress;

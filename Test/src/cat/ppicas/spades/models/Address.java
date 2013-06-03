@@ -1,8 +1,8 @@
-package cat.ppicas.spades.models.auto;
+package cat.ppicas.spades.models;
 
 import cat.ppicas.spades.Entity;
 
-public class Address implements Entity {
+public abstract class Address implements Entity {
 
 	private long mId;
 	private String mStreet;

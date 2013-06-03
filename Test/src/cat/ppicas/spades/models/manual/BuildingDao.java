@@ -12,9 +12,9 @@ import cat.ppicas.spades.Dao;
 import cat.ppicas.spades.EntityMapper;
 import cat.ppicas.spades.Table;
 
-public class BuildingDao extends Dao<Building> {
+public class BuildingDao extends Dao<BuildingManual> {
 
-	public static final Table<Building> TABLE = new Table<Building>("buildings_manual", Building.class);
+	public static final Table<BuildingManual> TABLE = new Table<BuildingManual>("buildings_manual", BuildingManual.class);
 
 	public static final Column ID = TABLE.columnId();
 
@@ -25,15 +25,15 @@ public class BuildingDao extends Dao<Building> {
 	public static final Column SURFACE = TABLE.column().real("surface").notNull(DEFAULT_ZERO).end();
 	public static final Column IS_MAIN = TABLE.column().integer("is_main").notNull(DEFAULT_FALSE).end();
 
-	public static final EntityMapper<Building> MAPPER = new EntityMapper<Building>(TABLE) {
+	public static final EntityMapper<BuildingManual> MAPPER = new EntityMapper<BuildingManual>(TABLE) {
 
 		@Override
-		protected Building newInstance(Cursor cursor, int[] mappings) {
-			return new Building();
+		protected BuildingManual newInstance(Cursor cursor, int[] mappings) {
+			return new BuildingManual();
 		}
 
 		@Override
-		protected void mapCursorValues(Building building, Cursor cursor, int[] maps) {
+		protected void mapCursorValues(BuildingManual building, Cursor cursor, int[] maps) {
 			int index;
 			index = maps[COMPANY_ID.index];
 			if (index != -1) {
@@ -62,7 +62,7 @@ public class BuildingDao extends Dao<Building> {
 		}
 
 		@Override
-		protected void mapContentValues(Building building, ContentValues values) {
+		protected void mapContentValues(BuildingManual building, ContentValues values) {
 			values.put(COMPANY_ID.name, building.getCompany().getKey());
 			if (building.getAddress() != null) {
 				values.put(ADDRESS.name, building.getAddress());
@@ -80,7 +80,7 @@ public class BuildingDao extends Dao<Building> {
 	}
 
 	@Override
-	protected void fetchRelatedFields(Cursor cursor, int[][] mappings, Building entity) {
+	protected void fetchRelatedFields(Cursor cursor, int[][] mappings, BuildingManual entity) {
 		super.fetchRelatedFields(cursor, mappings, entity);
 		entity.getCompany().fetch(cursor, mappings);
 	}

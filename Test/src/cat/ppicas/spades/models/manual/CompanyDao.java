@@ -10,24 +10,24 @@ import cat.ppicas.spades.Dao;
 import cat.ppicas.spades.EntityMapper;
 import cat.ppicas.spades.Table;
 
-public class CompanyDao extends Dao<Company> {
+public class CompanyDao extends Dao<CompanyManual> {
 
-	public static final Table<Company> TABLE = new Table<Company>("companies_manual", Company.class);
+	public static final Table<CompanyManual> TABLE = new Table<CompanyManual>("companies_manual", CompanyManual.class);
 
 	public static final Column ID = TABLE.columnId();
 	public static final Column NAME = TABLE.column().text("name").notNull().end();
 	public static final Column FUNDATION_YEAR = TABLE.column().integer("fundation_year").notNull().end();
 	public static final Column REGISTRATION = TABLE.column().integer("registration").end();
 
-	public static final EntityMapper<Company> MAPPER = new EntityMapper<Company>(TABLE) {
+	public static final EntityMapper<CompanyManual> MAPPER = new EntityMapper<CompanyManual>(TABLE) {
 
 		@Override
-		protected Company newInstance(Cursor cursor, int[] mappings) {
-			return new Company();
+		protected CompanyManual newInstance(Cursor cursor, int[] mappings) {
+			return new CompanyManual();
 		}
 
 		@Override
-		protected void mapCursorValues(Company company, Cursor cursor, int[] maps) {
+		protected void mapCursorValues(CompanyManual company, Cursor cursor, int[] maps) {
 			int index;
 			index = maps[NAME.index];
 			if (index != -1) {
@@ -47,7 +47,7 @@ public class CompanyDao extends Dao<Company> {
 		}
 
 		@Override
-		protected void mapContentValues(Company company, ContentValues values) {
+		protected void mapContentValues(CompanyManual company, ContentValues values) {
 			values.put(NAME.name, company.getName());
 			values.put(FUNDATION_YEAR.name, company.getFundationYear());
 			Date date = company.getRegistration();

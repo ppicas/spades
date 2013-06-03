@@ -5,7 +5,7 @@ import java.util.Date;
 import cat.ppicas.spades.Entity;
 import cat.ppicas.spades.Related;
 
-public abstract class BaseCompany implements Entity {
+public abstract class Company implements Entity {
 
 	private long mId;
 	private String mName = "";
@@ -46,6 +46,6 @@ public abstract class BaseCompany implements Entity {
 		mRegistration = registration;
 	}
 
-	public abstract Related<? extends BaseBuilding> getMainBuilding();
+	public abstract Related<? extends Building> getMainBuilding();
 
 }
