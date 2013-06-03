@@ -29,14 +29,15 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 	private long mBuildingBId;
 
 	@Override
+	@SuppressWarnings("unchecked")
 	protected void setUp() throws Exception {
 		super.setUp();
 
 		OpenHelper helper = new OpenHelper(getContext());
 		mDb = helper.getWritableDatabase();
 
-		mCompanyDao = newCompanyDao();
-		mBuildingDao = newBuildingDao();
+		mCompanyDao = (Dao<Company>) newCompanyDao(mDb);
+		mBuildingDao = (Dao<Building>) newBuildingDao(mDb);
 
 		mCompany = newCompany();
 		mCompany.setName("Google");
@@ -179,9 +180,9 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 		assertTrue(building.isMain());
 	}
 
-	protected abstract Dao<Company> newCompanyDao();
+	protected abstract Dao<? extends Company> newCompanyDao(SQLiteDatabase db);
 
-	protected abstract Dao<Building> newBuildingDao();
+	protected abstract Dao<? extends Building> newBuildingDao(SQLiteDatabase db);
 
 	protected abstract Company newCompany();
 

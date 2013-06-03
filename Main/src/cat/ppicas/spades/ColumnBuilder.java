@@ -68,7 +68,7 @@ public class ColumnBuilder {
 
 	public ColumnBuilder auto(String name, String fieldName) {
 		try {
-			Field field = mTable.getEntity().getDeclaredField(fieldName);
+			Field field = getField(mTable.getEntity(), fieldName);;
 			Class<?> type = field.getType();
 
 			// TODO Refactor this to a ValueMapperFactory.
@@ -140,6 +140,10 @@ public class ColumnBuilder {
 		Column column = new Column(mTable, index, mName, mDefinition, mNotNull, mValueMapper);
 		mTable.addColumn(column);
 		return column;
+	}
+
+	protected Field getField(Class<?> cls, String fieldName) throws NoSuchFieldException {
+		return cls.getDeclaredField(fieldName);
 	}
 
 }
