@@ -10,8 +10,6 @@ import android.test.AndroidTestCase;
 import cat.ppicas.spades.models.Building;
 import cat.ppicas.spades.models.Company;
 import cat.ppicas.spades.models.OpenHelper;
-import cat.ppicas.spades.models.auto.BuildingDao;
-import cat.ppicas.spades.models.auto.CompanyDao;
 import cat.ppicas.spades.query.Query;
 
 public abstract class IntegrationBaseTest extends AndroidTestCase {
@@ -20,6 +18,7 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 
 	private Dao<Company> mCompanyDao;
 	private Dao<Building> mBuildingDao;
+	private TablesHolder mTables;
 
 	private Company mCompany;
 	private long mCompanyId;
@@ -38,6 +37,7 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 
 		mCompanyDao = (Dao<Company>) newCompanyDao(mDb);
 		mBuildingDao = (Dao<Building>) newBuildingDao(mDb);
+		mTables = getTablesHolder();
 
 		mCompany = newCompany();
 		mCompany.setName("Google");
@@ -90,14 +90,14 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 	}
 
 	public void test__Simple_query() throws Exception {
-		Query query = new Query(CompanyDao.TABLE).where(CompanyDao.NAME, "=?").params("Google");
+		Query query = new Query(mTables.companyTable).where(mTables.companyName, "=?").params("Google");
 		List<Company> companies = mCompanyDao.fetchAll(query);
 
 		assertEquals(1, companies.size());
 	}
 
 	public void test__Simple_query_cursor() throws Exception {
-		Query query = new Query(CompanyDao.TABLE).where(CompanyDao.NAME, "=?").params("Google");
+		Query query = new Query(mTables.companyTable).where(mTables.companyName, "=?").params("Google");
 		Cursor cursor = query.execute(mDb);
 		int[][] mappings = query.getMappings();
 		List<Company> companies = mCompanyDao.fetchAll(cursor, mappings);
@@ -113,8 +113,8 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 	}
 
 	public void test__Query_with_column_selected_and_auto_entities_id() throws Exception {
-		Company company = mCompanyDao.fetchFirst(new Query(CompanyDao.TABLE)
-				.select(CompanyDao.FUNDATION_YEAR));
+		Company company = mCompanyDao.fetchFirst(new Query(mTables.companyTable)
+				.select(mTables.companyFundationYear));
 		assertEquals(mCompanyId, company.getEntityId());
 		assertEquals("", company.getName());
 		assertEquals(1998, company.getFundationYear());
@@ -122,9 +122,9 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 	}
 
 	public void test__Query_with_column_selected_and_no_auto_entities_id() throws Exception {
-		Company company = mCompanyDao.fetchFirst(new Query(CompanyDao.TABLE)
+		Company company = mCompanyDao.fetchFirst(new Query(mTables.companyTable)
 				.setAutoEntitiesId(false)
-				.select(CompanyDao.FUNDATION_YEAR));
+				.select(mTables.companyFundationYear));
 		assertEquals(0, company.getEntityId());
 		assertEquals("", company.getName());
 		assertEquals(1998, company.getFundationYear());
@@ -132,9 +132,9 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 	}
 
 	public void test__Many_to_one_related_fetched_manually() throws Exception {
-		Query query = new Query(BuildingDao.TABLE)
-				.leftJoin(CompanyDao.TABLE, "%s = %s", BuildingDao.COMPANY_ID, CompanyDao.ID)
-				.where(BuildingDao.ID, "=" + mBuildingAId);
+		Query query = new Query(mTables.buildingTable)
+				.leftJoin(mTables.companyTable, "%s = %s", mTables.buildingCompanyId, mTables.companyId)
+				.where(mTables.buildingId, "=" + mBuildingAId);
 
 		Cursor cursor = query.execute(mDb);
 		int[][] mappings = query.getMappings();
@@ -147,9 +147,9 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 	}
 
 	public void test__Many_to_one_related_fetched_automatically() throws Exception {
-		Query query = new Query(BuildingDao.TABLE)
-				.leftJoin(CompanyDao.TABLE, "%s = %s", BuildingDao.COMPANY_ID, CompanyDao.ID)
-				.where(BuildingDao.ID, "=" + mBuildingAId);
+		Query query = new Query(mTables.buildingTable)
+				.leftJoin(mTables.companyTable, "%s = %s", mTables.buildingCompanyId, mTables.companyId)
+				.where(mTables.buildingId, "=" + mBuildingAId);
 		List<Building> buildings = mBuildingDao.fetchAll(query);
 
 		assertEquals(1, buildings.size());
@@ -187,5 +187,28 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 	protected abstract Company newCompany();
 
 	protected abstract Building newBuilding();
+
+	protected abstract TablesHolder getTablesHolder();
+
+	protected static class TablesHolder {
+
+		public Table<?> buildingTable;
+
+		public Column buildingId;
+		public Column buildingCompanyId;
+		public Column buildingAddress;
+		public Column buildingPhone;
+		public Column buildingFloors;
+		public Column buildingSurface;
+		public Column buildingIsMain;
+
+		public Table<?> companyTable;
+
+		public Column companyId;
+		public Column companyName;
+		public Column companyFundationYear;
+		public Column companyRegistration;
+
+	}
 
 }

@@ -30,4 +30,28 @@ public class AutoModelsIntegrationTest extends IntegrationBaseTest {
 		return new BuildingAuto();
 	}
 
+	@Override
+	protected TablesHolder getTablesHolder() {
+		TablesHolder holder = new TablesHolder();
+
+		holder.buildingTable = BuildingDao.TABLE;
+
+		holder.buildingId = BuildingDao.ID;
+		holder.buildingCompanyId = BuildingDao.COMPANY_ID;
+		holder.buildingAddress = BuildingDao.ADDRESS;
+		holder.buildingPhone = BuildingDao.PHONE;
+		holder.buildingFloors = BuildingDao.FLOORS;
+		holder.buildingSurface = BuildingDao.SURFACE;
+		holder.buildingIsMain = BuildingDao.IS_MAIN;
+
+		holder.companyTable = CompanyDao.TABLE;
+
+		holder.companyId = CompanyDao.ID;
+		holder.companyName = CompanyDao.NAME;
+		holder.companyFundationYear = CompanyDao.FUNDATION_YEAR;
+		holder.companyRegistration = CompanyDao.REGISTRATION;
+
+		return holder;
+	}
+
 }
