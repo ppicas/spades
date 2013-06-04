@@ -143,7 +143,16 @@ public class ColumnBuilder {
 	}
 
 	protected Field getField(Class<?> cls, String fieldName) throws NoSuchFieldException {
-		return cls.getDeclaredField(fieldName);
+		while (cls != null) {
+			for (Field field : cls.getDeclaredFields()) {
+				if (field.getName().equals(fieldName)) {
+					return field;
+				}
+			}
+			cls = cls.getSuperclass();
+		}
+
+		throw new NoSuchFieldException(fieldName);
 	}
 
 }
