@@ -1,5 +1,6 @@
 package cat.ppicas.spades;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,8 +14,9 @@ public class Table<T extends Entity> {
 
 	private String mName;
 	private Class<T> mEntity;
-	private ArrayList<Column> mColumns = new ArrayList<Column>();
+	private List<Column> mColumns = new ArrayList<Column>();
 	private ColumnId mColumnId;
+	private List<RelatedInverse> mRelatedInverses = new ArrayList<RelatedInverse>();
 
 	public Table(String name, Class<T> cls) {
 		index = Tables.getInstance().addTable(this);
@@ -38,6 +40,10 @@ public class Table<T extends Entity> {
 		return mColumns.size();
 	}
 
+	public List<RelatedInverse> getRelatedInverses() {
+		return Collections.unmodifiableList(mRelatedInverses);
+	}
+
 	public ColumnId getColumnId() {
 		return mColumnId;
 	}
@@ -53,6 +59,16 @@ public class Table<T extends Entity> {
 
 	public ColumnBuilder column() {
 		return new ColumnBuilder(this);
+	}
+
+	public void relatedInverse(String relatedFieldName, String keyValueFieldName) {
+		try {
+			Field relatedField = ReflectionUtils.getField(mEntity, relatedFieldName);
+			Field keyValueField = ReflectionUtils.getField(mEntity, keyValueFieldName);
+			mRelatedInverses.add(new RelatedInverse(relatedField, keyValueField));
+		} catch (NoSuchFieldException e) {
+			throw new IllegalArgumentException(e);
+		}
 	}
 
 	public void createTables(SQLiteDatabase db) {

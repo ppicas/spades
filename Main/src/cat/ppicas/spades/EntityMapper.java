@@ -44,15 +44,32 @@ public abstract class EntityMapper<T extends Entity> {
 		}
 
 		T entity = newInstance(cursor, mappings);
+
+		// Set the entity ID.
 		if (colIdIndex != -1) {
 			entity.setEntityId(cursor.getLong(colIdIndex));
 		}
+
+		// Set the key values of the declared related inverse fields.
+		for (RelatedInverse relatedInverse : mTable.getRelatedInverses()) {
+			try {
+				Related<?> related = (Related<?>) relatedInverse.getRelatedField().get(entity);
+				Long keyValue = (Long) relatedInverse.getKeyValueField().get(entity);
+				related.setKey(keyValue);
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		// Automatic population of the entity fields via reflection.
 		for (Column column : mMappedColumns) {
 			int index = mappings[column.index];
 			if (index != -1) {
 				column.valueMapper.setFieldValue(entity, cursor, index);
 			}
 		}
+
+		// Manual population of the entity implemented by user.
 		mapCursorValues(entity, cursor, mappings);
 
 		return entity;

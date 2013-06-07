@@ -14,7 +14,7 @@ public class RelatedMapper implements ValueMapper {
 
 	public RelatedMapper(Field field) {
 		Class<?> type = field.getType();
-		if (type != Related.class) {
+		if (!type.isAssignableFrom(Related.class)) {
 			throw new IllegalArgumentException("Invalid Field type");
 		}
 		mRelatedField = field;

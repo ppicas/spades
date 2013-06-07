@@ -68,7 +68,7 @@ public class ColumnBuilder {
 
 	public ColumnBuilder auto(String name, String fieldName) {
 		try {
-			Field field = getField(mTable.getEntity(), fieldName);;
+			Field field = ReflectionUtils.getField(mTable.getEntity(), fieldName);;
 			Class<?> type = field.getType();
 
 			// TODO Refactor this to a ValueMapperFactory.
@@ -140,19 +140,6 @@ public class ColumnBuilder {
 		Column column = new Column(mTable, index, mName, mDefinition, mNotNull, mValueMapper);
 		mTable.addColumn(column);
 		return column;
-	}
-
-	protected Field getField(Class<?> cls, String fieldName) throws NoSuchFieldException {
-		while (cls != null) {
-			for (Field field : cls.getDeclaredFields()) {
-				if (field.getName().equals(fieldName)) {
-					return field;
-				}
-			}
-			cls = cls.getSuperclass();
-		}
-
-		throw new NoSuchFieldException(fieldName);
 	}
 
 }

@@ -17,6 +17,10 @@ public class CompanyDao extends Dao<CompanyAuto> {
 	public static final Column FUNDATION_YEAR = TABLE.column().auto("mFundationYear").notNull().end();
 	public static final Column REGISTRATION = TABLE.column().auto("mRegistration").end();
 
+	static {
+		TABLE.relatedInverse("mMainBuilding", "mId");
+	}
+
 	public static final EntityMapper<CompanyAuto> MAPPER = new EntityMapper<CompanyAuto>(TABLE) {
 
 		@Override
@@ -26,7 +30,6 @@ public class CompanyDao extends Dao<CompanyAuto> {
 
 		@Override
 		protected void mapCursorValues(CompanyAuto entity, Cursor cursor, int[] mappings) {
-			entity.getMainBuilding().setKey(entity.getEntityId());
 		}
 
 		@Override

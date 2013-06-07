@@ -33,6 +33,9 @@ public abstract class Dao<T extends Entity> {
 				mRelatedFields.add(((RelatedMapper) column.valueMapper).getRelatedField());
 			}
 		}
+		for (RelatedInverse related : table.getRelatedInverses()) {
+			mRelatedFields.add(related.getRelatedField());
+		}
 	}
 
 	public long insert(T entity) {
@@ -158,8 +161,7 @@ public abstract class Dao<T extends Entity> {
 	protected void fetchRelatedFields(Cursor cursor, int[][] mappings, T entity) {
 		for (Field relatedField : mRelatedFields) {
 			try {
-				@SuppressWarnings("unchecked")
-				Related<T> related = (Related<T>) relatedField.get(entity);
+				Related<?> related = (Related<?>) relatedField.get(entity);
 				related.fetch(cursor, mappings);
 			} catch (IllegalAccessException e) {
 				throw new RuntimeException(e);
