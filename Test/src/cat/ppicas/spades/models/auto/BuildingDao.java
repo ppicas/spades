@@ -30,9 +30,12 @@ public class BuildingDao extends Dao<BuildingAuto> {
 	static {
 		TableBuilder builder = new TableBuilder("buildings_auto", BuildingAuto.class);
 
-		COMPANY_ID = builder.column().auto("mCompany").notNull().foreignKey(CompanyDao.ID).end();
-		ADDRESS = builder.column().auto("mAddress").notNull(DEFAULT_EMTPY).end();
+		ID = builder.columnId();
+		COMPANY_ID = builder.columnAuto("mCompany").notNull().foreignKey(CompanyDao.ID).end();
+		ADDRESS = builder.columnAuto("mAddress").notNull(DEFAULT_EMTPY).end();
 		...
+
+		builder.relatedInverse("mMainBuilding", "mId");
 
 		TABLE = builder.build();
 	}
