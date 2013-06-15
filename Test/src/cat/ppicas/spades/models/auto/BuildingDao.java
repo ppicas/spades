@@ -24,6 +24,20 @@ public class BuildingDao extends Dao<BuildingAuto> {
 	public static final Column SURFACE = TABLE.column().auto("mSurface").notNull(DEFAULT_ZERO).end();
 	public static final Column IS_MAIN = TABLE.column().auto("mMain").notNull(DEFAULT_FALSE).end();
 
+	/*
+	// Experimenting with new API...
+
+	static {
+		TableBuilder builder = new TableBuilder("buildings_auto", BuildingAuto.class);
+
+		COMPANY_ID = builder.column().auto("mCompany").notNull().foreignKey(CompanyDao.ID).end();
+		ADDRESS = builder.column().auto("mAddress").notNull(DEFAULT_EMTPY).end();
+		...
+
+		TABLE = builder.build();
+	}
+	*/
+
 	public static final EntityMapper<BuildingAuto> MAPPER = new EntityMapper<BuildingAuto>(TABLE) {
 
 		@Override
