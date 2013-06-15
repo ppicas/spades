@@ -37,7 +37,9 @@ public class MappingsBuilder {
 			Arrays.fill(mMappings[tableIndex], -1);
 		}
 
-		mMappings[tableIndex][column.index] = mOffset++;
+		if (mMappings[tableIndex][column.index] == -1) {
+			mMappings[tableIndex][column.index] = mOffset++;
+		}
 
 		return this;
 	}
