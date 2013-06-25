@@ -17,7 +17,7 @@ public class Related<T extends Entity> {
 
 	public Related(Column relatedColumn, EntityMapper<T> mapper) {
 		mRelatedColumn = relatedColumn;
-		mRelatedTable = mRelatedColumn.table;
+		mRelatedTable = mRelatedColumn.getTable();
 		mMapper = mapper;
 	}
 

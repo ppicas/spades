@@ -31,9 +31,9 @@ public class MappingsBuilder {
 	}
 
 	public MappingsBuilder add(Column column) {
-		int tableIndex = column.table.index;
+		int tableIndex = column.getTable().index;
 		if (mMappings[tableIndex] == null) {
-			mMappings[tableIndex] = new int[column.table.getColumnsNumber()];
+			mMappings[tableIndex] = new int[column.getTable().getColumnsNumber()];
 			Arrays.fill(mMappings[tableIndex], -1);
 		}
 

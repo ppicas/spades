@@ -1,20 +1,17 @@
 package cat.ppicas.spades;
 
-import java.lang.reflect.Field;
-import java.util.Date;
-
 import android.text.TextUtils;
-
-import cat.ppicas.spades.map.BooleanMapper;
-import cat.ppicas.spades.map.DateMapper;
-import cat.ppicas.spades.map.DoubleMapper;
-import cat.ppicas.spades.map.IntegerMapper;
-import cat.ppicas.spades.map.LongMapper;
-import cat.ppicas.spades.map.RelatedMapper;
-import cat.ppicas.spades.map.StringMapper;
 import cat.ppicas.spades.map.ValueMapper;
 
 public class ColumnBuilder {
+
+	public enum Type {
+		TEXT,
+		NUMERIC,
+		INTEGER,
+		REAL,
+		NONE
+	}
 
 	public enum OnDelete {
 		CASCADE,
@@ -23,19 +20,49 @@ public class ColumnBuilder {
 		RESTRICT
 	}
 
-	public static final String DEFAULT_EMTPY = "''";
+	public enum DefaultValue {
+		EMTPY("''"),
+		ZERO("0"),
+		ONE("1"),
+		FALSE("0"),
+		TRUE("1");
+
+		private String mValue;
+
+		private DefaultValue(String value) {
+			mValue = value;
+		}
+
+		public String value() {
+			return mValue;
+		}
+	}
+
+	/*public static final String DEFAULT_EMTPY = "''";
 	public static final String DEFAULT_ZERO = "0";
 	public static final String DEFAULT_ONE = "1";
 	public static final String DEFAULT_FALSE = "0";
-	public static final String DEFAULT_TRUE = "1";
+	public static final String DEFAULT_TRUE = "1";*/
 
-	private Table<?> mTable;
+	// private Table<?> mTable;
 	private String mName;
 	private String mDefinition;
 	private boolean mNotNull;
 	private ValueMapper mValueMapper;
 
-	public ColumnBuilder(Table<?> table) {
+	private TableBuilder<?> mTableBuilder;
+
+	protected ColumnBuilder(String columnName, Type columnType, TableBuilder<?> builder) {
+		this(columnName, columnType.name(), builder);
+	}
+
+	protected ColumnBuilder(String columnName, String definition, TableBuilder<?> builder) {
+		mName = columnName;
+		mDefinition = definition;
+		mTableBuilder = builder;
+	}
+
+	/*public ColumnBuilder(Table<?> table) {
 		mTable = table;
 	}
 
@@ -101,7 +128,7 @@ public class ColumnBuilder {
 		} catch (NoSuchFieldException e) {
 			throw new IllegalArgumentException(e);
 		}
-	}
+	}*/
 
 	public ColumnBuilder notNull() {
 		mDefinition += " NOT NULL";
@@ -109,10 +136,17 @@ public class ColumnBuilder {
 		return this;
 	}
 
+	public ColumnBuilder notNull(DefaultValue defaultVal) {
+		return notNull(defaultVal.value());
+	}
+
 	public ColumnBuilder notNull(String defaultVal) {
-		mDefinition += " NOT NULL";
-		mNotNull = true;
+		notNull();
 		return defaultVal(defaultVal);
+	}
+
+	public ColumnBuilder defaultVal(DefaultValue val) {
+		return defaultVal(val.value());
 	}
 
 	public ColumnBuilder defaultVal(String val) {
@@ -125,7 +159,7 @@ public class ColumnBuilder {
 	}
 
 	public ColumnBuilder foreignKey(Column column, OnDelete onDelete) {
-		mDefinition += " REFERENCES " + column.table.getName() + "(" + column.name + ") "
+		mDefinition += " REFERENCES " + column.getTable().getName() + "(" + column.name + ") "
 				+ "ON DELETE " + onDelete.name().replace('_', ' ');
 		return this;
 	}
@@ -136,10 +170,18 @@ public class ColumnBuilder {
 	}
 
 	public Column end() {
+		int index = mTableBuilder.nextColumnIndex();
+		Column column = new Column(index, mName, mDefinition, mNotNull, mValueMapper);
+		mTableBuilder.addColumn(column);
+
+		return column;
+	}
+
+	/*public Column end() {
 		int index = mTable.nextColumnIndex();
 		Column column = new Column(mTable, index, mName, mDefinition, mNotNull, mValueMapper);
 		mTable.addColumn(column);
 		return column;
-	}
+	}*/
 
 }

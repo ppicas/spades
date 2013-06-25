@@ -20,11 +20,6 @@ public class Tables {
 
 	private Tables() {}
 
-	public int addTable(Table<?> table) {
-		mTables.add(table);
-		return mTables.size() - 1;
-	}
-
 	public Table<?> getTable(int index) {
 		if (index < 0 || index >= mTables.size()) {
 			return null;
@@ -39,6 +34,14 @@ public class Tables {
 
 	public int size() {
 		return mTables.size();
+	}
+
+	protected int nextTableIndex() {
+		return mTables.size();
+	}
+
+	protected void addTable(Table<?> table) {
+		mTables.add(table);
 	}
 
 }

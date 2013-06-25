@@ -1,6 +1,5 @@
 package cat.ppicas.spades;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,10 +17,20 @@ public class Table<T extends Entity> {
 	private ColumnId mColumnId;
 	private List<RelatedInverse> mRelatedInverses = new ArrayList<RelatedInverse>();
 
-	public Table(String name, Class<T> cls) {
+	/*public Table(String name, Class<T> cls) {
 		index = Tables.getInstance().addTable(this);
 		mName = name;
 		mEntity = cls;
+	}*/
+
+	protected Table(int index, String name, Class<T> entityClass, List<Column> columns,
+			ColumnId columnId, List<RelatedInverse> relatedInverses) {
+		this.index = index;
+		mName = name;
+		mEntity = entityClass;
+		mColumns.addAll(columns);
+		mColumnId = columnId;
+		mRelatedInverses.addAll(relatedInverses);
 	}
 
 	public String getName() {
@@ -48,7 +57,7 @@ public class Table<T extends Entity> {
 		return mColumnId;
 	}
 
-	public ColumnId columnId() {
+	/*public ColumnId columnId() {
 		if (mColumnId != null) {
 			throw new IllegalStateException("ColumnId is already defined");
 		}
@@ -69,7 +78,7 @@ public class Table<T extends Entity> {
 		} catch (NoSuchFieldException e) {
 			throw new IllegalArgumentException(e);
 		}
-	}
+	}*/
 
 	public void createTables(SQLiteDatabase db) {
 		String[] definitions = new String[mColumns.size()];
@@ -89,12 +98,12 @@ public class Table<T extends Entity> {
 		createTables(db);
 	}
 
-	int nextColumnIndex() {
+	/*int nextColumnIndex() {
 		return mColumns.size();
 	}
 
 	void addColumn(Column column) {
 		mColumns.add(column);
-	}
+	}*/
 
 }
