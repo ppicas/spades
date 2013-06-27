@@ -19,11 +19,11 @@ public abstract class Dao<T extends Entity> {
 	}
 
 	protected SQLiteDatabase mDb;
-	private Table<T> mTable;
+	private Table mTable;
 	private EntityMapper<T> mMapper;
 	private List<Field> mRelatedFields = new ArrayList<Field>();
 
-	public Dao(SQLiteDatabase db, Table<T> table, EntityMapper<T> mapper) {
+	public Dao(SQLiteDatabase db, Table table, EntityMapper<T> mapper) {
 		mDb = db;
 		mTable = table;
 		mMapper = mapper;

@@ -25,15 +25,15 @@ public class MappingsBuilder {
 		return this;
 	}
 
-	public MappingsBuilder add(Table<?> table) {
+	public MappingsBuilder add(Table table) {
 		add(table.getColumns());
 		return this;
 	}
 
 	public MappingsBuilder add(Column column) {
-		int tableIndex = column.getTable().index;
+		int tableIndex = column.table.index;
 		if (mMappings[tableIndex] == null) {
-			mMappings[tableIndex] = new int[column.getTable().getColumnsNumber()];
+			mMappings[tableIndex] = new int[column.table.getColumnsNumber()];
 			Arrays.fill(mMappings[tableIndex], -1);
 		}
 

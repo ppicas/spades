@@ -50,13 +50,13 @@ public class ColumnBuilder {
 	private boolean mNotNull;
 	private ValueMapper mValueMapper;
 
-	private TableBuilder<?> mTableBuilder;
+	private TableBuilder mTableBuilder;
 
-	protected ColumnBuilder(String columnName, Type columnType, TableBuilder<?> builder) {
+	protected ColumnBuilder(String columnName, Type columnType, TableBuilder builder) {
 		this(columnName, columnType.name(), builder);
 	}
 
-	protected ColumnBuilder(String columnName, String definition, TableBuilder<?> builder) {
+	protected ColumnBuilder(String columnName, String definition, TableBuilder builder) {
 		mName = columnName;
 		mDefinition = definition;
 		mTableBuilder = builder;
@@ -142,14 +142,14 @@ public class ColumnBuilder {
 
 	public ColumnBuilder notNull(String defaultVal) {
 		notNull();
-		return defaultVal(defaultVal);
+		return defaultValue(defaultVal);
 	}
 
-	public ColumnBuilder defaultVal(DefaultValue val) {
-		return defaultVal(val.value());
+	public ColumnBuilder defaultValue(DefaultValue val) {
+		return defaultValue(val.value());
 	}
 
-	public ColumnBuilder defaultVal(String val) {
+	public ColumnBuilder defaultValue(String val) {
 		mDefinition += " DEFAULT " + val;
 		return this;
 	}
@@ -159,7 +159,7 @@ public class ColumnBuilder {
 	}
 
 	public ColumnBuilder foreignKey(Column column, OnDelete onDelete) {
-		mDefinition += " REFERENCES " + column.getTable().getName() + "(" + column.name + ") "
+		mDefinition += " REFERENCES " + column.table.getName() + "(" + column.name + ") "
 				+ "ON DELETE " + onDelete.name().replace('_', ' ');
 		return this;
 	}
@@ -169,12 +169,13 @@ public class ColumnBuilder {
 		return this;
 	}
 
-	public Column end() {
-		int index = mTableBuilder.nextColumnIndex();
-		Column column = new Column(index, mName, mDefinition, mNotNull, mValueMapper);
-		mTableBuilder.addColumn(column);
+	public TableBuilder end() {
+		mTableBuilder.addColumnBuilder(this);
+		return mTableBuilder;
+	}
 
-		return column;
+	protected Column build(int index, Table table) {
+		return new Column(index, table, mName, mDefinition, mNotNull, mValueMapper);
 	}
 
 	/*public Column end() {

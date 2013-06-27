@@ -7,7 +7,7 @@ import cat.ppicas.spades.query.Query;
 public class Related<T extends Entity> {
 
 	private Column mRelatedColumn;
-	private Table<?> mRelatedTable;
+	private Table mRelatedTable;
 	private EntityMapper<T> mMapper;
 	private String mExtraWhere;
 
@@ -17,7 +17,7 @@ public class Related<T extends Entity> {
 
 	public Related(Column relatedColumn, EntityMapper<T> mapper) {
 		mRelatedColumn = relatedColumn;
-		mRelatedTable = mRelatedColumn.getTable();
+		mRelatedTable = mRelatedColumn.table;
 		mMapper = mapper;
 	}
 

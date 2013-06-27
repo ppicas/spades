@@ -68,13 +68,13 @@ public class Query {
 	private boolean mDistinct;
 	protected boolean mMagicColumns = false;
 
-	public Query(Table<?> fromTable) {
+	public Query(Table fromTable) {
 		mSelector.setAutoEntitiesId(true);
 		mSelector.setAutoRowsId(true);
 		from(fromTable);
 	}
 
-	public Query select(Table<?> table) {
+	public Query select(Table table) {
 		for (Column column : table.getColumns()) {
 			mSelector.selectColumn(column);
 		}
@@ -93,7 +93,7 @@ public class Query {
 		return this;
 	}
 
-	public Query from(Table<?> table) {
+	public Query from(Table table) {
 		if (mSelector.hasTables()) {
 			throw new IllegalStateException("From clause already defined");
 		}
@@ -102,12 +102,12 @@ public class Query {
 		return this;
 	}
 
-	public Query leftJoin(Table<?> table, String onrExp, Column... onExprCols) {
+	public Query leftJoin(Table table, String onrExp, Column... onExprCols) {
 		customJoin("LEFT", table, onrExp, onExprCols);
 		return this;
 	}
 
-	public Query innerJoin(Table<?> table, String onExpr, Column... onExprCols) {
+	public Query innerJoin(Table table, String onExpr, Column... onExprCols) {
 		customJoin("INNER", table, onExpr, onExprCols);
 		return this;
 	}
@@ -191,7 +191,7 @@ public class Query {
 		return mSelector.isAutoRowsId();
 	}
 
-	public boolean hasTable(Table<?> table) {
+	public boolean hasTable(Table table) {
 		return mSelector.hasTable(table);
 	}
 
@@ -239,7 +239,7 @@ public class Query {
 		return res;
 	}
 
-	protected void customJoin(String type, Table<?> table, String onExpr, Column... onExprCols) {
+	protected void customJoin(String type, Table table, String onExpr, Column... onExprCols) {
 		checkFromClause();
 		mSelector.addTable(table);
 		mFromClauses.add(type + " JOIN " + table.getName() + " AS " + sMapper.alias(table) + " ON "

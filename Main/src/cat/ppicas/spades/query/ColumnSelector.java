@@ -10,7 +10,7 @@ import cat.ppicas.spades.query.SelectedColumn.RowIdColumn;
 
 class ColumnSelector {
 
-	private List<Table<?>> mTables = new ArrayList<Table<?>>();
+	private List<Table> mTables = new ArrayList<Table>();
 	private List<Column> mColumns = new ArrayList<Column>();
 	private List<SelectedColumn> mSelected = new ArrayList<SelectedColumn>();
 	private boolean mAutoEntitiesId = false;
@@ -19,14 +19,14 @@ class ColumnSelector {
 	public ColumnSelector() {
 	}
 
-	public void addTable(Table<?> table) {
+	public void addTable(Table table) {
 		if (mTables.contains(table)) {
 			throw new IllegalStateException("Table already selected");
 		}
 		mTables.add(table);
 	}
 
-	public boolean hasTable(Table<?> table) {
+	public boolean hasTable(Table table) {
 		return mTables.contains(table);
 	}
 
@@ -51,7 +51,7 @@ class ColumnSelector {
 		List<SelectedColumn> selected = new ArrayList<SelectedColumn>();
 
 		if (mSelected.isEmpty()) {
-			for (Table<?> table : mTables) {
+			for (Table table : mTables) {
 				for (Column column : table.getColumns()) {
 					selected.add(new SelectedColumn(column));
 				}
@@ -101,7 +101,7 @@ class ColumnSelector {
 	}
 
 	private void checkColumn(Column column) {
-		if (!mTables.contains(column.getTable())) {
+		if (!mTables.contains(column.table)) {
 			throw new IllegalArgumentException("The selected Column dosen't belongs to a table "
 					+ "added before");
 		}
@@ -109,7 +109,7 @@ class ColumnSelector {
 
 	private void addAutoTableIds(List<SelectedColumn> selected) {
 		List<SelectedColumn> addList = new ArrayList<SelectedColumn>();
-		for (Table<?> table : mTables) {
+		for (Table table : mTables) {
 			if (!mColumns.contains(table.getColumnId())) {
 				addList.add(new SelectedColumn(table.getColumnId()));
 			}

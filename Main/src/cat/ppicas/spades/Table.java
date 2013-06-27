@@ -1,19 +1,23 @@
 package cat.ppicas.spades;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 import android.database.sqlite.SQLiteDatabase;
 import cat.ppicas.spades.Column.ColumnId;
 
-public class Table<T extends Entity> {
+public class Table {
 
 	public final int index;
 
 	private String mName;
-	private Class<T> mEntity;
-	private List<Column> mColumns = new ArrayList<Column>();
+	private Class<? extends Entity> mEntity;
+	private Map<String, Column> mColumns = new HashMap<String, Column>();
 	private ColumnId mColumnId;
 	private List<RelatedInverse> mRelatedInverses = new ArrayList<RelatedInverse>();
 
@@ -23,38 +27,43 @@ public class Table<T extends Entity> {
 		mEntity = cls;
 	}*/
 
-	protected Table(int index, String name, Class<T> entityClass, List<Column> columns,
-			ColumnId columnId, List<RelatedInverse> relatedInverses) {
+	protected Table(int index, String name, Class<? extends Entity> entityClass) {
 		this.index = index;
 		mName = name;
 		mEntity = entityClass;
-		mColumns.addAll(columns);
-		mColumnId = columnId;
-		mRelatedInverses.addAll(relatedInverses);
 	}
 
 	public String getName() {
 		return mName;
 	}
 
-	public Class<T> getEntity() {
+	public Class<? extends Entity> getEntity() {
 		return mEntity;
 	}
 
+	public Column getColumn(String name) {
+		if (!mColumns.containsKey(name)) {
+			throw new NoSuchElementException("The column '" + name + "' is not defined");
+		}
+
+		return mColumns.get(name);
+	}
+
 	public List<Column> getColumns() {
-		return Collections.unmodifiableList(mColumns);
+		Collection<Column> values = mColumns.values();
+		return Collections.unmodifiableList(new ArrayList<Column>(values));
 	}
 
 	public int getColumnsNumber() {
 		return mColumns.size();
 	}
 
-	public List<RelatedInverse> getRelatedInverses() {
-		return Collections.unmodifiableList(mRelatedInverses);
-	}
-
 	public ColumnId getColumnId() {
 		return mColumnId;
+	}
+
+	public List<RelatedInverse> getRelatedInverses() {
+		return Collections.unmodifiableList(mRelatedInverses);
 	}
 
 	/*public ColumnId columnId() {
@@ -83,7 +92,7 @@ public class Table<T extends Entity> {
 	public void createTables(SQLiteDatabase db) {
 		String[] definitions = new String[mColumns.size()];
 		int i = 0;
-		for (Column column : mColumns) {
+		for (Column column : mColumns.values()) {
 			definitions[i++] = column.getDefinition();
 		}
 		db.execSQL(SqlHelper.genCreateTable(getName(), definitions));
@@ -98,12 +107,20 @@ public class Table<T extends Entity> {
 		createTables(db);
 	}
 
-	/*int nextColumnIndex() {
+	protected void setColumnId(ColumnId columnId) {
+		mColumnId = columnId;
+	}
+
+	protected void addRelatedInverses(RelatedInverse relatedInverse) {
+		mRelatedInverses.add(relatedInverse);
+	}
+
+	protected int nextColumnIndex() {
 		return mColumns.size();
 	}
 
-	void addColumn(Column column) {
-		mColumns.add(column);
-	}*/
+	protected void addColumn(Column column) {
+		mColumns.put(column.name, column);
+	}
 
 }

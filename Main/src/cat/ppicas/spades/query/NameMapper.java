@@ -13,7 +13,7 @@ public class NameMapper {
 
 	private Tables mTables = Tables.getInstance();
 
-	public String alias(Table<?> table) {
+	public String alias(Table table) {
 		return PREFIX + table.index;
 	}
 
@@ -28,11 +28,11 @@ public class NameMapper {
 	 * @return
 	 */
 	public String alias(Column col) {
-		return PREFIX + col.getTable().index + "_" + col.index;
+		return PREFIX + col.table.index + "_" + col.index;
 	}
 
 	public String ref(Column col) {
-		return PREFIX + col.getTable().index + "." + col.name;
+		return PREFIX + col.table.index + "." + col.name;
 	}
 
 	public String[] refs(Column... cols) {
@@ -73,7 +73,7 @@ public class NameMapper {
 		}
 		int colIndex = Integer.valueOf(builder.toString());
 
-		Table<?> table = mTables.getTable(tableIndex);
+		Table table = mTables.getTable(tableIndex);
 		if (table != null) {
 			List<Column> columns = table.getColumns();
 			if (colIndex >= 0 && colIndex < columns.size()) {

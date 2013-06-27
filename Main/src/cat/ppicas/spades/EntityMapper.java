@@ -8,10 +8,10 @@ import android.database.Cursor;
 
 public abstract class EntityMapper<T extends Entity> {
 
-	private Table<T> mTable;
+	private Table mTable;
 	private List<Column> mMappedColumns = new ArrayList<Column>();
 
-	public EntityMapper(Table<T> table) {
+	public EntityMapper(Table table) {
 		mTable = table;
 		if (mTable.getColumns().isEmpty()) {
 			throw new IllegalStateException("Columns list is empty");

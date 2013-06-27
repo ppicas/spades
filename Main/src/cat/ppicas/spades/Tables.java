@@ -8,7 +8,7 @@ public class Tables {
 
 	private static Tables sInstance;
 
-	private List<Table<?>> mTables = new ArrayList<Table<?>>();
+	private List<Table> mTables = new ArrayList<Table>();
 
 	public static Tables getInstance() {
 		if (sInstance == null) {
@@ -20,7 +20,7 @@ public class Tables {
 
 	private Tables() {}
 
-	public Table<?> getTable(int index) {
+	public Table getTable(int index) {
 		if (index < 0 || index >= mTables.size()) {
 			return null;
 		}
@@ -28,7 +28,7 @@ public class Tables {
 		return mTables.get(index);
 	}
 
-	public List<Table<?>> getTables() {
+	public List<Table> getTables() {
 		return Collections.unmodifiableList(mTables);
 	}
 
@@ -40,7 +40,7 @@ public class Tables {
 		return mTables.size();
 	}
 
-	protected void addTable(Table<?> table) {
+	protected void addTable(Table table) {
 		mTables.add(table);
 	}
 

@@ -4,31 +4,29 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import cat.ppicas.spades.Column.ColumnId;
 import cat.ppicas.spades.ColumnBuilder.Type;
 
-public class TableBuilder<T extends Entity> {
+public class TableBuilder {
 
 	private String mTableName;
-	private Class<T> mEntityClass;
+	private Class<? extends Entity> mEntityClass;
 
-	private List<Column> mColumns = new ArrayList<Column>();
-	private ColumnId mColumnId;
+	private List<ColumnBuilder> mColumnBuilders = new ArrayList<ColumnBuilder>();
+	private String mColumnIdName;
 	private List<RelatedInverse> mRelatedInverses = new ArrayList<RelatedInverse>();
 
-	public TableBuilder(String tableName, Class<T> entityClass) {
+	public TableBuilder(String tableName, Class<? extends Entity> entityClass) {
 		mTableName = tableName;
 		mEntityClass = entityClass;
 	}
 
-	public ColumnId columnId() {
-		if (mColumnId != null) {
+	public TableBuilder columnId(String columnName) {
+		if (mColumnIdName != null) {
 			throw new IllegalStateException("ColumnId is already defined");
 		}
-		mColumnId = new ColumnId(mColumns.size());
-		mColumns.add(mColumnId);
+		mColumnIdName = columnName;
 
-		return mColumnId;
+		return this;
 	}
 
 	public ColumnBuilder columnText(String columnName) {
@@ -65,28 +63,23 @@ public class TableBuilder<T extends Entity> {
 		}
 	}
 
-	public Table<T> build() {
+	public Table build() {
 		// TODO Validation.
 
 		Tables tables = Tables.getInstance();
 
-		Table<T> table = new Table<T>(tables.nextTableIndex(), mTableName, mEntityClass, mColumns,
-				mColumnId, mRelatedInverses);
-
+		Table table = new Table(tables.nextTableIndex(), mTableName, mEntityClass);
 		tables.addTable(table);
-		for (Column column : mColumns) {
-			column.setTable(table);
+
+		for (ColumnBuilder columnBuilder : mColumnBuilders) {
+			table.addColumn(columnBuilder.build(table.nextColumnIndex(), table));
 		}
 
 		return table;
 	}
 
-	protected int nextColumnIndex() {
-		return mColumns.size();
-	}
-
-	protected void addColumn(Column column) {
-		mColumns.add(column);
+	protected void addColumnBuilder(ColumnBuilder columnBuilder) {
+		mColumnBuilders.add(columnBuilder);
 	}
 
 }
