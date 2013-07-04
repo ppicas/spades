@@ -7,10 +7,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class OpenHelper extends SQLiteOpenHelper {
 
-	private Table<?> mAutoCompanyTable;
-	private Table<?> mAutoBuildingTable;
-	private Table<?> mManualCompanyTable;
-	private Table<?> mManualBuildingTable;
+	private Table mAutoCompanyTable;
+	private Table mAutoBuildingTable;
+	private Table mManualCompanyTable;
+	private Table mManualBuildingTable;
 
 	public OpenHelper(Context context) {
 		super(context, null, null, 1);
@@ -24,6 +24,8 @@ public class OpenHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+		db.execSQL("PRAGMA foreign_keys = ON;");
+
 		mManualCompanyTable.createTables(db);
 		mManualBuildingTable.createTables(db);
 
@@ -40,10 +42,10 @@ public class OpenHelper extends SQLiteOpenHelper {
 		mAutoBuildingTable.upgradeTables(db, oldVersion, newVersion);
 	}
 
-	@Override
+	/*@Override
 	public void onConfigure(SQLiteDatabase db) {
 		super.onConfigure(db);
 		db.setForeignKeyConstraintsEnabled(true);
-	}
+	}*/
 
 }

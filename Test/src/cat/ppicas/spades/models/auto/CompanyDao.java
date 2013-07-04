@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import cat.ppicas.spades.Column;
+import cat.ppicas.spades.Column.ColumnId;
 import cat.ppicas.spades.Dao;
 import cat.ppicas.spades.EntityMapper;
 import cat.ppicas.spades.Table;
@@ -19,7 +20,7 @@ public class CompanyDao extends Dao<CompanyAuto> {
 			.relatedInverse("mMainBuilding", "mId")
 			.build();
 
-	public static final Column ID = TABLE.getColumn("id");
+	public static final ColumnId ID = TABLE.getColumnId();
 	public static final Column NAME = TABLE.getColumn("name");
 	public static final Column FUNDATION_YEAR = TABLE.getColumn("fundation_year");
 	public static final Column REGISTRATION = TABLE.getColumn("registration");

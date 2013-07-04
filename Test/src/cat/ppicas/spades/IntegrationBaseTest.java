@@ -192,7 +192,7 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 
 	protected static class TablesHolder {
 
-		public Table<?> buildingTable;
+		public Table buildingTable;
 
 		public Column buildingId;
 		public Column buildingCompanyId;
@@ -202,7 +202,7 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 		public Column buildingSurface;
 		public Column buildingIsMain;
 
-		public Table<?> companyTable;
+		public Table companyTable;
 
 		public Column companyId;
 		public Column companyName;

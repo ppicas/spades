@@ -1,20 +1,40 @@
 package cat.ppicas.spades.models.manual;
 
-import static cat.ppicas.spades.ColumnBuilder.DEFAULT_EMTPY;
-import static cat.ppicas.spades.ColumnBuilder.DEFAULT_ZERO;
-import static cat.ppicas.spades.ColumnBuilder.DEFAULT_FALSE;
-
+import static cat.ppicas.spades.ColumnBuilder.DefaultValue.EMTPY;
+import static cat.ppicas.spades.ColumnBuilder.DefaultValue.FALSE;
+import static cat.ppicas.spades.ColumnBuilder.DefaultValue.ZERO;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import cat.ppicas.spades.Column;
+import cat.ppicas.spades.Column.ColumnId;
 import cat.ppicas.spades.Dao;
 import cat.ppicas.spades.EntityMapper;
 import cat.ppicas.spades.Table;
+import cat.ppicas.spades.TableBuilder;
+import cat.ppicas.spades.models.auto.CompanyDao;
 
 public class BuildingDao extends Dao<BuildingManual> {
 
-	public static final Table<BuildingManual> TABLE = new Table<BuildingManual>("buildings_manual", BuildingManual.class);
+	public static final Table TABLE = new TableBuilder("buildings_manual", BuildingManual.class)
+			.columnId("id")
+			.columnInteger("company_id").notNull().foreignKey(CompanyDao.ID).end()
+			.columnText("address").notNull(EMTPY).end()
+			.columnText("phone").end()
+			.columnInteger("floors").notNull(ZERO).end()
+			.columnReal("surface").notNull(ZERO).end()
+			.columnInteger("is_main").notNull(FALSE).end()
+			.build();
+
+	public static final ColumnId ID = TABLE.getColumnId();
+	public static final Column COMPANY_ID = TABLE.getColumn("company_id");
+	public static final Column ADDRESS = TABLE.getColumn("address");
+	public static final Column PHONE = TABLE.getColumn("phone");
+	public static final Column FLOORS = TABLE.getColumn("floors");
+	public static final Column SURFACE = TABLE.getColumn("surface");
+	public static final Column IS_MAIN = TABLE.getColumn("is_main");
+
+	/*public static final Table<BuildingManual> TABLE = new Table<BuildingManual>("buildings_manual", BuildingManual.class);
 
 	public static final Column ID = TABLE.columnId();
 
@@ -23,7 +43,7 @@ public class BuildingDao extends Dao<BuildingManual> {
 	public static final Column PHONE = TABLE.column().text("phone").end();
 	public static final Column FLOORS = TABLE.column().integer("floors").notNull(DEFAULT_ZERO).end();
 	public static final Column SURFACE = TABLE.column().real("surface").notNull(DEFAULT_ZERO).end();
-	public static final Column IS_MAIN = TABLE.column().integer("is_main").notNull(DEFAULT_FALSE).end();
+	public static final Column IS_MAIN = TABLE.column().integer("is_main").notNull(DEFAULT_FALSE).end();*/
 
 	public static final EntityMapper<BuildingManual> MAPPER = new EntityMapper<BuildingManual>(TABLE) {
 

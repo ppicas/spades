@@ -6,18 +6,33 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import cat.ppicas.spades.Column;
+import cat.ppicas.spades.Column.ColumnId;
 import cat.ppicas.spades.Dao;
 import cat.ppicas.spades.EntityMapper;
 import cat.ppicas.spades.Table;
+import cat.ppicas.spades.TableBuilder;
 
 public class CompanyDao extends Dao<CompanyManual> {
 
-	public static final Table<CompanyManual> TABLE = new Table<CompanyManual>("companies_manual", CompanyManual.class);
+	public static final Table TABLE = new TableBuilder("companies_manual", CompanyManual.class)
+			.columnId("id")
+			.columnText("name").notNull().end()
+			.columnInteger("fundation_year").notNull().end()
+			.columnInteger("registration").end()
+			.relatedInverse("mMainBuilding", "mId")
+			.build();
+
+	public static final ColumnId ID = TABLE.getColumnId();
+	public static final Column NAME = TABLE.getColumn("name");
+	public static final Column FUNDATION_YEAR = TABLE.getColumn("fundation_year");
+	public static final Column REGISTRATION = TABLE.getColumn("registration");
+
+	/*public static final Table<CompanyManual> TABLE = new Table<CompanyManual>("companies_manual", CompanyManual.class);
 
 	public static final Column ID = TABLE.columnId();
 	public static final Column NAME = TABLE.column().text("name").notNull().end();
 	public static final Column FUNDATION_YEAR = TABLE.column().integer("fundation_year").notNull().end();
-	public static final Column REGISTRATION = TABLE.column().integer("registration").end();
+	public static final Column REGISTRATION = TABLE.column().integer("registration").end();*/
 
 	public static final EntityMapper<CompanyManual> MAPPER = new EntityMapper<CompanyManual>(TABLE) {
 

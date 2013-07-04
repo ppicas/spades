@@ -17,7 +17,7 @@ public class BuildingDao extends Dao<BuildingAuto> {
 
 	public static final Table TABLE = new TableBuilder("buildings_auto", BuildingAuto.class)
 			.columnId("id")
-			.columnAuto("company").notNull().foreignKey(CompanyDao.ID).end()
+			.columnAuto("company_id").notNull().foreignKey(CompanyDao.ID).end()
 			.columnAuto("address").notNull(EMTPY).end()
 			.columnAuto("phone").end()
 			.columnAuto("floors").notNull(ZERO).end()
