@@ -25,11 +25,12 @@ public class ReflectionUtils {
 	 * Generate a list of possible entity field names from a table column name.
 	 *
 	 * <p>
-	 * For example with the table column named {@code underscored_words} this
+	 * For example with the table column named {@code two_words} this
 	 * will return the following list:
 	 * <ul>
-	 * <li>camleCase</li>
-	 * <li>mCamleCase</li>
+	 * <li>two_words</li>
+	 * <li>twoWords</li>
+	 * <li>mTwoWords</li>
 	 * </ul>
 	 * </p>
 	 *

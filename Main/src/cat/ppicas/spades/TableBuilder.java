@@ -53,7 +53,7 @@ public class TableBuilder {
 		return new ColumnBuilder(columnName, definition, this);
 	}
 
-	public void relatedInverse(String relatedFieldName, String keyValueFieldName) {
+	public TableBuilder relatedInverse(String relatedFieldName, String keyValueFieldName) {
 		try {
 			Field relatedField = ReflectionUtils.getField(mEntityClass, relatedFieldName);
 			Field keyValueField = ReflectionUtils.getField(mEntityClass, keyValueFieldName);
@@ -61,6 +61,7 @@ public class TableBuilder {
 		} catch (NoSuchFieldException e) {
 			throw new IllegalArgumentException(e);
 		}
+		return this;
 	}
 
 	public Table build() {
