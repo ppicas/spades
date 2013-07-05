@@ -1,12 +1,57 @@
-package cat.ppicas.spades;
-
-import java.util.Set;
+package cat.ppicas.spades.text;
 
 import junit.framework.TestCase;
 
-public class ReflectionUtilsTest extends TestCase {
+public class TextUtilsTest extends TestCase {
 
-	public void test__Should_generate_field_names_from_column_name__When_one_word() throws Exception {
+	public void test__Should_generate_field_names_from_column_name() throws Exception {
+		new SplitIndentifierIntoWords()
+				.identifier("TWO_WORDS")
+				.words("two", "words")
+				.test();
+
+		new SplitIndentifierIntoWords()
+				.identifier("NOW_Three_Words")
+				.words("now", "three", "words")
+				.test();
+
+		new SplitIndentifierIntoWords()
+				.identifier("camelCasedWords")
+				.words("camel", "cased", "words")
+				.test();
+
+		new SplitIndentifierIntoWords()
+				.identifier("CamelCasedWords")
+				.words("camel", "cased", "words")
+				.test();
+
+		new SplitIndentifierIntoWords()
+				.identifier("mixed_underscored_andCamelCased")
+				.words("mixed", "underscored", "andCamelCased")
+				.test();
+	}
+
+	private class SplitIndentifierIntoWords {
+		private String mIdentifier;
+		private String[] mWords;
+
+		public SplitIndentifierIntoWords identifier(String identifier) {
+			mIdentifier = identifier;
+			return this;
+		}
+
+		public SplitIndentifierIntoWords words(String... words) {
+			mWords = words;
+			return this;
+		}
+
+		public void test() throws Exception {
+			String[] words = TextUtils.splitIdentifierWords(mIdentifier);
+			assertEquals(mWords, words);
+		}
+	}
+
+	/*public void test__Should_generate_field_names_from_column_name__When_one_word() throws Exception {
 		Set<String> names = ReflectionUtils.generateFieldNamesFromColumnName("one");
 		assertTrue(names.contains("one"));
 		assertTrue(names.contains("mOne"));
@@ -41,6 +86,6 @@ public class ReflectionUtilsTest extends TestCase {
 		assertTrue(names.contains("mSomethingId"));
 		assertTrue(names.contains("something"));
 		assertTrue(names.contains("mSomething"));
-	}
+	}*/
 
 }

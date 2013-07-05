@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cat.ppicas.spades.ColumnBuilder.Type;
+import cat.ppicas.spades.text.ReflectionUtils;
 
 public class TableBuilder {
 
