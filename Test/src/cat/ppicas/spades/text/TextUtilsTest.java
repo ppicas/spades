@@ -1,54 +1,65 @@
 package cat.ppicas.spades.text;
 
+import java.util.Set;
+
 import junit.framework.TestCase;
 
 public class TextUtilsTest extends TestCase {
 
-	public void test__Should_generate_field_names_from_column_name() throws Exception {
-		new SplitIndentifierIntoWords()
+	public void test__Should_generate_field_names_from_column_name__Case_1() throws Exception {
+		new SplitIndentifierIntoWordsTest()
 				.identifier("TWO_WORDS")
 				.words("two", "words")
 				.test();
+	}
 
-		new SplitIndentifierIntoWords()
+	public void test__Should_generate_field_names_from_column_name__Case_2() throws Exception {
+		new SplitIndentifierIntoWordsTest()
 				.identifier("NOW_Three_Words")
 				.words("now", "three", "words")
 				.test();
+	}
 
-		new SplitIndentifierIntoWords()
+	public void test__Should_generate_field_names_from_column_name__Case_3() throws Exception {
+		new SplitIndentifierIntoWordsTest()
 				.identifier("camelCasedWords")
 				.words("camel", "cased", "words")
 				.test();
+	}
 
-		new SplitIndentifierIntoWords()
+	public void test__Should_generate_field_names_from_column_name__Case_4() throws Exception {
+		new SplitIndentifierIntoWordsTest()
 				.identifier("CamelCasedWords")
 				.words("camel", "cased", "words")
 				.test();
+	}
 
-		new SplitIndentifierIntoWords()
-				.identifier("mixed_underscored_andCamelCased")
-				.words("mixed", "underscored", "andCamelCased")
+	public void test__Should_generate_field_names_from_column_name__Case_5() throws Exception {
+		new SplitIndentifierIntoWordsTest()
+				.identifier("HTMLContent")
+				.words("html", "content")
 				.test();
 	}
 
-	private class SplitIndentifierIntoWords {
-		private String mIdentifier;
-		private String[] mWords;
+	public void test__Should_generate_field_names_from_column_name__Case_6() throws Exception {
+		new SplitIndentifierIntoWordsTest()
+				.identifier("contentHTML")
+				.words("content", "html")
+				.test();
+	}
 
-		public SplitIndentifierIntoWords identifier(String identifier) {
-			mIdentifier = identifier;
-			return this;
-		}
+	public void test__Should_generate_field_names_from_column_name__Case_7() throws Exception {
+		new SplitIndentifierIntoWordsTest()
+				.identifier("mixed_underscored_andCamelCased")
+				.words("mixed", "underscored", "andcamelcased")
+				.test();
+	}
 
-		public SplitIndentifierIntoWords words(String... words) {
-			mWords = words;
-			return this;
-		}
-
-		public void test() throws Exception {
-			String[] words = TextUtils.splitIdentifierWords(mIdentifier);
-			assertEquals(mWords, words);
-		}
+	public void test__Should_generate_field_names_from_words__Case_1() throws Exception {
+		String[] words = new String[] { "word" };
+		Set<String> names = TextUtils.generateFieldNames(words);
+		assertTrue(names.contains("word"));
+		assertTrue(names.contains("mWord"));
 	}
 
 	/*public void test__Should_generate_field_names_from_column_name__When_one_word() throws Exception {
@@ -87,5 +98,28 @@ public class TextUtilsTest extends TestCase {
 		assertTrue(names.contains("something"));
 		assertTrue(names.contains("mSomething"));
 	}*/
+
+	private class SplitIndentifierIntoWordsTest {
+		private String mIdentifier;
+		private String[] mWords;
+
+		public SplitIndentifierIntoWordsTest identifier(String identifier) {
+			mIdentifier = identifier;
+			return this;
+		}
+
+		public SplitIndentifierIntoWordsTest words(String... words) {
+			mWords = words;
+			return this;
+		}
+
+		public void test() throws Exception {
+			String[] words = TextUtils.splitIdentifierWords(mIdentifier);
+			assertEquals(mWords.length, words.length);
+			for (int i = 0; i < words.length; i++) {
+				assertEquals(mWords[i], words[i]);
+			}
+		}
+	}
 
 }
