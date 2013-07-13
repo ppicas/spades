@@ -1,5 +1,7 @@
+/bin/
+/gen/
 /.settings
-/bin
-/gen
 /.classpath
 /.project
+
+/libs/*.properties
