@@ -1,6 +1,7 @@
 package cat.ppicas.spades.text;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 
 import java.util.Set;
@@ -10,113 +11,78 @@ import junit.framework.TestCase;
 public class TextUtilsTest extends TestCase {
 
 	public void test__Should_generate_field_names_from_column_name__Case_1() throws Exception {
-		new SplitIndentifierIntoWordsTest().identifier("TWO_WORDS").words("two", "words").test();
+		String identifier = "TWO_WORDS";
+		String[] words = TextUtils.splitIdentifierWords(identifier );
+		assertThat(words, arrayContainingInAnyOrder("two", "words"));
 	}
 
 	public void test__Should_generate_field_names_from_column_name__Case_2() throws Exception {
-		new SplitIndentifierIntoWordsTest().identifier("NOW_Three_Words")
-				.words("now", "three", "words").test();
+		String identifier = "NOW_Three_Words";
+		String[] words = TextUtils.splitIdentifierWords(identifier );
+		assertThat(words, arrayContainingInAnyOrder("now", "three", "words"));
 	}
 
 	public void test__Should_generate_field_names_from_column_name__Case_3() throws Exception {
-		new SplitIndentifierIntoWordsTest().identifier("camelCasedWords")
-				.words("camel", "cased", "words").test();
+		String identifier = "camelCasedWords";
+		String[] words = TextUtils.splitIdentifierWords(identifier );
+		assertThat(words, arrayContainingInAnyOrder("camel", "cased", "words"));
 	}
 
 	public void test__Should_generate_field_names_from_column_name__Case_4() throws Exception {
-		new SplitIndentifierIntoWordsTest().identifier("CamelCasedWords")
-				.words("camel", "cased", "words").test();
+		String identifier = "CamelCasedWords";
+		String[] words = TextUtils.splitIdentifierWords(identifier );
+		assertThat(words, arrayContainingInAnyOrder("camel", "cased", "words"));
 	}
 
 	public void test__Should_generate_field_names_from_column_name__Case_5() throws Exception {
-		new SplitIndentifierIntoWordsTest().identifier("HTMLContent").words("html", "content")
-				.test();
+		String identifier = "HTMLContent";
+		String[] words = TextUtils.splitIdentifierWords(identifier );
+		assertThat(words, arrayContainingInAnyOrder("html", "content"));
 	}
 
 	public void test__Should_generate_field_names_from_column_name__Case_6() throws Exception {
-		new SplitIndentifierIntoWordsTest().identifier("contentHTML").words("content", "html")
-				.test();
+		String identifier = "contentHTML";
+		String[] words = TextUtils.splitIdentifierWords(identifier );
+		assertThat(words, arrayContainingInAnyOrder("content", "html"));
 	}
 
 	public void test__Should_generate_field_names_from_column_name__Case_7() throws Exception {
-		new SplitIndentifierIntoWordsTest().identifier("mixed_underscored_andCamelCased")
-				.words("mixed", "underscored", "andcamelcased").test();
+		String identifier = "mixed_underscored_andCamelCased";
+		String[] words = TextUtils.splitIdentifierWords(identifier );
+		assertThat(words, arrayContainingInAnyOrder("mixed", "underscored", "andcamelcased"));
 	}
 
-	public void test__Should_generate_field_names_from_words__Case_1() throws Exception {
+	public void test__Should_generate_field_names_from_words__When_one_word() throws Exception {
 		String[] words = givenWords("word");
 		Set<String> fieldNames = TextUtils.generateFieldNames(words);
 		assertThat(fieldNames, containsInAnyOrder("mWord", "word", "Word", "WORD"));
 	}
 
-	/*
-	 * public void
-	 * test__Should_generate_field_names_from_column_name__When_one_word()
-	 * throws Exception { Set<String> names =
-	 * ReflectionUtils.generateFieldNamesFromColumnName("one");
-	 * assertTrue(names.contains("one")); assertTrue(names.contains("mOne")); }
-	 *
-	 * public void
-	 * test__Should_generate_field_names_from_column_name__When_two_words()
-	 * throws Exception { Set<String> names =
-	 * ReflectionUtils.generateFieldNamesFromColumnName("TWO_WORDS");
-	 * assertTrue(names.contains("two_words"));
-	 * assertTrue(names.contains("twoWords"));
-	 * assertTrue(names.contains("mTwoWords")); }
-	 *
-	 * public void
-	 * test__Should_generate_field_names_from_column_name__When_two_words_capitalized
-	 * () throws Exception { Set<String> names =
-	 * ReflectionUtils.generateFieldNamesFromColumnName("twoWords");
-	 * assertTrue(names.contains("twoWords"));
-	 * assertTrue(names.contains("mTwoWords")); }
-	 *
-	 * public void
-	 * test__Should_generate_field_names_from_column_name__When_has_prefix_is()
-	 * throws Exception { Set<String> names =
-	 * ReflectionUtils.generateFieldNamesFromColumnName("is_boolean");
-	 * assertTrue(names.contains("is_boolean"));
-	 * assertTrue(names.contains("isBoolean"));
-	 * assertTrue(names.contains("mIsBoolean"));
-	 * assertTrue(names.contains("boolean"));
-	 * assertTrue(names.contains("mBoolean")); }
-	 *
-	 * public void
-	 * test__Should_generate_field_names_from_column_name__When_has_suffix_id()
-	 * throws Exception { Set<String> names =
-	 * ReflectionUtils.generateFieldNamesFromColumnName("something_id");
-	 * assertTrue(names.contains("something_id"));
-	 * assertTrue(names.contains("somethingId"));
-	 * assertTrue(names.contains("mSomethingId"));
-	 * assertTrue(names.contains("something"));
-	 * assertTrue(names.contains("mSomething")); }
-	 */
+	public void test__Should_generate_field_names_from_words__When_two_words() throws Exception {
+		String[] words = givenWords("two", "words");
+		Set<String> fieldNames = TextUtils.generateFieldNames(words);
+		assertThat(fieldNames, containsInAnyOrder("mTwoWords", "twoWords", "TwoWord",
+				"twowords", "two_words", "Two_Words", "TWO_WORDS"));
+	}
+
+	public void test__Should_generate_field_names_from_words__When_prefixed_with_is() throws Exception {
+		String[] words = givenWords("is", "boolean");
+		Set<String> fieldNames = TextUtils.generateFieldNames(words);
+		assertThat(fieldNames, containsInAnyOrder("mIsBoolean", "isBoolean", "IsBoolean",
+				"isboolean", "is_boolean", "Is_Boolean", "IS_BOOLEAN", "mBoolean",
+				"boolean", "Boolean", "BOOLEAN"));
+	}
+
+	public void test__Should_generate_field_names_from_words__When_suffixed_with_id() throws Exception {
+		String[] words = givenWords("object_id");
+		Set<String> fieldNames = TextUtils.generateFieldNames(words);
+		assertThat(fieldNames, containsInAnyOrder("mObjectId", "objectId", "ObjectId",
+				"objectid", "object_id", "Object_Id", "OBJECT_ID", "mObject",
+				"object", "Object", "OBJECT"));
+	}
 
 	private String[] givenWords(String... words) {
 		return words;
-	}
-
-	private class SplitIndentifierIntoWordsTest {
-		private String mIdentifier;
-		private String[] mWords;
-
-		public SplitIndentifierIntoWordsTest identifier(String identifier) {
-			mIdentifier = identifier;
-			return this;
-		}
-
-		public SplitIndentifierIntoWordsTest words(String... words) {
-			mWords = words;
-			return this;
-		}
-
-		public void test() throws Exception {
-			String[] words = TextUtils.splitIdentifierWords(mIdentifier);
-			assertEquals(mWords.length, words.length);
-			for (int i = 0; i < words.length; i++) {
-				assertEquals(mWords[i], words[i]);
-			}
-		}
 	}
 
 }
