@@ -7,26 +7,13 @@ import android.database.Cursor;
 
 public class IntegerMapper implements ValueMapper {
 
-	private Field mField;
-	private boolean mPrimitive;
-
-	public IntegerMapper(Field field) {
-		Class<?> type = field.getType();
-		if (type != Integer.TYPE && type != Integer.class) {
-			throw new IllegalArgumentException("Invalid Field type");
-		}
-		field.setAccessible(true);
-		mField = field;
-		mPrimitive = field.getType().isPrimitive();
-	}
-
 	@Override
-	public void putContetValue(Object object, ContentValues values, String key, boolean notNull) {
+	public void putContetValue(Field field, Object object, ContentValues values, String key, boolean notNull) {
 		try {
-			if (mPrimitive) {
-				values.put(key, (Integer) mField.get(object));
+			if (field.getType().isPrimitive()) {
+				values.put(key, (Integer) field.get(object));
 			} else {
-				Integer value = (Integer) mField.get(object);
+				Integer value = (Integer) field.get(object);
 				if (value != null || (value == null && !notNull)) {
 					values.put(key, (value == null ? null : value));
 				}
@@ -37,12 +24,12 @@ public class IntegerMapper implements ValueMapper {
 	}
 
 	@Override
-	public void setFieldValue(Object object, Cursor cursor, int index) {
+	public void setFieldValue(Field field, Object object, Cursor cursor, int index) {
 		try {
-			if (mPrimitive) {
-				mField.setInt(object, cursor.getInt(index));
+			if (field.getType().isPrimitive()) {
+				field.setInt(object, cursor.getInt(index));
 			} else {
-				mField.set(object, cursor.isNull(index) ? null : cursor.getInt(index));
+				field.set(object, cursor.isNull(index) ? null : cursor.getInt(index));
 			}
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);

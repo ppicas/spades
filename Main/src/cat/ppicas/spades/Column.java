@@ -1,6 +1,6 @@
 package cat.ppicas.spades;
 
-import cat.ppicas.spades.map.ValueMapper;
+import cat.ppicas.spades.map.MappedField;
 
 public class Column {
 
@@ -16,17 +16,17 @@ public class Column {
 	public final Table table;
 	public final String name;
 	public final boolean notNull;
-	public final ValueMapper valueMapper;
+	public final MappedField mappedField;
 
 	private String mDefinition;
 
 	protected Column(int index, Table table, String name, String definition, boolean notNull,
-			ValueMapper valueMapper) {
+			MappedField mappedField) {
 		this.index = index;
 		this.table = table;
 		this.name = name;
 		this.notNull = notNull;
-		this.valueMapper = valueMapper;
+		this.mappedField = mappedField;
 		mDefinition = definition;
 	}
 

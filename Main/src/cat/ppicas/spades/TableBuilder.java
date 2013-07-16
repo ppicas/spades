@@ -3,9 +3,13 @@ package cat.ppicas.spades;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-import cat.ppicas.spades.ColumnBuilder.Type;
+import cat.ppicas.spades.ColumnBuilder.ColumnType;
+import cat.ppicas.spades.map.MappedField;
+import cat.ppicas.spades.map.MappedFieldFactory;
 import cat.ppicas.spades.util.ReflectionUtils;
+import cat.ppicas.spades.util.TextUtils;
 
 public class TableBuilder {
 
@@ -31,23 +35,38 @@ public class TableBuilder {
 	}
 
 	public ColumnBuilder columnText(String columnName) {
-		return new ColumnBuilder(columnName, Type.TEXT, this);
+		return new ColumnBuilder(columnName, ColumnType.TEXT, this);
 	}
 
 	public ColumnBuilder columnNumeric(String columnName) {
-		return new ColumnBuilder(columnName, Type.NUMERIC, this);
+		return new ColumnBuilder(columnName, ColumnType.NUMERIC, this);
 	}
 
 	public ColumnBuilder columnInteger(String columnName) {
-		return new ColumnBuilder(columnName, Type.INTEGER, this);
+		return new ColumnBuilder(columnName, ColumnType.INTEGER, this);
 	}
 
 	public ColumnBuilder columnReal(String columnName) {
-		return new ColumnBuilder(columnName, Type.REAL, this);
+		return new ColumnBuilder(columnName, ColumnType.REAL, this);
 	}
 
 	public ColumnBuilder columnAuto(String columnName) {
-		return new ColumnBuilder(columnName, Type.TEXT, this);
+		String[] words = TextUtils.splitIdentifierWords(columnName);
+		Set<String> fieldNames = TextUtils.generateFieldNames(words);
+		Field field = ReflectionUtils.findField(mEntityClass, fieldNames);
+		if (field == null) {
+			throw new IllegalArgumentException(new NoSuchFieldException());
+		}
+
+		MappedFieldFactory factory = MappedFieldFactory.getInstance();
+		MappedField mappedField = factory.createForField(field);
+
+		return new ColumnBuilder(columnName, mappedField, this);
+	}
+
+	public ColumnBuilder columnAuto(String columnName, String fieldName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public ColumnBuilder columnCustom(String columnName, String definition) {

@@ -9,32 +9,15 @@ import android.database.Cursor;
 
 public class RelatedMapper implements ValueMapper {
 
-	private Field mRelatedField;
-	private Field mField;
-
-	public RelatedMapper(Field field) {
-		Class<?> type = field.getType();
-		if (!type.isAssignableFrom(Related.class)) {
-			throw new IllegalArgumentException("Invalid Field type");
-		}
-		mRelatedField = field;
-		mRelatedField.setAccessible(true);
-		try {
-			mField = Related.class.getDeclaredField("mValue");
-			mField.setAccessible(true);
-		} catch (NoSuchFieldException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 	public Field getRelatedField() {
-		return mRelatedField;
+		return null;
 	}
 
 	@Override
-	public void putContetValue(Object object, ContentValues values, String key, boolean notNull) {
+	public void putContetValue(Field relatedField, Object object, ContentValues values, String key, boolean notNull) {
 		try {
-			Long value = (Long) mField.get(mRelatedField.get(object));
+			Related<?> related = (Related<?>) relatedField.get(object);
+			Long value = related.getKey();
 			if (value != null || (value == null && !notNull)) {
 				values.put(key, value);
 			}
@@ -44,10 +27,10 @@ public class RelatedMapper implements ValueMapper {
 	}
 
 	@Override
-	public void setFieldValue(Object object, Cursor cursor, int index) {
+	public void setFieldValue(Field relatedField, Object object, Cursor cursor, int index) {
 		try {
-			mField.set(mRelatedField.get(object),
-					cursor.isNull(index) ? null : cursor.getLong(index));
+			Related<?> related = (Related<?>) relatedField.get(object);
+			related.setKey(cursor.isNull(index) ? null : cursor.getLong(index));
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}

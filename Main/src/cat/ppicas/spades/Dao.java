@@ -29,8 +29,8 @@ public abstract class Dao<T extends Entity> {
 		mMapper = mapper;
 
 		for (Column column : table.getColumns()) {
-			if (column.valueMapper instanceof RelatedMapper) {
-				mRelatedFields.add(((RelatedMapper) column.valueMapper).getRelatedField());
+			if (column.mappedField instanceof RelatedMapper) {
+				mRelatedFields.add(((RelatedMapper) column.mappedField).getRelatedField());
 			}
 		}
 		for (RelatedInverse related : table.getRelatedInverses()) {

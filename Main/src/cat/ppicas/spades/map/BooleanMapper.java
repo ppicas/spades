@@ -7,26 +7,13 @@ import android.database.Cursor;
 
 public class BooleanMapper implements ValueMapper {
 
-	private Field mField;
-	private boolean mPrimitive;
-
-	public BooleanMapper(Field field) {
-		Class<?> type = field.getType();
-		if (type != Boolean.TYPE && type != Boolean.class) {
-			throw new IllegalArgumentException("Invalid Field type");
-		}
-		field.setAccessible(true);
-		mField = field;
-		mPrimitive = field.getType().isPrimitive();
-	}
-
 	@Override
-	public void putContetValue(Object object, ContentValues values, String key, boolean notNull) {
+	public void putContetValue(Field field, Object object, ContentValues values, String key, boolean notNull) {
 		try {
-			if (mPrimitive) {
-				values.put(key, (Boolean) mField.get(object));
+			if (field.getType().isPrimitive()) {
+				values.put(key, (Boolean) field.get(object));
 			} else {
-				Boolean value = (Boolean) mField.get(object);
+				Boolean value = (Boolean) field.get(object);
 				if (value != null || (value == null && !notNull)) {
 					values.put(key, (value == null ? null : value));
 				}
@@ -37,12 +24,12 @@ public class BooleanMapper implements ValueMapper {
 	}
 
 	@Override
-	public void setFieldValue(Object object, Cursor cursor, int index) {
+	public void setFieldValue(Field field, Object object, Cursor cursor, int index) {
 		try {
-			if (mPrimitive) {
-				mField.setBoolean(object, cursor.getShort(index) == 1);
+			if (field.getType().isPrimitive()) {
+				field.setBoolean(object, cursor.getShort(index) == 1);
 			} else {
-				mField.set(object, cursor.isNull(index) ? null : cursor.getShort(index) == 1);
+				field.set(object, cursor.isNull(index) ? null : cursor.getShort(index) == 1);
 			}
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);

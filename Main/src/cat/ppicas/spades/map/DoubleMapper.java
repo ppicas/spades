@@ -7,26 +7,13 @@ import android.database.Cursor;
 
 public class DoubleMapper implements ValueMapper {
 
-	private Field mField;
-	private boolean mPrimitive;
-
-	public DoubleMapper(Field field) {
-		Class<?> type = field.getType();
-		if (type != Double.TYPE && type != Double.class) {
-			throw new IllegalArgumentException("Invalid Field type");
-		}
-		field.setAccessible(true);
-		mField = field;
-		mPrimitive = field.getType().isPrimitive();
-	}
-
 	@Override
-	public void putContetValue(Object object, ContentValues values, String key, boolean notNull) {
+	public void putContetValue(Field field, Object object, ContentValues values, String key, boolean notNull) {
 		try {
-			if (mPrimitive) {
-				values.put(key, (Double) mField.get(object));
+			if (field.getType().isPrimitive()) {
+				values.put(key, (Double) field.get(object));
 			} else {
-				Double value = (Double) mField.get(object);
+				Double value = (Double) field.get(object);
 				if (value != null || (value == null && !notNull)) {
 					values.put(key, (value == null ? null : value));
 				}
@@ -37,12 +24,12 @@ public class DoubleMapper implements ValueMapper {
 	}
 
 	@Override
-	public void setFieldValue(Object object, Cursor cursor, int index) {
+	public void setFieldValue(Field field, Object object, Cursor cursor, int index) {
 		try {
-			if (mPrimitive) {
-				mField.setDouble(object, cursor.getDouble(index));
+			if (field.getType().isPrimitive()) {
+				field.setDouble(object, cursor.getDouble(index));
 			} else {
-				mField.set(object, cursor.isNull(index) ? null : cursor.getDouble(index));
+				field.set(object, cursor.isNull(index) ? null : cursor.getDouble(index));
 			}
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);

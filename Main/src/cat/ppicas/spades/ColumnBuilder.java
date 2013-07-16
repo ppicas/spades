@@ -1,11 +1,11 @@
 package cat.ppicas.spades;
 
 import android.text.TextUtils;
-import cat.ppicas.spades.map.ValueMapper;
+import cat.ppicas.spades.map.MappedField;
 
 public class ColumnBuilder {
 
-	public enum Type {
+	public enum ColumnType {
 		TEXT,
 		NUMERIC,
 		INTEGER,
@@ -38,22 +38,20 @@ public class ColumnBuilder {
 		}
 	}
 
-	/*public static final String DEFAULT_EMTPY = "''";
-	public static final String DEFAULT_ZERO = "0";
-	public static final String DEFAULT_ONE = "1";
-	public static final String DEFAULT_FALSE = "0";
-	public static final String DEFAULT_TRUE = "1";*/
-
-	// private Table<?> mTable;
 	private String mName;
 	private String mDefinition;
 	private boolean mNotNull;
-	private ValueMapper mValueMapper;
+	private MappedField mMappedField;
 
 	private TableBuilder mTableBuilder;
 
-	protected ColumnBuilder(String columnName, Type columnType, TableBuilder builder) {
+	protected ColumnBuilder(String columnName, ColumnType columnType, TableBuilder builder) {
 		this(columnName, columnType.name(), builder);
+	}
+
+	protected ColumnBuilder(String columnName, MappedField mappedField, TableBuilder builder) {
+		this(columnName, mappedField.getColumnType(), builder);
+		mMappedField = mappedField;
 	}
 
 	protected ColumnBuilder(String columnName, String definition, TableBuilder builder) {
@@ -62,43 +60,12 @@ public class ColumnBuilder {
 		mTableBuilder = builder;
 	}
 
-	/*public ColumnBuilder(Table<?> table) {
-		mTable = table;
-	}
-
-	public ColumnBuilder custom(String name, String definition) {
-		mName = name;
-		mDefinition = definition;
-		return this;
-	}
-
-	public ColumnBuilder text(String name) {
-		return custom(name, "TEXT");
-	}
-
-	public ColumnBuilder numeric(String name) {
-		return custom(name, "NUMERIC");
-	}
-
-	public ColumnBuilder integer(String name) {
-		return custom(name, "INTEGER");
-	}
-
-	public ColumnBuilder real(String name) {
-		return custom(name, "REAL");
-	}
-
-	public ColumnBuilder auto(String fieldName) {
-		// TODO Transform fieldName to name.
-		return auto(fieldName, fieldName);
-	}
-
-	public ColumnBuilder auto(String name, String fieldName) {
+	/*public ColumnBuilder auto(String name, String fieldName) {
 		try {
 			Field field = ReflectionUtils.getField(mTable.getEntity(), fieldName);;
 			Class<?> type = field.getType();
 
-			// TODO Refactor this to a ValueMapperFactory.
+			// TODO Refactor this to a MappedFieldFactory.
 			if (type == Integer.TYPE || type == Integer.class) {
 				integer(name);
 				mValueMapper = new IntegerMapper(field);
@@ -175,14 +142,7 @@ public class ColumnBuilder {
 	}
 
 	protected Column build(int index, Table table) {
-		return new Column(index, table, mName, mDefinition, mNotNull, mValueMapper);
+		return new Column(index, table, mName, mDefinition, mNotNull, mMappedField);
 	}
-
-	/*public Column end() {
-		int index = mTable.nextColumnIndex();
-		Column column = new Column(mTable, index, mName, mDefinition, mNotNull, mValueMapper);
-		mTable.addColumn(column);
-		return column;
-	}*/
 
 }

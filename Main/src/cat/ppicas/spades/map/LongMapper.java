@@ -7,26 +7,13 @@ import android.database.Cursor;
 
 public class LongMapper implements ValueMapper {
 
-	private Field mField;
-	private boolean mPrimitive;
-
-	public LongMapper(Field field) {
-		Class<?> type = field.getType();
-		if (type != Long.TYPE && type != Long.class) {
-			throw new IllegalArgumentException("Invalid Field type");
-		}
-		field.setAccessible(true);
-		mField = field;
-		mPrimitive = field.getType().isPrimitive();
-	}
-
 	@Override
-	public void putContetValue(Object object, ContentValues values, String key, boolean notNull) {
+	public void putContetValue(Field field, Object object, ContentValues values, String key, boolean notNull) {
 		try {
-			if (mPrimitive) {
-				values.put(key, (Long) mField.get(object));
+			if (field.getType().isPrimitive()) {
+				values.put(key, (Long) field.get(object));
 			} else {
-				Long value = (Long) mField.get(object);
+				Long value = (Long) field.get(object);
 				if (value != null || (value == null && !notNull)) {
 					values.put(key, (value == null ? null : value));
 				}
@@ -37,12 +24,12 @@ public class LongMapper implements ValueMapper {
 	}
 
 	@Override
-	public void setFieldValue(Object object, Cursor cursor, int index) {
+	public void setFieldValue(Field field, Object object, Cursor cursor, int index) {
 		try {
-			if (mPrimitive) {
-				mField.setLong(object, cursor.getLong(index));
+			if (field.getType().isPrimitive()) {
+				field.setLong(object, cursor.getLong(index));
 			} else {
-				mField.set(object, cursor.isNull(index) ? null : cursor.getLong(index));
+				field.set(object, cursor.isNull(index) ? null : cursor.getLong(index));
 			}
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
