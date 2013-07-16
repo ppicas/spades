@@ -83,7 +83,7 @@ public class TextUtils {
 		return buffer.toString();
 	}
 
-	private static String[] capitalize(String... words) {
+	private static String[] capitalize(String[] words) {
 		String[] capitalized = new String[words.length];
 		for (int i = 0; i < words.length; i++) {
 			String word = words[i];
