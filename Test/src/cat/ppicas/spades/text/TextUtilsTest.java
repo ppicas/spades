@@ -61,7 +61,7 @@ public class TextUtilsTest extends TestCase {
 	public void test__Should_generate_field_names_from_words__When_two_words() throws Exception {
 		String[] words = givenWords("two", "words");
 		Set<String> fieldNames = TextUtils.generateFieldNames(words);
-		assertThat(fieldNames, containsInAnyOrder("mTwoWords", "twoWords", "TwoWord",
+		assertThat(fieldNames, containsInAnyOrder("mTwoWords", "twoWords", "TwoWords",
 				"twowords", "two_words", "Two_Words", "TWO_WORDS"));
 	}
 
@@ -74,7 +74,7 @@ public class TextUtilsTest extends TestCase {
 	}
 
 	public void test__Should_generate_field_names_from_words__When_suffixed_with_id() throws Exception {
-		String[] words = givenWords("object_id");
+		String[] words = givenWords("object", "id");
 		Set<String> fieldNames = TextUtils.generateFieldNames(words);
 		assertThat(fieldNames, containsInAnyOrder("mObjectId", "objectId", "ObjectId",
 				"objectid", "object_id", "Object_Id", "OBJECT_ID", "mObject",

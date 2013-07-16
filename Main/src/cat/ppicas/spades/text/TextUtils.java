@@ -2,6 +2,7 @@ package cat.ppicas.spades.text;
 
 import static android.text.TextUtils.join;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -62,6 +63,13 @@ public class TextUtils {
 		names.add(join("_", lowerCasedWords));
 		names.add(join("_", capitalizedWords));
 		names.add(join("_", lowerCasedWords).toUpperCase(Locale.US));
+
+		if (words[0].equals("is")) {
+			names.addAll(generateFieldNames(Arrays.copyOfRange(words, 1, words.length)));
+		}
+		if (words[words.length - 1].equals("id")) {
+			names.addAll(generateFieldNames(Arrays.copyOfRange(words, 0, words.length - 1)));
+		}
 
 		return names;
 	}
