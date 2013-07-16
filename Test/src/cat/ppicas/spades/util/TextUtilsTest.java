@@ -1,4 +1,4 @@
-package cat.ppicas.spades.text;
+package cat.ppicas.spades.util;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
@@ -6,47 +6,49 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 
 import java.util.Set;
 
+import cat.ppicas.spades.util.TextUtils;
+
 import junit.framework.TestCase;
 
 public class TextUtilsTest extends TestCase {
 
-	public void test__Should_generate_field_names_from_column_name__Case_1() throws Exception {
+	public void test__Should_split_words_from_identifier__Case_1() throws Exception {
 		String identifier = "TWO_WORDS";
 		String[] words = TextUtils.splitIdentifierWords(identifier );
 		assertThat(words, arrayContainingInAnyOrder("two", "words"));
 	}
 
-	public void test__Should_generate_field_names_from_column_name__Case_2() throws Exception {
+	public void test__Should_split_words_from_identifier__Case_2() throws Exception {
 		String identifier = "NOW_Three_Words";
 		String[] words = TextUtils.splitIdentifierWords(identifier );
 		assertThat(words, arrayContainingInAnyOrder("now", "three", "words"));
 	}
 
-	public void test__Should_generate_field_names_from_column_name__Case_3() throws Exception {
+	public void test__Should_split_words_from_identifier__Case_3() throws Exception {
 		String identifier = "camelCasedWords";
 		String[] words = TextUtils.splitIdentifierWords(identifier );
 		assertThat(words, arrayContainingInAnyOrder("camel", "cased", "words"));
 	}
 
-	public void test__Should_generate_field_names_from_column_name__Case_4() throws Exception {
+	public void test__Should_split_words_from_identifier__Case_4() throws Exception {
 		String identifier = "CamelCasedWords";
 		String[] words = TextUtils.splitIdentifierWords(identifier );
 		assertThat(words, arrayContainingInAnyOrder("camel", "cased", "words"));
 	}
 
-	public void test__Should_generate_field_names_from_column_name__Case_5() throws Exception {
+	public void test__Should_split_words_from_identifier__Case_5() throws Exception {
 		String identifier = "HTMLContent";
 		String[] words = TextUtils.splitIdentifierWords(identifier );
 		assertThat(words, arrayContainingInAnyOrder("html", "content"));
 	}
 
-	public void test__Should_generate_field_names_from_column_name__Case_6() throws Exception {
+	public void test__Should_split_words_from_identifier__Case_6() throws Exception {
 		String identifier = "contentHTML";
 		String[] words = TextUtils.splitIdentifierWords(identifier );
 		assertThat(words, arrayContainingInAnyOrder("content", "html"));
 	}
 
-	public void test__Should_generate_field_names_from_column_name__Case_7() throws Exception {
+	public void test__Should_split_words_from_identifier__Case_7() throws Exception {
 		String identifier = "mixed_underscored_andCamelCased";
 		String[] words = TextUtils.splitIdentifierWords(identifier );
 		assertThat(words, arrayContainingInAnyOrder("mixed", "underscored", "andcamelcased"));

@@ -1,4 +1,4 @@
-package cat.ppicas.spades.text;
+package cat.ppicas.spades.util;
 
 import static android.text.TextUtils.join;
 

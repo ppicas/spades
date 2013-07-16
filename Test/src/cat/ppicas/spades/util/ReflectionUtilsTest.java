@@ -1,4 +1,4 @@
-package cat.ppicas.spades.text;
+package cat.ppicas.spades.util;
 
 import junit.framework.TestCase;
 
