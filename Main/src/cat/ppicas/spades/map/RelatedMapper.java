@@ -9,10 +9,6 @@ import android.database.Cursor;
 
 public class RelatedMapper implements ValueMapper {
 
-	public Field getRelatedField() {
-		return null;
-	}
-
 	@Override
 	public void putContetValue(Field relatedField, Object object, ContentValues values, String key, boolean notNull) {
 		try {

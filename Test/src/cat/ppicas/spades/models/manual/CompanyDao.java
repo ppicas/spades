@@ -27,13 +27,6 @@ public class CompanyDao extends Dao<CompanyManual> {
 	public static final Column FUNDATION_YEAR = TABLE.getColumn("fundation_year");
 	public static final Column REGISTRATION = TABLE.getColumn("registration");
 
-	/*public static final Table<CompanyManual> TABLE = new Table<CompanyManual>("companies_manual", CompanyManual.class);
-
-	public static final Column ID = TABLE.columnId();
-	public static final Column NAME = TABLE.column().text("name").notNull().end();
-	public static final Column FUNDATION_YEAR = TABLE.column().integer("fundation_year").notNull().end();
-	public static final Column REGISTRATION = TABLE.column().integer("registration").end();*/
-
 	public static final EntityMapper<CompanyManual> MAPPER = new EntityMapper<CompanyManual>(TABLE) {
 
 		@Override

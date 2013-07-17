@@ -21,12 +21,6 @@ public class Table {
 	private ColumnId mColumnId;
 	private List<RelatedInverse> mRelatedInverses = new ArrayList<RelatedInverse>();
 
-	/*public Table(String name, Class<T> cls) {
-		index = Tables.getInstance().addTable(this);
-		mName = name;
-		mEntity = cls;
-	}*/
-
 	protected Table(int index, String name, Class<? extends Entity> entityClass) {
 		this.index = index;
 		mName = name;
@@ -66,29 +60,6 @@ public class Table {
 		return Collections.unmodifiableList(mRelatedInverses);
 	}
 
-	/*public ColumnId columnId() {
-		if (mColumnId != null) {
-			throw new IllegalStateException("ColumnId is already defined");
-		}
-		mColumnId = new ColumnId(this, mColumns.size());
-		mColumns.add(mColumnId);
-		return mColumnId;
-	}
-
-	public ColumnBuilder column() {
-		return new ColumnBuilder(this);
-	}
-
-	public void relatedInverse(String relatedFieldName, String keyValueFieldName) {
-		try {
-			Field relatedField = ReflectionUtils.getField(mEntity, relatedFieldName);
-			Field keyValueField = ReflectionUtils.getField(mEntity, keyValueFieldName);
-			mRelatedInverses.add(new RelatedInverse(relatedField, keyValueField));
-		} catch (NoSuchFieldException e) {
-			throw new IllegalArgumentException(e);
-		}
-	}*/
-
 	public void createTables(SQLiteDatabase db) {
 		String[] definitions = new String[mColumns.size()];
 		int i = 0;
@@ -107,20 +78,20 @@ public class Table {
 		createTables(db);
 	}
 
-	protected void setColumnId(ColumnId columnId) {
-		mColumnId = columnId;
-	}
-
-	protected void addRelatedInverses(RelatedInverse relatedInverse) {
-		mRelatedInverses.add(relatedInverse);
+	protected void addColumn(Column column) {
+		mColumns.put(column.name, column);
 	}
 
 	protected int nextColumnIndex() {
 		return mColumns.size();
 	}
 
-	protected void addColumn(Column column) {
-		mColumns.put(column.name, column);
+	protected void setColumnId(ColumnId columnId) {
+		mColumnId = columnId;
+	}
+
+	protected void addRelatedInverse(RelatedInverse relatedInverse) {
+		mRelatedInverses.add(relatedInverse);
 	}
 
 }

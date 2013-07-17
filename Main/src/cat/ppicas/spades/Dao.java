@@ -7,15 +7,12 @@ import java.util.List;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import cat.ppicas.spades.map.RelatedMapper;
 import cat.ppicas.spades.query.Query;
 
 public abstract class Dao<T extends Entity> {
 
 	public static interface EntityConsumer<T extends Entity> {
-
 		public void accept(T entity, Cursor cursor);
-
 	}
 
 	protected SQLiteDatabase mDb;
@@ -28,11 +25,17 @@ public abstract class Dao<T extends Entity> {
 		mTable = table;
 		mMapper = mapper;
 
+		// Search for columns with a MappedField containing a Field of type
+		// Related in order to add into mRelatedFields list.
 		for (Column column : table.getColumns()) {
-			if (column.mappedField instanceof RelatedMapper) {
-				mRelatedFields.add(((RelatedMapper) column.mappedField).getRelatedField());
+			if (column.mappedField != null) {
+				Field field = column.mappedField.getField();
+				if (field.getType() == Related.class) {
+					mRelatedFields.add(field);
+				}
 			}
 		}
+		// Also add related Field from the Table RelatedInverse collection.
 		for (RelatedInverse related : table.getRelatedInverses()) {
 			mRelatedFields.add(related.getRelatedField());
 		}

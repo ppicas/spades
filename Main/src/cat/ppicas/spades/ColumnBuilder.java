@@ -60,43 +60,6 @@ public class ColumnBuilder {
 		mTableBuilder = builder;
 	}
 
-	/*public ColumnBuilder auto(String name, String fieldName) {
-		try {
-			Field field = ReflectionUtils.getField(mTable.getEntity(), fieldName);;
-			Class<?> type = field.getType();
-
-			// TODO Refactor this to a MappedFieldFactory.
-			if (type == Integer.TYPE || type == Integer.class) {
-				integer(name);
-				mValueMapper = new IntegerMapper(field);
-			} else if (type == Long.TYPE || type == Long.class) {
-				integer(name);
-				mValueMapper = new LongMapper(field);
-			} else if (type == Double.TYPE || type == Double.class) {
-				real(name);
-				mValueMapper = new DoubleMapper(field);
-			} else if (type == Boolean.TYPE || type == Boolean.class) {
-				integer(name);
-				mValueMapper = new BooleanMapper(field);
-			} else if (type == String.class) {
-				text(name);
-				mValueMapper = new StringMapper(field);
-			} else if (type == Date.class) {
-				integer(name);
-				mValueMapper = new DateMapper(field);
-			} else if (type == Related.class) {
-				integer(name);
-				mValueMapper = new RelatedMapper(field);
-			} else {
-				throw new IllegalArgumentException("Field type not supported");
-			}
-
-			return this;
-		} catch (NoSuchFieldException e) {
-			throw new IllegalArgumentException(e);
-		}
-	}*/
-
 	public ColumnBuilder notNull() {
 		mDefinition += " NOT NULL";
 		mNotNull = true;

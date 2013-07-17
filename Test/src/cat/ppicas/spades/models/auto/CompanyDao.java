@@ -25,17 +25,6 @@ public class CompanyDao extends Dao<CompanyAuto> {
 	public static final Column FUNDATION_YEAR = TABLE.getColumn("fundation_year");
 	public static final Column REGISTRATION = TABLE.getColumn("registration");
 
-	/*public static final Table<CompanyAuto> TABLE = new Table<CompanyAuto>("companies_auto", CompanyAuto.class);
-
-	public static final Column ID = TABLE.columnId();
-	public static final Column NAME = TABLE.column().auto("mName").notNull().end();
-	public static final Column FUNDATION_YEAR = TABLE.column().auto("mFundationYear").notNull().end();
-	public static final Column REGISTRATION = TABLE.column().auto("mRegistration").end();
-
-	static {
-		TABLE.relatedInverse("mMainBuilding", "mId");
-	}*/
-
 	public static final EntityMapper<CompanyAuto> MAPPER = new EntityMapper<CompanyAuto>(TABLE) {
 
 		@Override

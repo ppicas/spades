@@ -23,9 +23,6 @@ public class MappedFieldFactory {
 		return sInstance;
 	}
 
-	private Map<Class<?>, ValueMapper> mValueMappers = new HashMap<Class<?>, ValueMapper>();
-	private Map<Class<?>, ColumnType> mColumnTypes = new HashMap<Class<?>, ColumnType>();
-
 	private static void registerCoreValueMappers(MappedFieldFactory factory) {
 		IntegerMapper integerMapper = new IntegerMapper();
 		factory.registerValueMapper(Integer.TYPE, integerMapper, ColumnType.INTEGER);
@@ -49,6 +46,9 @@ public class MappedFieldFactory {
 
 		factory.registerValueMapper(Related.class, new RelatedMapper(), ColumnType.INTEGER);
 	}
+
+	private Map<Class<?>, ValueMapper> mValueMappers = new HashMap<Class<?>, ValueMapper>();
+	private Map<Class<?>, ColumnType> mColumnTypes = new HashMap<Class<?>, ColumnType>();
 
 	private MappedFieldFactory() {
 	}
@@ -75,10 +75,11 @@ public class MappedFieldFactory {
 		private ColumnType mColumnType;
 
 		private MappedFieldImpl(Field field, ValueMapper mapper, ColumnType columnType) {
-			super();
 			mField = field;
 			mMapper = mapper;
 			mColumnType = columnType;
+
+			mField.setAccessible(true);
 		}
 
 		@Override
@@ -88,6 +89,12 @@ public class MappedFieldFactory {
 
 		@Override
 		public void setFieldValue(Object object, Cursor cursor, int index) {
+			mMapper.setFieldValue(mField, object, cursor, index);
+		}
+
+		@Override
+		public Field getField() {
+			return mField;
 		}
 
 		@Override

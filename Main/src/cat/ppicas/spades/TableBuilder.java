@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import cat.ppicas.spades.Column.ColumnId;
 import cat.ppicas.spades.ColumnBuilder.ColumnType;
 import cat.ppicas.spades.map.MappedField;
 import cat.ppicas.spades.map.MappedFieldFactory;
@@ -54,19 +55,12 @@ public class TableBuilder {
 		String[] words = TextUtils.splitIdentifierWords(columnName);
 		Set<String> fieldNames = TextUtils.generateFieldNames(words);
 		Field field = ReflectionUtils.findField(mEntityClass, fieldNames);
-		if (field == null) {
-			throw new IllegalArgumentException(new NoSuchFieldException());
-		}
-
-		MappedFieldFactory factory = MappedFieldFactory.getInstance();
-		MappedField mappedField = factory.createForField(field);
-
-		return new ColumnBuilder(columnName, mappedField, this);
+		return columnAuto(columnName, field);
 	}
 
 	public ColumnBuilder columnAuto(String columnName, String fieldName) {
-		// TODO Auto-generated method stub
-		return null;
+		Field field = ReflectionUtils.findField(mEntityClass, fieldName);
+		return columnAuto(columnName, field);
 	}
 
 	public ColumnBuilder columnCustom(String columnName, String definition) {
@@ -85,15 +79,24 @@ public class TableBuilder {
 	}
 
 	public Table build() {
-		// TODO Validation.
+		if (mColumnIdName == null || mColumnIdName.isEmpty()) {
+			throw new IllegalStateException("You must define a ColumnId");
+		}
 
 		Tables tables = Tables.getInstance();
-
 		Table table = new Table(tables.nextTableIndex(), mTableName, mEntityClass);
 		tables.addTable(table);
 
+		ColumnId columnId = new ColumnId(table.nextColumnIndex(), table, mColumnIdName);
+		table.addColumn(columnId);
+		table.setColumnId(columnId);
+
 		for (ColumnBuilder columnBuilder : mColumnBuilders) {
 			table.addColumn(columnBuilder.build(table.nextColumnIndex(), table));
+		}
+
+		for (RelatedInverse relatedInverse : mRelatedInverses) {
+			table.addRelatedInverse(relatedInverse);
 		}
 
 		return table;
@@ -101,6 +104,17 @@ public class TableBuilder {
 
 	protected void addColumnBuilder(ColumnBuilder columnBuilder) {
 		mColumnBuilders.add(columnBuilder);
+	}
+
+	private ColumnBuilder columnAuto(String columnName, Field field) {
+		if (field == null) {
+			throw new IllegalArgumentException(new NoSuchFieldException());
+		}
+
+		MappedFieldFactory factory = MappedFieldFactory.getInstance();
+		MappedField mappedField = factory.createForField(field);
+
+		return new ColumnBuilder(columnName, mappedField, this);
 	}
 
 }

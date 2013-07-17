@@ -5,11 +5,9 @@ import cat.ppicas.spades.map.MappedField;
 public class Column {
 
 	public static class ColumnId extends Column {
-
 		protected ColumnId(int index, Table table, String name) {
 			super(index, table, name, "INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL", true, null);
 		}
-
 	}
 
 	public final int index;
