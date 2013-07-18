@@ -1,8 +1,5 @@
 package cat.ppicas.spades.models.auto;
 
-import static cat.ppicas.spades.ColumnBuilder.DefaultValue.EMTPY;
-import static cat.ppicas.spades.ColumnBuilder.DefaultValue.FALSE;
-import static cat.ppicas.spades.ColumnBuilder.DefaultValue.ZERO;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,11 +15,11 @@ public class BuildingDao extends Dao<BuildingAuto> {
 	public static final Table TABLE = new TableBuilder("buildings_auto", BuildingAuto.class)
 			.columnId("id")
 			.columnAuto("company_id").notNull().foreignKey(CompanyDao.ID).end()
-			.columnAuto("address").notNull(EMTPY).end()
+			.columnAuto("address").notNull().defaultValue("").end()
 			.columnAuto("phone").end()
-			.columnAuto("floors").notNull(ZERO).end()
-			.columnAuto("surface").notNull(ZERO).end()
-			.columnAuto("is_main").notNull(FALSE).end()
+			.columnAuto("floors").notNull().defaultValue(0).end()
+			.columnAuto("surface").notNull().defaultValue(0).end()
+			.columnAuto("is_main").notNull().defaultValue(false).end()
 			.build();
 
 	public static final ColumnId ID = TABLE.getColumnId();

@@ -1,8 +1,5 @@
 package cat.ppicas.spades.models.manual;
 
-import static cat.ppicas.spades.ColumnBuilder.DefaultValue.EMTPY;
-import static cat.ppicas.spades.ColumnBuilder.DefaultValue.FALSE;
-import static cat.ppicas.spades.ColumnBuilder.DefaultValue.ZERO;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,11 +16,11 @@ public class BuildingDao extends Dao<BuildingManual> {
 	public static final Table TABLE = new TableBuilder("buildings_manual", BuildingManual.class)
 			.columnId("id")
 			.columnInteger("company_id").notNull().foreignKey(CompanyDao.ID).end()
-			.columnText("address").notNull(EMTPY).end()
+			.columnText("address").notNull().defaultValue("").end()
 			.columnText("phone").end()
-			.columnInteger("floors").notNull(ZERO).end()
-			.columnReal("surface").notNull(ZERO).end()
-			.columnInteger("is_main").notNull(FALSE).end()
+			.columnInteger("floors").notNull().defaultValue(0).end()
+			.columnReal("surface").notNull().defaultValue(0).end()
+			.columnInteger("is_main").notNull().defaultValue(false).end()
 			.build();
 
 	public static final ColumnId ID = TABLE.getColumnId();

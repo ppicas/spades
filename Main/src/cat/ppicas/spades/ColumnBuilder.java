@@ -20,24 +20,6 @@ public class ColumnBuilder {
 		RESTRICT
 	}
 
-	public enum DefaultValue {
-		EMTPY("''"),
-		ZERO("0"),
-		ONE("1"),
-		FALSE("0"),
-		TRUE("1");
-
-		private String mValue;
-
-		private DefaultValue(String value) {
-			mValue = value;
-		}
-
-		public String value() {
-			return mValue;
-		}
-	}
-
 	private String mName;
 	private String mDefinition;
 	private boolean mNotNull;
@@ -66,21 +48,21 @@ public class ColumnBuilder {
 		return this;
 	}
 
-	public ColumnBuilder notNull(DefaultValue defaultVal) {
-		return notNull(defaultVal.value());
+	public ColumnBuilder defaultValue(String value) {
+		// TODO Strip "'" chars from text.
+		return defaultValueExp("'" + value + "'");
 	}
 
-	public ColumnBuilder notNull(String defaultVal) {
-		notNull();
-		return defaultValue(defaultVal);
+	public ColumnBuilder defaultValue(Number value) {
+		return defaultValueExp(value.toString());
 	}
 
-	public ColumnBuilder defaultValue(DefaultValue val) {
-		return defaultValue(val.value());
+	public ColumnBuilder defaultValue(boolean value) {
+		return defaultValueExp(value ? "1" : "0");
 	}
 
-	public ColumnBuilder defaultValue(String val) {
-		mDefinition += " DEFAULT " + val;
+	public ColumnBuilder defaultValueExp(String expression) {
+		mDefinition += " DEFAULT " + expression;
 		return this;
 	}
 
