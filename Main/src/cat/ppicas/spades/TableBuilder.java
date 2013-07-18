@@ -19,7 +19,6 @@ public class TableBuilder {
 
 	private List<ColumnBuilder> mColumnBuilders = new ArrayList<ColumnBuilder>();
 	private String mColumnIdName;
-	private List<RelatedInverse> mRelatedInverses = new ArrayList<RelatedInverse>();
 
 	public TableBuilder(String tableName, Class<? extends Entity> entityClass) {
 		mTableName = tableName;
@@ -67,17 +66,6 @@ public class TableBuilder {
 		return new ColumnBuilder(columnName, definition, this);
 	}
 
-	public TableBuilder relatedInverse(String relatedFieldName, String keyValueFieldName) {
-		try {
-			Field relatedField = ReflectionUtils.getField(mEntityClass, relatedFieldName);
-			Field keyValueField = ReflectionUtils.getField(mEntityClass, keyValueFieldName);
-			mRelatedInverses.add(new RelatedInverse(relatedField, keyValueField));
-		} catch (NoSuchFieldException e) {
-			throw new IllegalArgumentException(e);
-		}
-		return this;
-	}
-
 	public Table build() {
 		if (mColumnIdName == null || mColumnIdName.isEmpty()) {
 			throw new IllegalStateException("You must define a ColumnId");
@@ -93,10 +81,6 @@ public class TableBuilder {
 
 		for (ColumnBuilder columnBuilder : mColumnBuilders) {
 			table.addColumn(columnBuilder.build(table.nextColumnIndex(), table));
-		}
-
-		for (RelatedInverse relatedInverse : mRelatedInverses) {
-			table.addRelatedInverse(relatedInverse);
 		}
 
 		return table;

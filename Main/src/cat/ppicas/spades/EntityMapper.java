@@ -26,6 +26,10 @@ public abstract class EntityMapper<T extends Entity> {
 		}
 	}
 
+	public Table getTable() {
+		return mTable;
+	}
+
 	public int[][] getDefaultMappings() {
 		return new MappingsBuilder().add(mTable).build();
 	}
@@ -37,8 +41,13 @@ public abstract class EntityMapper<T extends Entity> {
 		mapContentValues(entity, values);
 	}
 
-	public T createFromCursor(Cursor cursor, int[] mappings) {
-		int colIdIndex = mappings[mTable.getColumnId().index];
+	public T createFromCursor(Cursor cursor, int[][] mappings) {
+		if (mTable.index >= mappings.length || mappings[mTable.index] == null) {
+			return null;
+		}
+		int[] tableMappings = mappings[mTable.index];
+
+		int colIdIndex = tableMappings[mTable.getColumnId().index];
 		if (colIdIndex != -1 && cursor.isNull(colIdIndex)) {
 			return null;
 		}
@@ -50,35 +59,24 @@ public abstract class EntityMapper<T extends Entity> {
 			entity.setEntityId(cursor.getLong(colIdIndex));
 		}
 
-		// Set the key values of the declared related inverse fields.
-		for (RelatedInverse relatedInverse : mTable.getRelatedInverses()) {
-			try {
-				Related<?> related = (Related<?>) relatedInverse.getRelatedField().get(entity);
-				Long keyValue = (Long) relatedInverse.getKeyValueField().get(entity);
-				related.setKey(keyValue);
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
-			}
-		}
-
 		// Automatic population of the entity fields via reflection.
 		for (Column column : mMappedColumns) {
-			int index = mappings[column.index];
+			int index = tableMappings[column.index];
 			if (index != -1) {
 				column.mappedField.setFieldValue(entity, cursor, index);
 			}
 		}
 
 		// Manual population of the entity implemented by user.
-		mapCursorValues(entity, cursor, mappings);
+		mapCursorValues(entity, cursor, mappings, mTable.index);
 
 		return entity;
 	}
 
-	protected abstract T newInstance(Cursor cursor, int[] mappings);
+	protected abstract T newInstance(Cursor cursor, int[][] mappings);
 
 	protected abstract void mapContentValues(T entity, ContentValues values);
 
-	protected abstract void mapCursorValues(T entity, Cursor cursor, int[] mappings);
+	protected abstract void mapCursorValues(T entity, Cursor cursor, int[][] mappings, int tableIndex);
 
 }

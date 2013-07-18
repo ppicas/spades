@@ -19,7 +19,6 @@ public class CompanyDao extends Dao<CompanyManual> {
 			.columnText("name").notNull().end()
 			.columnInteger("fundation_year").notNull().end()
 			.columnInteger("registration").end()
-			.relatedInverse("mMainBuilding", "mId")
 			.build();
 
 	public static final ColumnId ID = TABLE.getColumnId();
@@ -30,13 +29,16 @@ public class CompanyDao extends Dao<CompanyManual> {
 	public static final EntityMapper<CompanyManual> MAPPER = new EntityMapper<CompanyManual>(TABLE) {
 
 		@Override
-		protected CompanyManual newInstance(Cursor cursor, int[] mappings) {
+		protected CompanyManual newInstance(Cursor cursor, int[][] mappings) {
 			return new CompanyManual();
 		}
 
 		@Override
-		protected void mapCursorValues(CompanyManual company, Cursor cursor, int[] maps) {
+		protected void mapCursorValues(CompanyManual company, Cursor cursor, int[][] mappings,
+				int tableIndex) {
+			int[] maps = mappings[tableIndex];
 			int index;
+
 			index = maps[NAME.index];
 			if (index != -1) {
 				company.setName(cursor.getString(index));

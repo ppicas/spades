@@ -1,6 +1,5 @@
 package cat.ppicas.spades;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,23 +17,11 @@ public abstract class Dao<T extends Entity> {
 	protected SQLiteDatabase mDb;
 	private Table mTable;
 	private EntityMapper<T> mMapper;
-	private List<Field> mRelatedFields = new ArrayList<Field>();
 
 	public Dao(SQLiteDatabase db, Table table, EntityMapper<T> mapper) {
 		mDb = db;
 		mTable = table;
 		mMapper = mapper;
-
-		// Search for columns with a MappedField containing a Field of type
-		// Related in order to add into mRelatedFields list.
-		for (Column column : table.getColumns()) {
-			if (column.mappedField != null) {
-				Field field = column.mappedField.getField();
-				if (field.getType() == Related.class) {
-					mRelatedFields.add(field);
-				}
-			}
-		}
 	}
 
 	public long insert(T entity) {
@@ -93,15 +80,11 @@ public abstract class Dao<T extends Entity> {
 	}
 
 	public T fetchFirst(Cursor cursor, int[][] mappings) {
-		if (!cursor.moveToFirst() || mTable.index >= mappings.length
-				|| mappings[mTable.index] == null) {
+		if (!cursor.moveToFirst()) {
 			return null;
 		}
 
-		T entity = mMapper.createFromCursor(cursor, mappings[mTable.index]);
-		if (entity != null) {
-			fetchRelatedFields(cursor, mappings, entity);
-		}
+		T entity = mMapper.createFromCursor(cursor, mappings);
 
 		return entity;
 	}
@@ -125,9 +108,8 @@ public abstract class Dao<T extends Entity> {
 		if (mTable.index < mappings.length && mappings[mTable.index] != null) {
 			cursor.moveToPosition(-1);
 			while (cursor.moveToNext()) {
-				T entity = mMapper.createFromCursor(cursor, mappings[mTable.index]);
+				T entity = mMapper.createFromCursor(cursor, mappings);
 				if (entity != null) {
-					fetchRelatedFields(cursor, mappings, entity);
 					if (consumer != null) {
 						consumer.accept(cursor, mappings, entity);
 					}
@@ -154,17 +136,6 @@ public abstract class Dao<T extends Entity> {
 			return fetchAll(cursor, query.getMappings(), consumer);
 		} finally {
 			cursor.close();
-		}
-	}
-
-	protected void fetchRelatedFields(Cursor cursor, int[][] mappings, T entity) {
-		for (Field relatedField : mRelatedFields) {
-			try {
-				Related<?> related = (Related<?>) relatedField.get(entity);
-				related.fetch(cursor, mappings);
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
-			}
 		}
 	}
 

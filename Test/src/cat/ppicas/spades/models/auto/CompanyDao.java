@@ -17,7 +17,6 @@ public class CompanyDao extends Dao<CompanyAuto> {
 			.columnAuto("name").notNull().end()
 			.columnAuto("fundation_year").notNull().end()
 			.columnAuto("registration").end()
-			.relatedInverse("mMainBuilding", "mId")
 			.build();
 
 	public static final ColumnId ID = TABLE.getColumnId();
@@ -28,16 +27,26 @@ public class CompanyDao extends Dao<CompanyAuto> {
 	public static final EntityMapper<CompanyAuto> MAPPER = new EntityMapper<CompanyAuto>(TABLE) {
 
 		@Override
-		protected CompanyAuto newInstance(Cursor cursor, int[] mappings) {
+		protected CompanyAuto newInstance(Cursor cursor, int[][] mappings) {
 			return new CompanyAuto();
 		}
 
 		@Override
-		protected void mapCursorValues(CompanyAuto entity, Cursor cursor, int[] mappings) {
+		protected void mapCursorValues(CompanyAuto company, Cursor cursor, int[][] mappings,
+				int tableIndex) {
+			company.getMainBuilding().setKey(company.getEntityId());
+
+			int[] buildingMappings = mappings[BuildingDao.TABLE.index];
+			if (buildingMappings != null) {
+				int isMainIndex = buildingMappings[BuildingDao.IS_MAIN.index];
+				if (isMainIndex != -1 && cursor.getInt(isMainIndex) == 1) {
+					company.getMainBuilding().fetch(cursor, mappings);
+				}
+			}
 		}
 
 		@Override
-		protected void mapContentValues(CompanyAuto entity, ContentValues values) {
+		protected void mapContentValues(CompanyAuto company, ContentValues values) {
 		}
 
 	};

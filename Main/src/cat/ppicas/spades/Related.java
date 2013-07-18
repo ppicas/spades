@@ -44,8 +44,7 @@ public class Related<T extends Entity> {
 			Cursor cursor = query.execute(db);
 			if (cursor.moveToFirst()) {
 				int[][] mappings = query.getMappings();
-				int[] tableMappings = mappings[mRelatedTable.index];
-				mEntity = mMapper.createFromCursor(cursor, tableMappings);
+				mEntity = mMapper.createFromCursor(cursor, mappings);
 			} else {
 				mEntity = null;
 			}
@@ -58,11 +57,8 @@ public class Related<T extends Entity> {
 
 	public T fetch(Cursor cursor, int[][] mappings) {
 		if (!mFetched) {
-			int[] tableMappings = mappings[mRelatedTable.index];
-			if (tableMappings != null) {
-				mEntity = mMapper.createFromCursor(cursor, tableMappings);
-				mFetched = true;
-			}
+			mEntity = mMapper.createFromCursor(cursor, mappings);
+			mFetched = true;
 		}
 
 		return mEntity;

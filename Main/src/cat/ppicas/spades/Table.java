@@ -19,7 +19,6 @@ public class Table {
 	private Class<? extends Entity> mEntity;
 	private Map<String, Column> mColumns = new HashMap<String, Column>();
 	private ColumnId mColumnId;
-	private List<RelatedInverse> mRelatedInverses = new ArrayList<RelatedInverse>();
 
 	protected Table(int index, String name, Class<? extends Entity> entityClass) {
 		this.index = index;
@@ -84,14 +83,6 @@ public class Table {
 
 	protected void setColumnId(ColumnId columnId) {
 		mColumnId = columnId;
-	}
-
-	protected void addRelatedInverse(RelatedInverse relatedInverse) {
-		mRelatedInverses.add(relatedInverse);
-	}
-
-	protected List<RelatedInverse> getRelatedInverses() {
-		return Collections.unmodifiableList(mRelatedInverses);
 	}
 
 }

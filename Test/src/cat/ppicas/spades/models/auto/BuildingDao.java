@@ -33,12 +33,14 @@ public class BuildingDao extends Dao<BuildingAuto> {
 	public static final EntityMapper<BuildingAuto> MAPPER = new EntityMapper<BuildingAuto>(TABLE) {
 
 		@Override
-		protected BuildingAuto newInstance(Cursor cursor, int[] mappings) {
+		protected BuildingAuto newInstance(Cursor cursor, int[][] mappings) {
 			return new BuildingAuto();
 		}
 
 		@Override
-		protected void mapCursorValues(BuildingAuto building, Cursor cursor, int[] maps) {
+		protected void mapCursorValues(BuildingAuto building, Cursor cursor, int[][] mappings,
+				int tableIndex) {
+			building.getCompany().fetch(cursor, mappings);
 		}
 
 		@Override

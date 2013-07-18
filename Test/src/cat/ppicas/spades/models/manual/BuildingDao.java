@@ -34,13 +34,16 @@ public class BuildingDao extends Dao<BuildingManual> {
 	public static final EntityMapper<BuildingManual> MAPPER = new EntityMapper<BuildingManual>(TABLE) {
 
 		@Override
-		protected BuildingManual newInstance(Cursor cursor, int[] mappings) {
+		protected BuildingManual newInstance(Cursor cursor, int[][] mappings) {
 			return new BuildingManual();
 		}
 
 		@Override
-		protected void mapCursorValues(BuildingManual building, Cursor cursor, int[] maps) {
+		protected void mapCursorValues(BuildingManual building, Cursor cursor, int[][] mappings,
+				int tableIndex) {
+			int[] maps = mappings[tableIndex];
 			int index;
+
 			index = maps[COMPANY_ID.index];
 			if (index != -1) {
 				building.getCompany().setKey(cursor.getLong(index));
@@ -65,6 +68,8 @@ public class BuildingDao extends Dao<BuildingManual> {
 			if (index != -1) {
 				building.setMain(cursor.getInt(index) == 1);
 			}
+
+			building.getCompany().fetch(cursor, mappings);
 		}
 
 		@Override
@@ -83,12 +88,6 @@ public class BuildingDao extends Dao<BuildingManual> {
 
 	public BuildingDao(SQLiteDatabase db) {
 		super(db, TABLE, MAPPER);
-	}
-
-	@Override
-	protected void fetchRelatedFields(Cursor cursor, int[][] mappings, BuildingManual entity) {
-		super.fetchRelatedFields(cursor, mappings, entity);
-		entity.getCompany().fetch(cursor, mappings);
 	}
 
 }

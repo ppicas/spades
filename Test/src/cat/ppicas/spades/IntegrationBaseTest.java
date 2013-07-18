@@ -155,6 +155,10 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 		assertEquals(1, buildings.size());
 		Company company = buildings.get(0).getCompany().get();
 		assertEquals(mCompanyId, company.getEntityId());
+		assertEquals("Google", company.getName());
+		assertEquals(1998, company.getFundationYear());
+		assertEquals(new GregorianCalendar(1998, Calendar.SEPTEMBER, 4).getTime(),
+				company.getRegistration());
 	}
 
 	public void test__Many_to_one_related_fetched_from_entity() throws Exception {
