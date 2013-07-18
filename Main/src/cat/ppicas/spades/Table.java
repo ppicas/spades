@@ -56,10 +56,6 @@ public class Table {
 		return mColumnId;
 	}
 
-	public List<RelatedInverse> getRelatedInverses() {
-		return Collections.unmodifiableList(mRelatedInverses);
-	}
-
 	public void createTables(SQLiteDatabase db) {
 		String[] definitions = new String[mColumns.size()];
 		int i = 0;
@@ -92,6 +88,10 @@ public class Table {
 
 	protected void addRelatedInverse(RelatedInverse relatedInverse) {
 		mRelatedInverses.add(relatedInverse);
+	}
+
+	protected List<RelatedInverse> getRelatedInverses() {
+		return Collections.unmodifiableList(mRelatedInverses);
 	}
 
 }

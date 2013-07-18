@@ -2,7 +2,7 @@ package cat.ppicas.spades;
 
 import java.lang.reflect.Field;
 
-public class RelatedInverse {
+class RelatedInverse {
 
 	private Field mRelatedField;
 	private Field mKeyValueField;

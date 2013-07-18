@@ -35,10 +35,6 @@ public abstract class Dao<T extends Entity> {
 				}
 			}
 		}
-		// Also add related Field from the Table RelatedInverse collection.
-		for (RelatedInverse related : table.getRelatedInverses()) {
-			mRelatedFields.add(related.getRelatedField());
-		}
 	}
 
 	public long insert(T entity) {
