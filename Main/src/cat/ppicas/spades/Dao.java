@@ -12,7 +12,7 @@ import cat.ppicas.spades.query.Query;
 public abstract class Dao<T extends Entity> {
 
 	public static interface EntityConsumer<T extends Entity> {
-		public void accept(T entity, Cursor cursor);
+		public void accept(Cursor cursor, int[][] mappings, T entity);
 	}
 
 	protected SQLiteDatabase mDb;
@@ -133,7 +133,7 @@ public abstract class Dao<T extends Entity> {
 				if (entity != null) {
 					fetchRelatedFields(cursor, mappings, entity);
 					if (consumer != null) {
-						consumer.accept(entity, cursor);
+						consumer.accept(cursor, mappings, entity);
 					}
 				}
 				list.add(entity);
