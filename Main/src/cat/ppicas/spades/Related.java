@@ -36,15 +36,14 @@ public class Related<T extends Entity> {
 	}
 
 	public T fetch(SQLiteDatabase db) {
-		if (!mFetched) {
-			Query query = new Query(mRelatedTable).where(mRelatedColumn, "=" + getKey()).limit(1);
+		if (!mFetched && mValue != null) {
+			Query query = new Query(mRelatedTable).where(mRelatedColumn, "=" + mValue).limit(1);
 			if (mExtraWhere != null) {
 				query.where(mExtraWhere);
 			}
 			Cursor cursor = query.execute(db);
 			if (cursor.moveToFirst()) {
-				int[][] mappings = query.getMappings();
-				mEntity = mMapper.createFromCursor(cursor, mappings);
+				mEntity = mMapper.createFromCursor(cursor, query.getMappings());
 			} else {
 				mEntity = null;
 			}
@@ -57,6 +56,23 @@ public class Related<T extends Entity> {
 
 	public T fetch(Cursor cursor, int[][] mappings) {
 		if (!mFetched) {
+			// Obtain the cursor index of the related column.
+			int colIndex = -1;
+			if (mRelatedTable.index < mappings.length && mappings[mRelatedTable.index] != null
+					&& mappings[mRelatedTable.index][mRelatedColumn.index] != -1) {
+				colIndex = mappings[mRelatedTable.index][mRelatedColumn.index];
+			}
+
+			if (colIndex != -1 && !cursor.isNull(colIndex)) {
+				if (mValue != null && mValue != cursor.getLong(colIndex)) {
+					// Protection against incorrect entity assignments.
+					return null;
+				} else if (mValue == null) {
+					// Automatic assignment of mValue.
+					mValue = cursor.getLong(colIndex);
+				}
+			}
+
 			mEntity = mMapper.createFromCursor(cursor, mappings);
 			mFetched = true;
 		}
