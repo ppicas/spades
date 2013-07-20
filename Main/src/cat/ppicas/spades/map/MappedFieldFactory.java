@@ -75,7 +75,8 @@ public class MappedFieldFactory {
 		}
 
 		if (valueMapper == null) {
-			throw new IllegalArgumentException("Field type not supported");
+			throw new IllegalArgumentException("The type of the field '" + field.getName() + "' "
+					+ " is not supported: " + field.getType().getName());
 		}
 
 		return new MappedFieldImpl(field, valueMapper, columnType);
