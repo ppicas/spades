@@ -17,12 +17,14 @@ public class CompanyDao extends Dao<CompanyAuto> {
 			.columnAuto("name").notNull().end()
 			.columnAuto("fundation_year").notNull().end()
 			.columnAuto("registration").end()
+			.columnAuto("size").end()
 			.build();
 
 	public static final ColumnId ID = TABLE.getColumnId();
 	public static final Column NAME = TABLE.getColumn("name");
 	public static final Column FUNDATION_YEAR = TABLE.getColumn("fundation_year");
 	public static final Column REGISTRATION = TABLE.getColumn("registration");
+	public static final Column SIZE = TABLE.getColumn("size");
 
 	public static final EntityMapper<CompanyAuto> MAPPER = new EntityMapper<CompanyAuto>(TABLE) {
 

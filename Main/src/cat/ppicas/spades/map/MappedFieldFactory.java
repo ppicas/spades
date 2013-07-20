@@ -45,6 +45,8 @@ public class MappedFieldFactory {
 		factory.registerValueMapper(Date.class, new DateMapper(), ColumnType.INTEGER);
 
 		factory.registerValueMapper(Related.class, new RelatedMapper(), ColumnType.INTEGER);
+
+		factory.registerValueMapper(Enum.class, new EnumMapper(), ColumnType.TEXT);
 	}
 
 	private Map<Class<?>, ValueMapper> mValueMappers = new HashMap<Class<?>, ValueMapper>();
@@ -61,6 +63,16 @@ public class MappedFieldFactory {
 	public MappedField createForField(Field field) {
 		ValueMapper valueMapper = mValueMappers.get(field.getType());
 		ColumnType columnType = mColumnTypes.get(field.getType());
+
+		if (valueMapper == null) {
+			for (Class<?> cls : mValueMappers.keySet()) {
+				if (cls.isAssignableFrom(field.getType())) {
+					valueMapper = mValueMappers.get(cls);
+					columnType = mColumnTypes.get(cls);
+					break;
+				}
+			}
+		}
 
 		if (valueMapper == null) {
 			throw new IllegalArgumentException("Field type not supported");

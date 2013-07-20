@@ -7,10 +7,15 @@ import cat.ppicas.spades.Related;
 
 public abstract class Company implements Entity {
 
+	public static enum CompanySize {
+		SMALL, MEDIUM, LARGE
+	}
+
 	private long mId;
 	private String mName = "";
 	private int mFundationYear;
 	private Date mRegistration;
+	private CompanySize mSize;
 
 	@Override
 	public long getEntityId() {
@@ -44,6 +49,14 @@ public abstract class Company implements Entity {
 
 	public void setRegistration(Date registration) {
 		mRegistration = registration;
+	}
+
+	public CompanySize getSize() {
+		return mSize;
+	}
+
+	public void setSize(CompanySize size) {
+		mSize = size;
 	}
 
 	public abstract Related<? extends Building> getMainBuilding();
