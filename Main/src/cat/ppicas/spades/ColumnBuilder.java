@@ -65,8 +65,7 @@ public class ColumnBuilder {
 	}
 
 	public ColumnBuilder defaultValue(String value) {
-		// TODO Strip "'" chars from text.
-		return defaultValueExp("'" + value + "'");
+		return defaultValueExp("'" + value.replace("'", "''") + "'");
 	}
 
 	public ColumnBuilder defaultValue(Number value) {
