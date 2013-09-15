@@ -30,7 +30,7 @@ import cat.ppicas.spades.Table;
 
 public class Query {
 
-	private static NameMapper sMapper = new NameMapper();
+	private static final NameMapper sMapper = new NameMapper();
 
 	public static int[][] getCursorMappings(Cursor cursor) {
 		MappingsBuilder builder = new MappingsBuilder();
