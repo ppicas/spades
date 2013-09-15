@@ -74,15 +74,14 @@ public class Query {
 		return sMapper;
 	}
 
-	protected ColumnSelector mSelector = new ColumnSelector();
-
-	protected ArrayList<String> mFromClauses = new ArrayList<String>();
-	protected ArrayList<String> mWhereClauses = new ArrayList<String>();
-	protected ArrayList<String> mWhereArgs = new ArrayList<String>();
-	protected ArrayList<String> mOrderBy = new ArrayList<String>();
-	protected String mLimit;
+	private ColumnSelector mSelector = new ColumnSelector();
+	private ArrayList<String> mFromClauses = new ArrayList<String>();
+	private ArrayList<String> mWhereClauses = new ArrayList<String>();
+	private ArrayList<String> mWhereArgs = new ArrayList<String>();
+	private ArrayList<String> mOrderBy = new ArrayList<String>();
+	private String mLimit;
 	private boolean mDistinct;
-	protected boolean mMagicColumns = false;
+	private boolean mMagicColumns = false;
 
 	public Query(Table fromTable) {
 		mSelector.setAutoEntitiesId(true);

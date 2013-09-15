@@ -30,7 +30,7 @@ public abstract class Dao<T extends Entity> {
 		public void accept(Cursor cursor, int[][] mappings, T entity);
 	}
 
-	protected SQLiteDatabase mDb;
+	private SQLiteDatabase mDb;
 	private Table mTable;
 	private EntityMapper<T> mMapper;
 
@@ -153,6 +153,10 @@ public abstract class Dao<T extends Entity> {
 		} finally {
 			cursor.close();
 		}
+	}
+
+	protected SQLiteDatabase getDb() {
+		return mDb;
 	}
 
 }
