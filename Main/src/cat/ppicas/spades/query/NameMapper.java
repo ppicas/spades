@@ -1,7 +1,5 @@
 package cat.ppicas.spades.query;
 
-import java.util.List;
-
 import android.database.Cursor;
 import cat.ppicas.spades.Column;
 import cat.ppicas.spades.Table;
@@ -74,14 +72,7 @@ public class NameMapper {
 		int colIndex = Integer.valueOf(builder.toString());
 
 		Table table = mTables.getTable(tableIndex);
-		if (table != null) {
-			List<Column> columns = table.getColumns();
-			if (colIndex >= 0 && colIndex < columns.size()) {
-				return columns.get(colIndex);
-			}
-		}
-
-		return null;
+		return (table != null) ? table.getColumn(colIndex) : null;
 	}
 
 }

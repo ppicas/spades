@@ -1,7 +1,6 @@
 package cat.ppicas.spades;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +16,8 @@ public class Table {
 
 	private String mName;
 	private Class<? extends Entity> mEntity;
-	private Map<String, Column> mColumns = new HashMap<String, Column>();
+	private List<Column> mColumns = new ArrayList<Column>();
+	private Map<String, Column> mColumnsNameMap = new HashMap<String, Column>();
 	private ColumnId mColumnId;
 
 	protected Table(int index, String name, Class<? extends Entity> entityClass) {
@@ -35,16 +35,23 @@ public class Table {
 	}
 
 	public Column getColumn(String name) {
-		if (!mColumns.containsKey(name)) {
+		if (!mColumnsNameMap.containsKey(name)) {
 			throw new NoSuchElementException("The column '" + name + "' is not defined");
 		}
 
-		return mColumns.get(name);
+		return mColumnsNameMap.get(name);
+	}
+
+	public Column getColumn(int index) {
+		if (index >= 0 && index < mColumns.size()) {
+			return mColumns.get(index);
+		} else {
+			return null;
+		}
 	}
 
 	public List<Column> getColumns() {
-		Collection<Column> values = mColumns.values();
-		return Collections.unmodifiableList(new ArrayList<Column>(values));
+		return Collections.unmodifiableList(mColumns);
 	}
 
 	public int getColumnsNumber() {
@@ -58,7 +65,7 @@ public class Table {
 	public void createTables(SQLiteDatabase db) {
 		String[] definitions = new String[mColumns.size()];
 		int i = 0;
-		for (Column column : mColumns.values()) {
+		for (Column column : mColumns) {
 			definitions[i++] = column.getDefinition();
 		}
 		db.execSQL(SqlHelper.genCreateTable(getName(), definitions));
@@ -74,7 +81,8 @@ public class Table {
 	}
 
 	protected void addColumn(Column column) {
-		mColumns.put(column.name, column);
+		mColumns.add(column);
+		mColumnsNameMap.put(column.name, column);
 	}
 
 	protected int nextColumnIndex() {

@@ -14,7 +14,7 @@ import cat.ppicas.spades.Table;
 
 public class Query {
 
-	protected static NameMapper sMapper = new NameMapper();
+	private static NameMapper sMapper = new NameMapper();
 
 	public static int[][] getCursorMappings(Cursor cursor) {
 		MappingsBuilder builder = new MappingsBuilder();
@@ -28,10 +28,6 @@ public class Query {
 		}
 
 		return builder.build();
-	}
-
-	public static NameMapper getMapper() {
-		return sMapper;
 	}
 
 	public static String expr(Column col, String exp) {
@@ -56,6 +52,10 @@ public class Query {
 
 	public static String or(String... exprs) {
 		return "(" + join(" OR ", exprs) + ")";
+	}
+
+	protected static NameMapper getMapper() {
+		return sMapper;
 	}
 
 	protected ColumnSelector mSelector = new ColumnSelector();
