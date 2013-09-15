@@ -1,4 +1,3 @@
-
 /**
  * Copyright (C) 2013 Pau Picas Sans <pau.picas@gmail.com>
  *
@@ -22,18 +21,14 @@ import java.lang.reflect.Field;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-public class LongMapper implements ValueMapper {
+public class EnumMapper implements ValueMapper {
 
 	@Override
 	public void putContetValue(Field field, Object object, ContentValues values, String key, boolean notNull) {
 		try {
-			if (field.getType().isPrimitive()) {
-				values.put(key, (Long) field.get(object));
-			} else {
-				Long value = (Long) field.get(object);
-				if (value != null || (value == null && !notNull)) {
-					values.put(key, (value == null ? null : value));
-				}
+			Enum<?> enumValue = (Enum<?>) field.get(object);
+			if (enumValue != null || (enumValue == null && !notNull)) {
+				values.put(key, (String) enumValue.name());
 			}
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
@@ -43,10 +38,13 @@ public class LongMapper implements ValueMapper {
 	@Override
 	public void setFieldValue(Field field, Object object, Cursor cursor, int index) {
 		try {
-			if (field.getType().isPrimitive()) {
-				field.setLong(object, cursor.getLong(index));
+			if (cursor.isNull(index)) {
+				field.set(object, null);
 			} else {
-				field.set(object, cursor.isNull(index) ? null : cursor.getLong(index));
+				String name = cursor.getString(index);
+				@SuppressWarnings("unchecked")
+				Enum<?> value = Enum.valueOf(field.getType().asSubclass(Enum.class), name);
+				field.set(object, value);
 			}
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
