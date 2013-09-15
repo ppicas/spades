@@ -22,7 +22,7 @@ public class SqlHelper {
 
 	public static String genCreateTable(String tableName, String... colDefs) {
 		StringBuilder sql = new StringBuilder();
-		sql.append("CREATE TABLE IF NOT EXISTS " + tableName + "(\n");
+		sql.append("CREATE TABLE IF NOT EXISTS ").append(tableName).append("(\n");
 		sql.append(TextUtils.join(",\n", colDefs));
 		sql.append(")");
 
@@ -30,11 +30,30 @@ public class SqlHelper {
 	}
 
 	public static String genCreateIndex(String tableName, int indexNum, String... colDefs) {
+		StringBuilder indexName = new  StringBuilder();
+		indexName.append(tableName).append("_idx").append(indexNum);
+
 		StringBuilder sql = new StringBuilder();
-		sql.append("CREATE INDEX IF NOT EXISTS " + tableName + "_idx" + indexNum
-				+ " ON " + tableName + "(\n");
+		sql.append("CREATE INDEX IF NOT EXISTS ").append(indexName).append(" ON ")
+				.append(tableName).append("(\n");
 		sql.append(TextUtils.join(",\n", colDefs));
 		sql.append(")");
+
+		return sql.toString();
+	}
+
+	public static String genAlterTableAddColumn(String tableName, String colDef) {
+		StringBuilder sql = new StringBuilder();
+		sql.append("ALTER TABLE ").append(tableName).append(" ");
+		sql.append("ADD COLUMN ").append(colDef);
+
+		return sql.toString();
+	}
+
+	public static String genRenameTable(String tableName, String newTableName) {
+		StringBuilder sql = new StringBuilder();
+		sql.append("ALTER TABLE ").append(tableName).append(" ");
+		sql.append("RENAME TO ").append(newTableName);
 
 		return sql.toString();
 	}
