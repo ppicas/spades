@@ -17,13 +17,31 @@
 package cat.ppicas.spades;
 
 import java.util.Arrays;
-import java.util.List;
+
+import android.database.Cursor;
+import cat.ppicas.spades.query.NameMapper;
 
 public class MappingsBuilder {
 
 	private int mOffset;
 	private Tables mTables;
 	private int[][] mMappings;
+
+	public static int[][] getCursorMappings(Cursor cursor) {
+		MappingsBuilder builder = new MappingsBuilder();
+		NameMapper mapper = new NameMapper();
+
+		for (String name : cursor.getColumnNames()) {
+			Column column = mapper.parseColumnName(name);
+			if (column != null) {
+				builder.add(column);
+			} else {
+				builder.addOffset();
+			}
+		}
+
+		return builder.build();
+	}
 
 	public MappingsBuilder() {
 		mOffset = 0;
@@ -60,7 +78,7 @@ public class MappingsBuilder {
 		return this;
 	}
 
-	public MappingsBuilder add(List<? extends Column> columns) {
+	public MappingsBuilder add(Iterable<? extends Column> columns) {
 		for (Column column : columns) {
 			add(column);
 		}

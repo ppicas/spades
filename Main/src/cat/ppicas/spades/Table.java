@@ -84,16 +84,21 @@ public class Table {
 		for (Column column : mColumns) {
 			definitions[i++] = column.getDefinition();
 		}
-		db.execSQL(SqlHelper.genCreateTable(getName(), definitions));
+		db.execSQL(SqlHelper.createTable(getName(), definitions));
 	}
 
 	public void dropTables(SQLiteDatabase db) {
-		db.execSQL(SqlHelper.genDropTable(getName()));
+		db.execSQL(SqlHelper.dropTable(getName()));
 	}
 
 	public void upgradeTables(SQLiteDatabase db, int oldVersion, int newVersion) {
 		dropTables(db);
 		createTables(db);
+	}
+
+	@Override
+	public String toString() {
+		return mName;
 	}
 
 	protected void addColumn(Column column) {

@@ -18,11 +18,12 @@ package cat.ppicas.spades.query;
 
 import android.provider.BaseColumns;
 import cat.ppicas.spades.Column;
+import cat.ppicas.spades.SqlHelper;
 import cat.ppicas.spades.Column.ColumnId;
 
 class SelectedColumn {
 
-	private NameMapper mMapper = Query.getMapper();
+	private NameMapper mMapper = new NameMapper();
 	private Column mColumn;
 	private String mCustomExpression;
 	private Column[] mCustomColumns;
@@ -60,7 +61,7 @@ class SelectedColumn {
 				return mMapper.ref(mColumn);
 			}
 		} else {
-			return Query.expr(mCustomExpression, mCustomColumns);
+			return SqlHelper.expr(mCustomExpression, mCustomColumns);
 		}
 	}
 

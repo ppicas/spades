@@ -16,11 +16,47 @@
 
 package cat.ppicas.spades;
 
+import static android.text.TextUtils.join;
+import cat.ppicas.spades.query.NameMapper;
 import android.text.TextUtils;
 
 public class SqlHelper {
 
-	public static String genCreateTable(String tableName, String... colDefs) {
+	private static final NameMapper sMapper = new NameMapper();
+
+	public static String table(Table table) {
+		return table.getName() + " AS " + sMapper.alias(table);
+	}
+
+	public static String column(Column col) {
+		return sMapper.ref(col);
+	}
+
+	public static String expr(Column col, String exp) {
+		return String.format("%s " + exp, new Object[] { sMapper.ref(col) });
+	}
+
+	public static String expr(String expr, Column... cols) {
+		return String.format(expr, (Object[]) sMapper.refs(cols));
+	}
+
+	public static String and(Iterable<String> exprs) {
+		return "(" + join(" AND ", exprs) + ")";
+	}
+
+	public static String and(String... exprs) {
+		return "(" + join(" AND ", exprs) + ")";
+	}
+
+	public static String or(Iterable<String> exprs) {
+		return "(" + join(" OR ", exprs) + ")";
+	}
+
+	public static String or(String... exprs) {
+		return "(" + join(" OR ", exprs) + ")";
+	}
+
+	public static String createTable(String tableName, String... colDefs) {
 		StringBuilder sql = new StringBuilder();
 		sql.append("CREATE TABLE IF NOT EXISTS ").append(tableName).append("(\n");
 		sql.append(TextUtils.join(",\n", colDefs));
@@ -29,7 +65,7 @@ public class SqlHelper {
 		return sql.toString();
 	}
 
-	public static String genCreateIndex(String tableName, int indexNum, String... colDefs) {
+	public static String createIndex(String tableName, int indexNum, String... colDefs) {
 		StringBuilder indexName = new  StringBuilder();
 		indexName.append(tableName).append("_idx").append(indexNum);
 
@@ -42,7 +78,7 @@ public class SqlHelper {
 		return sql.toString();
 	}
 
-	public static String genAlterTableAddColumn(String tableName, String colDef) {
+	public static String alterTableAddColumn(String tableName, String colDef) {
 		StringBuilder sql = new StringBuilder();
 		sql.append("ALTER TABLE ").append(tableName).append(" ");
 		sql.append("ADD COLUMN ").append(colDef);
@@ -50,7 +86,7 @@ public class SqlHelper {
 		return sql.toString();
 	}
 
-	public static String genRenameTable(String tableName, String newTableName) {
+	public static String renameTable(String tableName, String newTableName) {
 		StringBuilder sql = new StringBuilder();
 		sql.append("ALTER TABLE ").append(tableName).append(" ");
 		sql.append("RENAME TO ").append(newTableName);
@@ -58,11 +94,11 @@ public class SqlHelper {
 		return sql.toString();
 	}
 
-	public static String genDropTable(String tableName) {
+	public static String dropTable(String tableName) {
 		return "DROP TABLE IF EXISTS " + tableName;
 	}
 
-	public static String genDropIndex(String tableName, int indexNum) {
+	public static String dropIndex(String tableName, int indexNum) {
 		return "DROP INDEX IF EXISTS " + tableName + "_idx" + indexNum;
 	}
 

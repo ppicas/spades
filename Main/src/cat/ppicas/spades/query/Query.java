@@ -26,54 +26,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import cat.ppicas.spades.Column;
 import cat.ppicas.spades.MappingsBuilder;
+import cat.ppicas.spades.SqlHelper;
 import cat.ppicas.spades.Table;
 
 public class Query {
 
-	private static final NameMapper sMapper = new NameMapper();
-
-	public static int[][] getCursorMappings(Cursor cursor) {
-		MappingsBuilder builder = new MappingsBuilder();
-		for (String name : cursor.getColumnNames()) {
-			Column column = sMapper.parseColumnName(name);
-			if (column != null) {
-				builder.add(column);
-			} else {
-				builder.addOffset();
-			}
-		}
-
-		return builder.build();
-	}
-
-	public static String expr(Column col, String exp) {
-		return String.format("%s " + exp, new Object[] { sMapper.ref(col) });
-	}
-
-	public static String expr(String expr, Column... cols) {
-		return String.format(expr, (Object[]) sMapper.refs(cols));
-	}
-
-	public static String and(Iterable<String> exprs) {
-		return "(" + join(" AND ", exprs) + ")";
-	}
-
-	public static String and(String... exprs) {
-		return "(" + join(" AND ", exprs) + ")";
-	}
-
-	public static String or(Iterable<String> exprs) {
-		return "(" + join(" OR ", exprs) + ")";
-	}
-
-	public static String or(String... exprs) {
-		return "(" + join(" OR ", exprs) + ")";
-	}
-
-	protected static NameMapper getMapper() {
-		return sMapper;
-	}
-
+	private NameMapper mMapper = new NameMapper();
 	private ColumnSelector mSelector = new ColumnSelector();
 	private ArrayList<String> mFromClauses = new ArrayList<String>();
 	private ArrayList<String> mWhereClauses = new ArrayList<String>();
@@ -113,7 +71,7 @@ public class Query {
 			throw new IllegalStateException("From clause already defined");
 		}
 		mSelector.addTable(table);
-		mFromClauses.add(table.getName() + " AS " + sMapper.alias(table));
+		mFromClauses.add(table.getName() + " AS " + mMapper.alias(table));
 		return this;
 	}
 
@@ -128,12 +86,12 @@ public class Query {
 	}
 
 	public Query where(Column col, String expr) {
-		mWhereClauses.add(expr("%s " + expr, col));
+		mWhereClauses.add(SqlHelper.expr("%s " + expr, col));
 		return this;
 	}
 
 	public Query where(String expr, Column... cols) {
-		mWhereClauses.add(expr(expr, cols));
+		mWhereClauses.add(SqlHelper.expr(expr, cols));
 		return this;
 	}
 
@@ -143,7 +101,7 @@ public class Query {
 	}
 
 	public Query orderBy(Column col, boolean asc) {
-		mOrderBy.add(sMapper.ref(col) + " " + (asc ? "ASC" : "DESC"));
+		mOrderBy.add(mMapper.ref(col) + " " + (asc ? "ASC" : "DESC"));
 		return this;
 	}
 
@@ -257,8 +215,8 @@ public class Query {
 	protected void customJoin(String type, Table table, String onExpr, Column... onExprCols) {
 		checkFromClause();
 		mSelector.addTable(table);
-		mFromClauses.add(type + " JOIN " + table.getName() + " AS " + sMapper.alias(table) + " ON "
-				+ expr(onExpr, onExprCols));
+		mFromClauses.add(type + " JOIN " + table.getName() + " AS " + mMapper.alias(table) + " ON "
+				+ SqlHelper.expr(onExpr, onExprCols));
 	}
 
 	protected void checkFromClause() {
