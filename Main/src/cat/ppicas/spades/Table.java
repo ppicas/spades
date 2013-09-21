@@ -78,7 +78,7 @@ public class Table {
 		return mColumnId;
 	}
 
-	public void createTables(SQLiteDatabase db) {
+	public void createTable(SQLiteDatabase db) {
 		String[] definitions = new String[mColumns.size()];
 		int i = 0;
 		for (Column column : mColumns) {
@@ -87,13 +87,8 @@ public class Table {
 		db.execSQL(SqlHelper.createTable(getName(), definitions));
 	}
 
-	public void dropTables(SQLiteDatabase db) {
+	public void dropTable(SQLiteDatabase db) {
 		db.execSQL(SqlHelper.dropTable(getName()));
-	}
-
-	public void upgradeTables(SQLiteDatabase db, int oldVersion, int newVersion) {
-		dropTables(db);
-		createTables(db);
 	}
 
 	@Override

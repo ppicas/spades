@@ -16,10 +16,10 @@
 
 package cat.ppicas.spades.models;
 
-import cat.ppicas.spades.Table;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import cat.ppicas.spades.Table;
 
 public class OpenHelper extends SQLiteOpenHelper {
 
@@ -41,21 +41,13 @@ public class OpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("PRAGMA foreign_keys = ON;");
-
-		mManualCompanyTable.createTables(db);
-		mManualBuildingTable.createTables(db);
-
-		mAutoCompanyTable.createTables(db);
-		mAutoBuildingTable.createTables(db);
+		createTables(db);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		mManualCompanyTable.upgradeTables(db, oldVersion, newVersion);
-		mManualBuildingTable.upgradeTables(db, oldVersion, newVersion);
-
-		mAutoCompanyTable.upgradeTables(db, oldVersion, newVersion);
-		mAutoBuildingTable.upgradeTables(db, oldVersion, newVersion);
+		dropTables(db);
+		createTables(db);
 	}
 
 	/*@Override
@@ -63,5 +55,21 @@ public class OpenHelper extends SQLiteOpenHelper {
 		super.onConfigure(db);
 		db.setForeignKeyConstraintsEnabled(true);
 	}*/
+
+	private void createTables(SQLiteDatabase db) {
+		mManualCompanyTable.createTable(db);
+		mManualBuildingTable.createTable(db);
+
+		mAutoCompanyTable.createTable(db);
+		mAutoBuildingTable.createTable(db);
+	}
+
+	private void dropTables(SQLiteDatabase db) {
+		mManualCompanyTable.dropTable(db);
+		mManualBuildingTable.dropTable(db);
+
+		mAutoCompanyTable.dropTable(db);
+		mAutoBuildingTable.dropTable(db);
+	}
 
 }
