@@ -91,7 +91,7 @@ public class TableBuilder {
 		Table table = new Table(tables.nextTableIndex(), mTableName, mEntityClass);
 		tables.addTable(table);
 
-		ColumnId columnId = new ColumnId(table.nextColumnIndex(), table, mColumnIdName);
+		ColumnId columnId = new ColumnId(table.nextColumnIndex(), mColumnIdName, table);
 		table.addColumn(columnId);
 		table.setColumnId(columnId);
 

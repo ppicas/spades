@@ -36,7 +36,7 @@ public abstract class EntityMapper<T extends Entity> {
 			throw new IllegalStateException("ColumnId not defined");
 		}
 		for (Column column : table.getColumns()) {
-			if (column.mappedField != null) {
+			if (column.getMappedField() != null) {
 				mMappedColumns.add(column);
 			}
 		}
@@ -52,7 +52,7 @@ public abstract class EntityMapper<T extends Entity> {
 
 	public void putContentValues(T entity, ContentValues values) {
 		for (Column column : mMappedColumns) {
-			column.mappedField.putContetValue(entity, values, column.name, column.notNull);
+			column.getMappedField().putContetValue(entity, values, column.name, column.isNotNull());
 		}
 		mapContentValues(entity, values);
 	}
@@ -79,7 +79,7 @@ public abstract class EntityMapper<T extends Entity> {
 		for (Column column : mMappedColumns) {
 			int index = tableMappings[column.index];
 			if (index != -1) {
-				column.mappedField.setFieldValue(entity, cursor, index);
+				column.getMappedField().setFieldValue(entity, cursor, index);
 			}
 		}
 

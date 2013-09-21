@@ -29,8 +29,8 @@ import cat.ppicas.spades.Column.ColumnId;
 public class Table {
 
 	public final int index;
+	public final String name;
 
-	private String mName;
 	private Class<? extends Entity> mEntity;
 	private List<Column> mColumns = new ArrayList<Column>();
 	private Map<String, Column> mColumnsNameMap = new HashMap<String, Column>();
@@ -38,12 +38,8 @@ public class Table {
 
 	protected Table(int index, String name, Class<? extends Entity> entityClass) {
 		this.index = index;
-		mName = name;
+		this.name = name;
 		mEntity = entityClass;
-	}
-
-	public String getName() {
-		return mName;
 	}
 
 	public Class<? extends Entity> getEntity() {
@@ -84,20 +80,20 @@ public class Table {
 		for (Column column : mColumns) {
 			definitions[i++] = column.getDefinition();
 		}
-		db.execSQL(SqlHelper.createTable(mName, definitions));
+		db.execSQL(SqlHelper.createTable(name, definitions));
 
 		int num = 1;
 		for (Column column : mColumns) {
 			if (column.isIndexed()) {
 				String indexName = generateIndexName(num++);
 				String colDef = column.name + (column.indexIsAscendant() ? " ASC" : " DESC");
-				db.execSQL(SqlHelper.createIndex(indexName, column.indexIsUnique(), mName, colDef));
+				db.execSQL(SqlHelper.createIndex(indexName, column.indexIsUnique(), name, colDef));
 			}
 		}
 	}
 
 	public void dropTable(SQLiteDatabase db) {
-		db.execSQL(SqlHelper.dropTable(mName));
+		db.execSQL(SqlHelper.dropTable(name));
 
 		int num = 1;
 		for (Column column : mColumns) {
@@ -109,7 +105,7 @@ public class Table {
 
 	@Override
 	public String toString() {
-		return mName;
+		return name;
 	}
 
 	protected void addColumn(Column column) {
@@ -126,8 +122,8 @@ public class Table {
 	}
 
 	private String generateIndexName(int num) {
-		StringBuilder indexName = new  StringBuilder(mName.length() + 10 + 3);
-		indexName.append(mName).append("_auto_idx_").append(num);
+		StringBuilder indexName = new  StringBuilder(name.length() + 10 + 3);
+		indexName.append(name).append("_auto_idx_").append(num);
 		return indexName.toString();
 	}
 

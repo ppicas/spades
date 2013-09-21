@@ -71,7 +71,7 @@ public class Query {
 			throw new IllegalStateException("From clause already defined");
 		}
 		mSelector.addTable(table);
-		mFromClauses.add(table.getName() + " AS " + mMapper.alias(table));
+		mFromClauses.add(table.name + " AS " + mMapper.alias(table));
 		return this;
 	}
 
@@ -215,7 +215,7 @@ public class Query {
 	protected void customJoin(String type, Table table, String onExpr, Column... onExprCols) {
 		checkFromClause();
 		mSelector.addTable(table);
-		mFromClauses.add(type + " JOIN " + table.getName() + " AS " + mMapper.alias(table) + " ON "
+		mFromClauses.add(type + " JOIN " + table.name + " AS " + mMapper.alias(table) + " ON "
 				+ SqlHelper.expr(onExpr, onExprCols));
 	}
 

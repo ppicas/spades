@@ -21,39 +21,45 @@ import cat.ppicas.spades.map.MappedField;
 public class Column {
 
 	public static class ColumnId extends Column {
-		protected ColumnId(int index, Table table, String name) {
-			super(index, table, name, "INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL", true, null);
+		protected ColumnId(int index, String name, Table table) {
+			super(index, name, table, "INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL", true);
 		}
 	}
 
 	public final int index;
-	public final Table table;
 	public final String name;
-	public final boolean notNull;
-	public final MappedField mappedField;
 
-	private String mDefinition;
+	private final Table mTable;
+	private final String mDefinition;
+	private final boolean mNotNull;
+
+	private MappedField mMappedField;
 	private boolean mIndexed;
 	private boolean mIndexIsUnique;
 	private boolean mIndexIsAscendant;
 
-	protected Column(int index, Table table, String name, String definition, boolean notNull,
-			MappedField mappedField) {
+	protected Column(int index, String name, Table table, String definition, boolean notNull) {
 		this.index = index;
-		this.table = table;
 		this.name = name;
-		this.notNull = notNull;
-		this.mappedField = mappedField;
+		mTable = table;
 		mDefinition = definition;
+		mNotNull = notNull;
+	}
+
+	public Table getTable() {
+		return mTable;
 	}
 
 	public String getDefinition() {
 		return name + " " + mDefinition;
 	}
 
-	@Override
-	public String toString() {
-		return name;
+	public boolean isNotNull() {
+		return mNotNull;
+	}
+
+	public MappedField getMappedField() {
+		return mMappedField;
 	}
 
 	public boolean isIndexed() {
@@ -66,6 +72,10 @@ public class Column {
 
 	public boolean indexIsAscendant() {
 		return mIndexIsAscendant;
+	}
+
+	protected void setMappedField(MappedField mappedField) {
+		mMappedField = mappedField;
 	}
 
 	protected void setIndexed(boolean unique, boolean ascendant) {

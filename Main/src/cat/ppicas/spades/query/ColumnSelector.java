@@ -117,7 +117,7 @@ class ColumnSelector {
 	}
 
 	private void checkColumn(Column column) {
-		if (!mTables.contains(column.table)) {
+		if (!mTables.contains(column.getTable())) {
 			throw new IllegalArgumentException("The selected Column dosen't belongs to a table "
 					+ "added before");
 		}

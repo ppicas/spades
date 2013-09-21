@@ -42,11 +42,11 @@ public class NameMapper {
 	 * @return
 	 */
 	public String alias(Column col) {
-		return PREFIX + col.table.index + "_" + col.index;
+		return PREFIX + col.getTable().index + "_" + col.index;
 	}
 
 	public String ref(Column col) {
-		return PREFIX + col.table.index + "." + col.name;
+		return PREFIX + col.getTable().index + "." + col.name;
 	}
 
 	public String[] refs(Column... cols) {

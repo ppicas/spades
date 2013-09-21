@@ -65,14 +65,14 @@ public class MappingsBuilder {
 	}
 
 	public MappingsBuilder add(Column column) {
-		int tableIndex = column.table.index;
-		if (mMappings[tableIndex] == null) {
-			mMappings[tableIndex] = new int[column.table.getColumnsSize()];
-			Arrays.fill(mMappings[tableIndex], -1);
+		Table table = column.getTable();
+		if (mMappings[table.index] == null) {
+			mMappings[table.index] = new int[table.getColumnsSize()];
+			Arrays.fill(mMappings[table.index], -1);
 		}
 
-		if (mMappings[tableIndex][column.index] == -1) {
-			mMappings[tableIndex][column.index] = mOffset++;
+		if (mMappings[table.index][column.index] == -1) {
+			mMappings[table.index][column.index] = mOffset++;
 		}
 
 		return this;

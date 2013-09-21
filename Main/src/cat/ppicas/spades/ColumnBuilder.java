@@ -89,7 +89,7 @@ public class ColumnBuilder {
 	}
 
 	public ColumnBuilder foreignKey(Column column, OnDelete onDelete) {
-		mDefinition += " REFERENCES " + column.table.getName() + "(" + column.name + ") "
+		mDefinition += " REFERENCES " + column.getTable().name + "(" + column.name + ") "
 				+ "ON DELETE " + onDelete.name().replace('_', ' ');
 		indexed(false, true);
 
@@ -115,10 +115,14 @@ public class ColumnBuilder {
 	}
 
 	protected Column build(int index, Table table) {
-		Column column = new Column(index, table, mName, mDefinition, mNotNull, mMappedField);
+		Column column = new Column(index, mName, table, mDefinition, mNotNull);
+		if (mMappedField != null) {
+			column.setMappedField(mMappedField);
+		}
 		if (mIndexed) {
 			column.setIndexed(mIndexIsUnique, mIndexIsAscendant);
 		}
+
 		return column;
 	}
 

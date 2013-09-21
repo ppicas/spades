@@ -45,7 +45,7 @@ public abstract class Dao<T extends Entity> {
 		mMapper.putContentValues(entity, values);
 		values.putNull(mTable.getColumnId().name);
 
-		long newId = mDb.insertOrThrow(mTable.getName(), null, values);
+		long newId = mDb.insertOrThrow(mTable.name, null, values);
 		if (newId != -1) {
 			entity.setEntityId(newId);
 		}
@@ -61,7 +61,7 @@ public abstract class Dao<T extends Entity> {
 			values.remove(colId);
 		}
 
-		return mDb.update(mTable.getName(), values, colId + "=" + entity.getEntityId(), null);
+		return mDb.update(mTable.name, values, colId + "=" + entity.getEntityId(), null);
 	}
 
 	public boolean save(T entity) {
@@ -73,11 +73,11 @@ public abstract class Dao<T extends Entity> {
 	}
 
 	public int delete(long id) {
-		return mDb.delete(mTable.getName(), mTable.getColumnId().name + "=" + id, null);
+		return mDb.delete(mTable.name, mTable.getColumnId().name + "=" + id, null);
 	}
 
 	public T get(long id) {
-		Cursor cursor = mDb.query(mTable.getName(), new String[] { "*" },
+		Cursor cursor = mDb.query(mTable.name, new String[] { "*" },
 				mTable.getColumnId().name + "=" + id, null, null, null, null, "1");
 		try {
 			return fetchFirst(cursor, mMapper.getDefaultMappings());
@@ -87,7 +87,7 @@ public abstract class Dao<T extends Entity> {
 	}
 
 	public List<T> getAll() {
-		Cursor cursor = mDb.query(mTable.getName(), new String[] { "*" }, null, null, null, null, null);
+		Cursor cursor = mDb.query(mTable.name, new String[] { "*" }, null, null, null, null, null);
 		try {
 			return fetchAll(cursor, mMapper.getDefaultMappings());
 		} finally {

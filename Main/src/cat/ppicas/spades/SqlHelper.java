@@ -25,7 +25,7 @@ public class SqlHelper {
 	private static final NameMapper sMapper = new NameMapper();
 
 	public static String table(Table table) {
-		return table.getName() + " AS " + sMapper.alias(table);
+		return table.name + " AS " + sMapper.alias(table);
 	}
 
 	public static String column(Column col) {
