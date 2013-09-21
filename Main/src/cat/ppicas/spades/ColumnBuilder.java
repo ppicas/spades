@@ -40,8 +40,10 @@ public class ColumnBuilder {
 	private String mDefinition;
 	private boolean mNotNull;
 	private MappedField mMappedField;
-
 	private TableBuilder mTableBuilder;
+	private boolean mIndexed;
+	private boolean mIndexIsUnique;
+	private boolean mIndexIsAscendant;
 
 	protected ColumnBuilder(String columnName, ColumnType columnType, TableBuilder builder) {
 		this(columnName, columnType.name(), builder);
@@ -61,6 +63,7 @@ public class ColumnBuilder {
 	public ColumnBuilder notNull() {
 		mDefinition += " NOT NULL";
 		mNotNull = true;
+
 		return this;
 	}
 
@@ -88,6 +91,16 @@ public class ColumnBuilder {
 	public ColumnBuilder foreignKey(Column column, OnDelete onDelete) {
 		mDefinition += " REFERENCES " + column.table.getName() + "(" + column.name + ") "
 				+ "ON DELETE " + onDelete.name().replace('_', ' ');
+		indexed(false, true);
+
+		return this;
+	}
+
+	public ColumnBuilder indexed(boolean unique, boolean ascendant) {
+		mIndexed = true;
+		mIndexIsUnique = unique;
+		mIndexIsAscendant = ascendant;
+
 		return this;
 	}
 
@@ -102,7 +115,11 @@ public class ColumnBuilder {
 	}
 
 	protected Column build(int index, Table table) {
-		return new Column(index, table, mName, mDefinition, mNotNull, mMappedField);
+		Column column = new Column(index, table, mName, mDefinition, mNotNull, mMappedField);
+		if (mIndexed) {
+			column.setIndexed(mIndexIsUnique, mIndexIsAscendant);
+		}
+		return column;
 	}
 
 }

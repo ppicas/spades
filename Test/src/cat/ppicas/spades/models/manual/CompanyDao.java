@@ -34,7 +34,7 @@ public class CompanyDao extends Dao<CompanyManual> {
 	public static final Table TABLE = new TableBuilder("companies_manual", CompanyManual.class)
 			.columnId("id")
 			.columnText("name").notNull().end()
-			.columnInteger("fundation_year").notNull().end()
+			.columnInteger("fundation_year").notNull().indexed(false, true).end()
 			.columnInteger("registration").end()
 			.columnText("size").end()
 			.build();

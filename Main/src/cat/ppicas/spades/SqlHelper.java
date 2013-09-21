@@ -65,13 +65,15 @@ public class SqlHelper {
 		return sql.toString();
 	}
 
-	public static String createIndex(String tableName, int indexNum, String... colDefs) {
-		StringBuilder indexName = new  StringBuilder();
-		indexName.append(tableName).append("_idx").append(indexNum);
-
+	public static String createIndex(String indexName, boolean unique, String tableName,
+			String... colDefs) {
 		StringBuilder sql = new StringBuilder();
-		sql.append("CREATE INDEX IF NOT EXISTS ").append(indexName).append(" ON ")
-				.append(tableName).append("(\n");
+		if (unique) {
+			sql.append("CREATE UNIQUE INDEX IF NOT EXISTS ");
+		} else {
+			sql.append("CREATE INDEX IF NOT EXISTS ");
+		}
+		sql.append(indexName).append(" ON ").append(tableName).append("(\n");
 		sql.append(TextUtils.join(",\n", colDefs));
 		sql.append(")");
 
@@ -98,8 +100,8 @@ public class SqlHelper {
 		return "DROP TABLE IF EXISTS " + tableName;
 	}
 
-	public static String dropIndex(String tableName, int indexNum) {
-		return "DROP INDEX IF EXISTS " + tableName + "_idx" + indexNum;
+	public static String dropIndex(String indexName) {
+		return "DROP INDEX IF EXISTS " + indexName;
 	}
 
 }

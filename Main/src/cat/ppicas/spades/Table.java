@@ -84,11 +84,27 @@ public class Table {
 		for (Column column : mColumns) {
 			definitions[i++] = column.getDefinition();
 		}
-		db.execSQL(SqlHelper.createTable(getName(), definitions));
+		db.execSQL(SqlHelper.createTable(mName, definitions));
+
+		int num = 1;
+		for (Column column : mColumns) {
+			if (column.isIndexed()) {
+				String indexName = generateIndexName(num++);
+				String colDef = column.name + (column.indexIsAscendant() ? " ASC" : " DESC");
+				db.execSQL(SqlHelper.createIndex(indexName, column.indexIsUnique(), mName, colDef));
+			}
+		}
 	}
 
 	public void dropTable(SQLiteDatabase db) {
-		db.execSQL(SqlHelper.dropTable(getName()));
+		db.execSQL(SqlHelper.dropTable(mName));
+
+		int num = 1;
+		for (Column column : mColumns) {
+			if (column.isIndexed()) {
+				db.execSQL(SqlHelper.dropIndex(generateIndexName(num++)));
+			}
+		}
 	}
 
 	@Override
@@ -107,6 +123,12 @@ public class Table {
 
 	protected void setColumnId(ColumnId columnId) {
 		mColumnId = columnId;
+	}
+
+	private String generateIndexName(int num) {
+		StringBuilder indexName = new  StringBuilder(mName.length() + 10 + 3);
+		indexName.append(mName).append("_auto_idx_").append(num);
+		return indexName.toString();
 	}
 
 }

@@ -33,6 +33,9 @@ public class Column {
 	public final MappedField mappedField;
 
 	private String mDefinition;
+	private boolean mIndexed;
+	private boolean mIndexIsUnique;
+	private boolean mIndexIsAscendant;
 
 	protected Column(int index, Table table, String name, String definition, boolean notNull,
 			MappedField mappedField) {
@@ -51,6 +54,24 @@ public class Column {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	public boolean isIndexed() {
+		return mIndexed;
+	}
+
+	public boolean indexIsUnique() {
+		return mIndexIsUnique;
+	}
+
+	public boolean indexIsAscendant() {
+		return mIndexIsAscendant;
+	}
+
+	protected void setIndexed(boolean unique, boolean ascendant) {
+		mIndexed = true;
+		mIndexIsUnique = unique;
+		mIndexIsAscendant = ascendant;
 	}
 
 }
