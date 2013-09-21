@@ -18,6 +18,7 @@ package cat.ppicas.spades.query;
 
 import java.util.List;
 
+import cat.ppicas.spades.Column;
 import cat.ppicas.spades.models.manual.BuildingDao;
 import cat.ppicas.spades.models.manual.CompanyDao;
 import cat.ppicas.spades.query.SelectedColumn.CountColumn;
@@ -43,18 +44,17 @@ public class ColumnSelectorTest extends TestCase {
 		// When get the selected columns.
 		List<SelectedColumn> selected = mSelector.getSelectedColumns();
 		// Then all both table columns are returned in order of aggregation.
-		assertEquals(11, selected.size());
-		assertEquals(CompanyDao.ID, selected.get(0).getColumn());
-		assertEquals(CompanyDao.NAME, selected.get(1).getColumn());
-		assertEquals(CompanyDao.FUNDATION_YEAR, selected.get(2).getColumn());
-		assertEquals(CompanyDao.REGISTRATION, selected.get(3).getColumn());
-		assertEquals(BuildingDao.ID, selected.get(4).getColumn());
-		assertEquals(BuildingDao.COMPANY_ID, selected.get(5).getColumn());
-		assertEquals(BuildingDao.ADDRESS, selected.get(6).getColumn());
-		assertEquals(BuildingDao.PHONE, selected.get(7).getColumn());
-		assertEquals(BuildingDao.FLOORS, selected.get(8).getColumn());
-		assertEquals(BuildingDao.SURFACE, selected.get(9).getColumn());
-		assertEquals(BuildingDao.IS_MAIN, selected.get(10).getColumn());
+		int expectedSize = CompanyDao.TABLE.getColumnsSize() + BuildingDao.TABLE.getColumnsSize();
+		assertEquals(expectedSize, selected.size());
+		// And contains all columns from first table
+		int index = 0;
+		for (Column column : CompanyDao.TABLE.getColumns()) {
+			assertEquals(column, selected.get(index++).getColumn());
+		}
+		// And contains all columns from second table
+		for (Column column : BuildingDao.TABLE.getColumns()) {
+			assertEquals(column, selected.get(index++).getColumn());
+		}
 	}
 
 	public void test__Should_get_selected_columns__When_one_table_added() throws Exception {
@@ -199,10 +199,11 @@ public class ColumnSelectorTest extends TestCase {
 		// When get the selected columns.
 		List<SelectedColumn> selected = mSelector.getSelectedColumns();
 		// Then will return all tables columns plus a RowId.
-		assertEquals(12, selected.size());
+		int expectedSize = CompanyDao.TABLE.getColumnsSize() + BuildingDao.TABLE.getColumnsSize() + 1;
+		assertEquals(expectedSize, selected.size());
 		// And the last column will be a RowId of ID column from first table.
-		assertEquals(CompanyDao.ID, selected.get(11).getCustomColumns()[0]);
-		assertTrue(selected.get(11) instanceof RowIdColumn);
+		assertEquals(CompanyDao.ID, selected.get(selected.size() - 1).getCustomColumns()[0]);
+		assertTrue(selected.get(selected.size() - 1) instanceof RowIdColumn);
 	}
 
 	public void test__Should_auto_add_rows_id__When_columns_selected() throws Exception {

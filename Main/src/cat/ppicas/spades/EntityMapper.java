@@ -29,7 +29,7 @@ public abstract class EntityMapper<T extends Entity> {
 
 	public EntityMapper(Table table) {
 		mTable = table;
-		if (mTable.getColumnsNumber() == 0) {
+		if (mTable.getColumnsSize() == 0) {
 			throw new IllegalStateException("Columns list is empty");
 		}
 		if (mTable.getColumnId() == null) {

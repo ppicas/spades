@@ -70,7 +70,7 @@ public class Table {
 		return Collections.unmodifiableList(mColumns);
 	}
 
-	public int getColumnsNumber() {
+	public int getColumnsSize() {
 		return mColumns.size();
 	}
 

@@ -72,16 +72,17 @@ public class Related<T extends Entity> {
 
 	public T fetch(Cursor cursor, int[][] mappings) {
 		if (!mFetched) {
-			// Obtain the cursor index of the related column.
-			int colIndex = -1;
-			if (mRelatedTable.index < mappings.length && mappings[mRelatedTable.index] != null
-					&& mappings[mRelatedTable.index][mRelatedColumn.index] != -1) {
-				colIndex = mappings[mRelatedTable.index][mRelatedColumn.index];
+			// Check if there are mappings for the related table, if there
+			// aren't then the cursor dosen't contains data for this entity.
+			if (mRelatedTable.index >= mappings.length || mappings[mRelatedTable.index] == null) {
+				return null;
 			}
 
+			// Obtain the cursor index of the related column.
+			int colIndex = mappings[mRelatedTable.index][mRelatedColumn.index];
 			if (colIndex != -1 && !cursor.isNull(colIndex)) {
 				if (mValue != null && mValue != cursor.getLong(colIndex)) {
-					// Protection against incorrect entity assignments.
+					// Protection against incorrect entity assignments (ID != Foreign key).
 					return null;
 				} else if (mValue == null) {
 					// Automatic assignment of mValue.

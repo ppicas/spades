@@ -67,7 +67,7 @@ public class MappingsBuilder {
 	public MappingsBuilder add(Column column) {
 		int tableIndex = column.table.index;
 		if (mMappings[tableIndex] == null) {
-			mMappings[tableIndex] = new int[column.table.getColumnsNumber()];
+			mMappings[tableIndex] = new int[column.table.getColumnsSize()];
 			Arrays.fill(mMappings[tableIndex], -1);
 		}
 
