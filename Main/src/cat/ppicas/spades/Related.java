@@ -53,10 +53,7 @@ public class Related<T extends Entity> {
 
 	public T fetch(SQLiteDatabase db) {
 		if (!mFetched && mValue != null) {
-			Query query = new Query(mRelatedTable).where(mRelatedColumn, "=" + mValue).limit(1);
-			if (mExtraWhere != null) {
-				query.where(mExtraWhere);
-			}
+			Query query = createFetchQuery();
 			Cursor cursor = query.execute(db);
 			if (cursor.moveToFirst()) {
 				mEntity = mMapper.createFromCursor(cursor, query.getMappings());
@@ -112,6 +109,15 @@ public class Related<T extends Entity> {
 
 	public void setKey(Long value) {
 		mValue = value;
+	}
+
+	protected Query createFetchQuery() {
+		Query query = new Query(mRelatedTable).where(mRelatedColumn, "=" + mValue).limit(1);
+		if (mExtraWhere != null) {
+			query.where(mExtraWhere);
+		}
+
+		return query;
 	}
 
 }
