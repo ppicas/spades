@@ -79,6 +79,10 @@ public class ColumnBuilder {
 		return defaultValueExp(value ? "1" : "0");
 	}
 
+	public ColumnBuilder defaultValue(Enum<?> value) {
+		return defaultValueExp("'" + value.name() + "'");
+	}
+
 	public ColumnBuilder defaultValueExp(String expression) {
 		mDefinition += " DEFAULT " + expression;
 		return this;
