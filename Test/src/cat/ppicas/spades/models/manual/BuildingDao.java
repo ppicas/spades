@@ -21,6 +21,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import cat.ppicas.spades.Column;
 import cat.ppicas.spades.Column.ColumnId;
+import cat.ppicas.spades.CursorInfo;
 import cat.ppicas.spades.Dao;
 import cat.ppicas.spades.EntityMapper;
 import cat.ppicas.spades.Table;
@@ -50,42 +51,40 @@ public class BuildingDao extends Dao<BuildingManual> {
 	public static final EntityMapper<BuildingManual> MAPPER = new EntityMapper<BuildingManual>(TABLE) {
 
 		@Override
-		protected BuildingManual newInstance(Cursor cursor, int[][] mappings) {
+		protected BuildingManual newInstance(Cursor cursor, CursorInfo cursorInfo) {
 			return new BuildingManual();
 		}
 
 		@Override
-		protected void mapCursorValues(BuildingManual building, Cursor cursor, int[][] mappings,
-				int tableIndex) {
-			int[] maps = mappings[tableIndex];
+		protected void mapCursorValues(BuildingManual building, Cursor cursor, CursorInfo cursorInfo) {
 			int index;
 
-			index = maps[COMPANY_ID.index];
+			index = cursorInfo.getColumnIndex(COMPANY_ID);
 			if (index != -1) {
 				building.getCompany().setKey(cursor.getLong(index));
 			}
-			index = maps[ADDRESS.index];
+			index = cursorInfo.getColumnIndex(ADDRESS);
 			if (index != -1) {
 				building.setAddress(cursor.getString(index));
 			}
-			index = maps[PHONE.index];
+			index = cursorInfo.getColumnIndex(PHONE);
 			if (index != -1) {
 				building.setPhone(cursor.isNull(index) ? null : cursor.getString(index));
 			}
-			index = maps[FLOORS.index];
+			index = cursorInfo.getColumnIndex(FLOORS);
 			if (index != -1) {
 				building.setFloors(cursor.getInt(index));
 			}
-			index = maps[SURFACE.index];
+			index = cursorInfo.getColumnIndex(SURFACE);
 			if (index != -1) {
 				building.setSurface(cursor.getDouble(index));
 			}
-			index = maps[IS_MAIN.index];
+			index = cursorInfo.getColumnIndex(IS_MAIN);
 			if (index != -1) {
 				building.setMain(cursor.getInt(index) == 1);
 			}
 
-			building.getCompany().fetch(cursor, mappings);
+			building.getCompany().fetch(cursor, cursorInfo);
 		}
 
 		@Override

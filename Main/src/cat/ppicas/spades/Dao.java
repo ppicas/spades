@@ -27,7 +27,7 @@ import cat.ppicas.spades.query.Query;
 public abstract class Dao<T extends Entity> {
 
 	public static interface EntityConsumer<T extends Entity> {
-		public void accept(Cursor cursor, int[][] mappings, T entity);
+		public void accept(Cursor cursor, CursorInfo cursorInfo, T entity);
 	}
 
 	private SQLiteDatabase mDb;
@@ -80,7 +80,7 @@ public abstract class Dao<T extends Entity> {
 		Cursor cursor = mDb.query(mTable.name, new String[] { "*" },
 				mTable.getColumnId().name + "=" + id, null, null, null, null, "1");
 		try {
-			return fetchFirst(cursor, mMapper.getDefaultMappings());
+			return fetchFirst(cursor, mMapper.getDefaultCursorInfo());
 		} finally {
 			cursor.close();
 		}
@@ -89,18 +89,18 @@ public abstract class Dao<T extends Entity> {
 	public List<T> getAll() {
 		Cursor cursor = mDb.query(mTable.name, new String[] { "*" }, null, null, null, null, null);
 		try {
-			return fetchAll(cursor, mMapper.getDefaultMappings());
+			return fetchAll(cursor, mMapper.getDefaultCursorInfo());
 		} finally {
 			cursor.close();
 		}
 	}
 
-	public T fetchFirst(Cursor cursor, int[][] mappings) {
+	public T fetchFirst(Cursor cursor, CursorInfo cursorInfo) {
 		if (!cursor.moveToFirst()) {
 			return null;
 		}
 
-		T entity = mMapper.createFromCursor(cursor, mappings);
+		T entity = mMapper.createFromCursor(cursor, cursorInfo);
 
 		return entity;
 	}
@@ -108,26 +108,26 @@ public abstract class Dao<T extends Entity> {
 	public T fetchFirst(Query query) {
 		Cursor cursor = query.execute(mDb);
 		try {
-			return fetchFirst(cursor, query.getMappings());
+			return fetchFirst(cursor, query.getCursorInfo());
 		} finally {
 			cursor.close();
 		}
 	}
 
-	public List<T> fetchAll(Cursor cursor, int[][] mappings) {
-		return fetchAll(cursor, mappings, null);
+	public List<T> fetchAll(Cursor cursor, CursorInfo cursorInfo) {
+		return fetchAll(cursor, cursorInfo, null);
 	}
 
-	public List<T> fetchAll(Cursor cursor, int[][] mappings, EntityConsumer<T> consumer) {
+	public List<T> fetchAll(Cursor cursor, CursorInfo cursorInfo, EntityConsumer<T> consumer) {
 		ArrayList<T> list = new ArrayList<T>();
 
-		if (mTable.index < mappings.length && mappings[mTable.index] != null) {
+		if (cursorInfo.hasTable(mTable)) {
 			cursor.moveToPosition(-1);
 			while (cursor.moveToNext()) {
-				T entity = mMapper.createFromCursor(cursor, mappings);
+				T entity = mMapper.createFromCursor(cursor, cursorInfo);
 				if (entity != null) {
 					if (consumer != null) {
-						consumer.accept(cursor, mappings, entity);
+						consumer.accept(cursor, cursorInfo, entity);
 					}
 				}
 				list.add(entity);
@@ -140,7 +140,7 @@ public abstract class Dao<T extends Entity> {
 	public List<T> fetchAll(Query query) {
 		Cursor cursor = query.execute(mDb);
 		try {
-			return fetchAll(cursor, query.getMappings(), null);
+			return fetchAll(cursor, query.getCursorInfo(), null);
 		} finally {
 			cursor.close();
 		}
@@ -149,7 +149,7 @@ public abstract class Dao<T extends Entity> {
 	public List<T> fetchAll(Query query, EntityConsumer<T> consumer) {
 		Cursor cursor = query.execute(mDb);
 		try {
-			return fetchAll(cursor, query.getMappings(), consumer);
+			return fetchAll(cursor, query.getCursorInfo(), consumer);
 		} finally {
 			cursor.close();
 		}

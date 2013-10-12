@@ -118,8 +118,8 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 	public void test__Simple_query_cursor() throws Exception {
 		Query query = new Query(mTables.companyTable).where(mTables.companyName, "=?").params("Google");
 		Cursor cursor = query.execute(mDb);
-		int[][] mappings = query.getMappings();
-		List<Company> companies = mCompanyDao.fetchAll(cursor, mappings);
+		CursorInfo cursorInfo = query.getCursorInfo();
+		List<Company> companies = mCompanyDao.fetchAll(cursor, cursorInfo);
 		cursor.close();
 
 		assertEquals(1, companies.size());
@@ -156,9 +156,9 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 				.where(mTables.buildingId, "=" + mBuildingAId);
 
 		Cursor cursor = query.execute(mDb);
-		int[][] mappings = query.getMappings();
-		List<Building> buildings = mBuildingDao.fetchAll(cursor, mappings);
-		List<Company> companies = mCompanyDao.fetchAll(cursor, mappings);
+		CursorInfo cursorInfo = query.getCursorInfo();
+		List<Building> buildings = mBuildingDao.fetchAll(cursor, cursorInfo);
+		List<Company> companies = mCompanyDao.fetchAll(cursor, cursorInfo);
 		cursor.close();
 
 		assertEquals(1, buildings.size());

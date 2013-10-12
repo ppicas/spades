@@ -46,8 +46,8 @@ public abstract class EntityMapper<T extends Entity> {
 		return mTable;
 	}
 
-	public int[][] getDefaultMappings() {
-		return new MappingsBuilder().add(mTable).build();
+	public CursorInfo getDefaultCursorInfo() {
+		return new CursorInfoBuilder().add(mTable).build();
 	}
 
 	public void putContentValues(T entity, ContentValues values) {
@@ -57,18 +57,17 @@ public abstract class EntityMapper<T extends Entity> {
 		mapContentValues(entity, values);
 	}
 
-	public T createFromCursor(Cursor cursor, int[][] mappings) {
-		if (mTable.index >= mappings.length || mappings[mTable.index] == null) {
+	public T createFromCursor(Cursor cursor, CursorInfo cursorInfo) {
+		if (!cursorInfo.hasTable(mTable)) {
 			return null;
 		}
-		int[] tableMappings = mappings[mTable.index];
 
-		int colIdIndex = tableMappings[mTable.getColumnId().index];
+		int colIdIndex = cursorInfo.getColumnIndex(mTable.getColumnId());
 		if (colIdIndex != -1 && cursor.isNull(colIdIndex)) {
 			return null;
 		}
 
-		T entity = newInstance(cursor, mappings);
+		T entity = newInstance(cursor, cursorInfo);
 
 		// Set the entity ID.
 		if (colIdIndex != -1) {
@@ -77,22 +76,22 @@ public abstract class EntityMapper<T extends Entity> {
 
 		// Automatic population of the entity fields via reflection.
 		for (Column column : mMappedColumns) {
-			int index = tableMappings[column.index];
+			int index = cursorInfo.getColumnIndex(column);
 			if (index != -1) {
 				column.getMappedField().setFieldValue(entity, cursor, index);
 			}
 		}
 
 		// Manual population of the entity implemented by user.
-		mapCursorValues(entity, cursor, mappings, mTable.index);
+		mapCursorValues(entity, cursor, cursorInfo);
 
 		return entity;
 	}
 
-	protected abstract T newInstance(Cursor cursor, int[][] mappings);
+	protected abstract T newInstance(Cursor cursor, CursorInfo cursorInfo);
 
 	protected abstract void mapContentValues(T entity, ContentValues values);
 
-	protected abstract void mapCursorValues(T entity, Cursor cursor, int[][] mappings, int tableIndex);
+	protected abstract void mapCursorValues(T entity, Cursor cursor, CursorInfo cursorInfo);
 
 }

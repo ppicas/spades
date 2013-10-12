@@ -21,6 +21,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import cat.ppicas.spades.Column;
 import cat.ppicas.spades.Column.ColumnId;
+import cat.ppicas.spades.CursorInfo;
 import cat.ppicas.spades.Dao;
 import cat.ppicas.spades.EntityMapper;
 import cat.ppicas.spades.Table;
@@ -49,14 +50,13 @@ public class BuildingDao extends Dao<BuildingAuto> {
 	public static final EntityMapper<BuildingAuto> MAPPER = new EntityMapper<BuildingAuto>(TABLE) {
 
 		@Override
-		protected BuildingAuto newInstance(Cursor cursor, int[][] mappings) {
+		protected BuildingAuto newInstance(Cursor cursor, CursorInfo cursorInfo) {
 			return new BuildingAuto();
 		}
 
 		@Override
-		protected void mapCursorValues(BuildingAuto building, Cursor cursor, int[][] mappings,
-				int tableIndex) {
-			building.getCompany().fetch(cursor, mappings);
+		protected void mapCursorValues(BuildingAuto building, Cursor cursor, CursorInfo cursorInfo) {
+			building.getCompany().fetch(cursor, cursorInfo);
 		}
 
 		@Override

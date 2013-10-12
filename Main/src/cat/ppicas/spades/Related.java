@@ -56,7 +56,7 @@ public class Related<T extends Entity> {
 			Query query = createFetchQuery();
 			Cursor cursor = query.execute(db);
 			if (cursor.moveToFirst()) {
-				mEntity = mMapper.createFromCursor(cursor, query.getMappings());
+				mEntity = mMapper.createFromCursor(cursor, query.getCursorInfo());
 			} else {
 				mEntity = null;
 			}
@@ -67,16 +67,15 @@ public class Related<T extends Entity> {
 		return mEntity;
 	}
 
-	public T fetch(Cursor cursor, int[][] mappings) {
+	public T fetch(Cursor cursor, CursorInfo cursorInfo) {
 		if (!mFetched) {
-			// Check if there are mappings for the related table, if there
-			// aren't then the cursor dosen't contains data for this entity.
-			if (mRelatedTable.index >= mappings.length || mappings[mRelatedTable.index] == null) {
+			// Check if the cursor contains data for this entity.
+			if (!cursorInfo.hasTable(mRelatedTable)) {
 				return null;
 			}
 
 			// Obtain the cursor index of the related column.
-			int colIndex = mappings[mRelatedTable.index][mRelatedColumn.index];
+			int colIndex = cursorInfo.getColumnIndex(mRelatedColumn);
 			if (colIndex != -1 && !cursor.isNull(colIndex)) {
 				if (mValue != null && mValue != cursor.getLong(colIndex)) {
 					// Protection against incorrect entity assignments (ID != Foreign key).
@@ -87,7 +86,7 @@ public class Related<T extends Entity> {
 				}
 			}
 
-			mEntity = mMapper.createFromCursor(cursor, mappings);
+			mEntity = mMapper.createFromCursor(cursor, cursorInfo);
 			mFetched = true;
 		}
 

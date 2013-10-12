@@ -21,14 +21,15 @@ import java.util.Arrays;
 import android.database.Cursor;
 import cat.ppicas.spades.query.NameMapper;
 
-public class MappingsBuilder {
+public class CursorInfoBuilder {
 
-	private int mOffset;
-	private Tables mTables;
-	private int[][] mMappings;
+	private final Tables mTables = Tables.getInstance();
+	private int mOffset = 0;
+	private boolean[] mHasTables;
+	private int[][] mColumnIndexes;
 
-	public static int[][] getCursorMappings(Cursor cursor) {
-		MappingsBuilder builder = new MappingsBuilder();
+	public static CursorInfo getCursorInfo(Cursor cursor) {
+		CursorInfoBuilder builder = new CursorInfoBuilder();
 		NameMapper mapper = new NameMapper();
 
 		for (String name : cursor.getColumnNames()) {
@@ -43,57 +44,58 @@ public class MappingsBuilder {
 		return builder.build();
 	}
 
-	public MappingsBuilder() {
-		mOffset = 0;
-		mTables = Tables.getInstance();
-		mMappings = new int[mTables.size()][];
+	public CursorInfoBuilder() {
+		mHasTables = new boolean[mTables.size()];
+		Arrays.fill(mHasTables, false);
+
+		mColumnIndexes = new int[mTables.size()][];
+		for (Table table : mTables.getTables()) {
+			mColumnIndexes[table.index] = new int[table.getColumnsSize()];
+			Arrays.fill(mColumnIndexes[table.index], -1);
+		}
 	}
 
-	public MappingsBuilder addOffset() {
+	public CursorInfoBuilder addOffset() {
 		mOffset++;
 		return this;
 	}
 
-	public MappingsBuilder addOffset(int inc) {
+	public CursorInfoBuilder addOffset(int inc) {
 		mOffset += inc;
 		return this;
 	}
 
-	public MappingsBuilder add(Table table) {
+	public CursorInfoBuilder add(Table table) {
 		add(table.getColumns());
 		return this;
 	}
 
-	public MappingsBuilder add(Column column) {
+	public CursorInfoBuilder add(Column column) {
 		Table table = column.getTable();
-		if (mMappings[table.index] == null) {
-			mMappings[table.index] = new int[table.getColumnsSize()];
-			Arrays.fill(mMappings[table.index], -1);
-		}
-
-		if (mMappings[table.index][column.index] == -1) {
-			mMappings[table.index][column.index] = mOffset++;
+		if (mColumnIndexes[table.index][column.index] == -1) {
+			mHasTables[table.index] = true;
+			mColumnIndexes[table.index][column.index] = mOffset++;
 		}
 
 		return this;
 	}
 
-	public MappingsBuilder add(Iterable<? extends Column> columns) {
+	public CursorInfoBuilder add(Iterable<? extends Column> columns) {
 		for (Column column : columns) {
 			add(column);
 		}
 		return this;
 	}
 
-	public MappingsBuilder add(Column... columns) {
+	public CursorInfoBuilder add(Column... columns) {
 		for (Column column : columns) {
 			add(column);
 		}
 		return this;
 	}
 
-	public int[][] build() {
-		return mMappings;
+	public CursorInfo build() {
+		return new CursorInfo(mHasTables, mColumnIndexes);
 	}
 
 }

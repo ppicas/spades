@@ -21,6 +21,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import cat.ppicas.spades.Column;
 import cat.ppicas.spades.Column.ColumnId;
+import cat.ppicas.spades.CursorInfo;
 import cat.ppicas.spades.Dao;
 import cat.ppicas.spades.EntityMapper;
 import cat.ppicas.spades.Table;
@@ -45,21 +46,17 @@ public class CompanyDao extends Dao<CompanyAuto> {
 	public static final EntityMapper<CompanyAuto> MAPPER = new EntityMapper<CompanyAuto>(TABLE) {
 
 		@Override
-		protected CompanyAuto newInstance(Cursor cursor, int[][] mappings) {
+		protected CompanyAuto newInstance(Cursor cursor, CursorInfo cursorInfo) {
 			return new CompanyAuto();
 		}
 
 		@Override
-		protected void mapCursorValues(CompanyAuto company, Cursor cursor, int[][] mappings,
-				int tableIndex) {
+		protected void mapCursorValues(CompanyAuto company, Cursor cursor, CursorInfo cursorInfo) {
 			company.getMainBuilding().setKey(company.getEntityId());
 
-			int[] buildingMappings = mappings[BuildingDao.TABLE.index];
-			if (buildingMappings != null) {
-				int isMainIndex = buildingMappings[BuildingDao.IS_MAIN.index];
-				if (isMainIndex != -1 && cursor.getInt(isMainIndex) == 1) {
-					company.getMainBuilding().fetch(cursor, mappings);
-				}
+			int isMainIndex = cursorInfo.getColumnIndex(BuildingDao.IS_MAIN);
+			if (isMainIndex != -1 && cursor.getInt(isMainIndex) == 1) {
+				company.getMainBuilding().fetch(cursor, cursorInfo);
 			}
 		}
 

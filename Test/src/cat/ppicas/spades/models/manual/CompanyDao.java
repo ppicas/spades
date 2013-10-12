@@ -23,6 +23,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import cat.ppicas.spades.Column;
 import cat.ppicas.spades.Column.ColumnId;
+import cat.ppicas.spades.CursorInfo;
 import cat.ppicas.spades.Dao;
 import cat.ppicas.spades.EntityMapper;
 import cat.ppicas.spades.Table;
@@ -48,30 +49,28 @@ public class CompanyDao extends Dao<CompanyManual> {
 	public static final EntityMapper<CompanyManual> MAPPER = new EntityMapper<CompanyManual>(TABLE) {
 
 		@Override
-		protected CompanyManual newInstance(Cursor cursor, int[][] mappings) {
+		protected CompanyManual newInstance(Cursor cursor, CursorInfo cursorInfo) {
 			return new CompanyManual();
 		}
 
 		@Override
-		protected void mapCursorValues(CompanyManual company, Cursor cursor, int[][] mappings,
-				int tableIndex) {
-			int[] maps = mappings[tableIndex];
+		protected void mapCursorValues(CompanyManual company, Cursor cursor, CursorInfo cursorInfo) {
 			int index;
 
-			index = maps[NAME.index];
+			index = cursorInfo.getColumnIndex(NAME);
 			if (index != -1) {
 				company.setName(cursor.getString(index));
 			}
-			index = maps[FUNDATION_YEAR.index];
+			index = cursorInfo.getColumnIndex(FUNDATION_YEAR);
 			if (index != -1) {
 				company.setFundationYear(cursor.getInt(index));
 			}
-			index = maps[REGISTRATION.index];
+			index = cursorInfo.getColumnIndex(REGISTRATION);
 			if (index != -1) {
 				company.setRegistration(cursor.isNull(index) ? null
 						: new Date(cursor.getLong(index)));
 			}
-			index = maps[SIZE.index];
+			index = cursorInfo.getColumnIndex(SIZE);
 			if (index != -1) {
 				company.setSize(cursor.isNull(index) ? null
 						: CompanySize.valueOf(cursor.getString(index)));

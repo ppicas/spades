@@ -25,7 +25,8 @@ import java.util.List;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import cat.ppicas.spades.Column;
-import cat.ppicas.spades.MappingsBuilder;
+import cat.ppicas.spades.CursorInfo;
+import cat.ppicas.spades.CursorInfoBuilder;
 import cat.ppicas.spades.SqlHelper;
 import cat.ppicas.spades.Table;
 
@@ -168,8 +169,8 @@ public class Query {
 		return mSelector.hasTable(table);
 	}
 
-	public int[][] getMappings() {
-		MappingsBuilder builder = new MappingsBuilder();
+	public CursorInfo getCursorInfo() {
+		CursorInfoBuilder builder = new CursorInfoBuilder();
 		for (SelectedColumn selected : mSelector.getSelectedColumns()) {
 			if (!selected.isCustom()) {
 				builder.add(selected.getColumn());
