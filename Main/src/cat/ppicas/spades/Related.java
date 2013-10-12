@@ -99,6 +99,7 @@ public class Related<T extends Entity> {
 
 	public void set(T entity) {
 		mEntity = entity;
+		mValue = entity.getEntityId();
 		mFetched = true;
 	}
 
@@ -107,6 +108,7 @@ public class Related<T extends Entity> {
 	}
 
 	public void setKey(Long value) {
+		reset();
 		mValue = value;
 	}
 

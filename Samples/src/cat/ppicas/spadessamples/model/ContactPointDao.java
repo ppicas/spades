@@ -13,7 +13,7 @@ import cat.ppicas.spades.TableBuilder;
 
 public class ContactPointDao extends Dao<ContactPoint> {
 
-	public static final Table TABLE = new TableBuilder("person", ContactPoint.class)
+	public static final Table TABLE = new TableBuilder("contact_point", ContactPoint.class)
 			.columnId("id")
 			.columnAuto("person_id").notNull().foreignKey(PersonDao.ID).end()
 			.columnAuto("name").notNull().end()
@@ -23,7 +23,7 @@ public class ContactPointDao extends Dao<ContactPoint> {
 
 	public static final ColumnId ID = TABLE.getColumnId();
 
-	public static final Column PERSON_ID = TABLE.getColumn("phone_id");
+	public static final Column PERSON_ID = TABLE.getColumn("person_id");
 	public static final Column NAME = TABLE.getColumn("name");
 	public static final Column EMAIL = TABLE.getColumn("email");
 	public static final Column PHONE = TABLE.getColumn("phone");

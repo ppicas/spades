@@ -10,7 +10,7 @@ public class ContactPoint implements Entity {
 	private String mEmail;
 	private String mPhone;
 
-	private Related<Person> mPerson;
+	private Related<Person> mPerson = new Related<Person>(PersonDao.ID, PersonDao.MAPPER);
 
 	@Override
 	public long getEntityId() {

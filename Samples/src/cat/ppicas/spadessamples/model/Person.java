@@ -41,19 +41,19 @@ public class Person implements Entity {
 		mName = name;
 	}
 
-	Date getBirthDate() {
+	public Date getBirthDate() {
 		return mBirthDate;
 	}
 
-	void setBirthDate(Date birthDate) {
+	public void setBirthDate(Date birthDate) {
 		mBirthDate = birthDate;
 	}
 
-	Gender getGender() {
+	public Gender getGender() {
 		return mGender;
 	}
 
-	void setGender(Gender gender) {
+	public void setGender(Gender gender) {
 		mGender = gender;
 	}
 
