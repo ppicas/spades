@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import cat.ppicas.spades.Column;
 import cat.ppicas.spades.Column.ColumnId;
+import cat.ppicas.spades.CursorInfo;
 import cat.ppicas.spades.Dao;
 import cat.ppicas.spades.EntityMapper;
 import cat.ppicas.spades.Table;
@@ -29,7 +30,7 @@ public class ContactPointDao extends Dao<ContactPoint> {
 
 	public static final EntityMapper<ContactPoint> MAPPER = new EntityMapper<ContactPoint>(TABLE) {
 		@Override
-		protected ContactPoint newInstance(Cursor cursor, int[][] mappings) {
+		protected ContactPoint newInstance(Cursor cursor, CursorInfo cursorInfo) {
 			return new ContactPoint();
 		}
 
@@ -38,8 +39,7 @@ public class ContactPointDao extends Dao<ContactPoint> {
 		}
 
 		@Override
-		protected void mapCursorValues(ContactPoint entity, Cursor cursor, int[][] mappings,
-				int tableIndex) {
+		protected void mapCursorValues(ContactPoint entity, Cursor cursor, CursorInfo cursorInfo) {
 		}
 	};
 

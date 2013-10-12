@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import cat.ppicas.spades.Column;
 import cat.ppicas.spades.Column.ColumnId;
+import cat.ppicas.spades.CursorInfo;
 import cat.ppicas.spades.Dao;
 import cat.ppicas.spades.EntityMapper;
 import cat.ppicas.spades.Table;
@@ -34,7 +35,7 @@ public class PersonDao extends Dao<Person> {
 
 	public static final EntityMapper<Person> MAPPER = new EntityMapper<Person>(TABLE) {
 		@Override
-		protected Person newInstance(Cursor cursor, int[][] mappings) {
+		protected Person newInstance(Cursor cursor, CursorInfo cursorInfo) {
 			return new Person();
 		}
 
@@ -43,8 +44,7 @@ public class PersonDao extends Dao<Person> {
 		}
 
 		@Override
-		protected void mapCursorValues(Person entity, Cursor cursor, int[][] mappings,
-				int tableIndex) {
+		protected void mapCursorValues(Person entity, Cursor cursor, CursorInfo cursorInfo) {
 		}
 	};
 
