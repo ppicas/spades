@@ -24,4 +24,9 @@ public class CursorListActivity extends Activity {
 
 		helper.close();
 	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
 }
