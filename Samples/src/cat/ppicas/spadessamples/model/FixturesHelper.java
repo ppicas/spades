@@ -25,6 +25,11 @@ public class FixturesHelper {
 		personB.getSpouse().set(personA);
 		personDao.insert(personB);
 
+		// Person C.
+		Person personC = new Person();
+		personC.setName("Lorem Vadecun");
+		personDao.insert(personC);
+
 		// Set person B as person A spouse.
 		personA.getSpouse().set(personB);
 		personDao.save(personA);

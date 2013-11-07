@@ -1,34 +1,61 @@
 package cat.ppicas.spadessamples;
 
-import cat.ppicas.spadessamples.model.DatabaseHelper;
-import android.app.Activity;
+import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import cat.ppicas.spadessamples.model.DatabaseHelper;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ListActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
 
-		findViewById(R.id.cursor_list).setOnClickListener(new ClickListener(CursorListActivity.class));
-		// findViewById(R.id.object_list).setOnClickListener(new ClickListener(MainActivity.class));
+		ItemAdapter adapter = new ItemAdapter(this);
+		setListAdapter(adapter);
+
+		adapter.add(new Item("List with CursorAdapter", CursorListActivity.class));
+		adapter.add(new Item("List with ArrayAdapter", null));
+
+		getListView().setOnItemClickListener(new ItemClickListener());
 	}
 
-	private class ClickListener implements OnClickListener {
-		private Class<?> mActivity;
+	private static class ItemAdapter extends ArrayAdapter<Item> {
+		public ItemAdapter(Context context) {
+			super(context, android.R.layout.simple_list_item_1);
+		}
+	}
 
-		public ClickListener(Class<?> activity) {
-			mActivity = activity;
+	private static class Item {
+		String name;
+		Class<?> activity;
+
+		public Item(String name, Class<?> activity) {
+			this.name = name;
+			this.activity = activity;
 		}
 
 		@Override
-		public void onClick(View v) {
-			DatabaseHelper.deleteDatabase(MainActivity.this);
-			startActivity(new Intent(MainActivity.this, mActivity));
+		public String toString() {
+			return name;
+		}
+	}
+
+	private static class ItemClickListener implements OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			Context context = parent.getContext();
+			ItemAdapter adapter = (ItemAdapter) parent.getAdapter();
+			Item item = adapter.getItem(position);
+			if (item.activity != null) {
+				DatabaseHelper.deleteDatabase(context);
+				context.startActivity(new Intent(context, item.activity));
+			}
 		}
 	}
 
