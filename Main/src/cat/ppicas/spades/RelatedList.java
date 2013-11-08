@@ -67,6 +67,8 @@ public class RelatedList<T extends Entity> {
 			}
 
 			mChilds = new ArrayList<T>();
+			mFetched = true;
+
 			Long parentId = mParent.getEntityId();
 			int childColIndex = cursorInfo.getColumnIndex(mChildColumn);
 
@@ -84,9 +86,7 @@ public class RelatedList<T extends Entity> {
 				T entity = mChildMapper.createFromCursor(cursor, cursorInfo);
 				mChilds.add(entity);
 			}
-
 			cursor.moveToPosition(oldPosition);
-			mFetched = true;
 		}
 
 		return mChilds;
