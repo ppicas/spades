@@ -16,18 +16,27 @@
 
 package cat.ppicas.spades.models.manual;
 
-import cat.ppicas.spades.Related;
+import cat.ppicas.spades.RelatedInverse;
+import cat.ppicas.spades.RelatedList;
 import cat.ppicas.spades.SqlHelper;
 import cat.ppicas.spades.models.Company;
 
 public class CompanyManual extends Company {
 
-	private Related<BuildingManual> mMainBuilding = new Related<BuildingManual>(BuildingDao.COMPANY_ID,
-			BuildingDao.MAPPER, SqlHelper.expr("%s", BuildingDao.IS_MAIN));
+	private RelatedInverse<BuildingManual> mMainBuilding = new RelatedInverse<BuildingManual>(this,
+			BuildingDao.COMPANY_ID, BuildingDao.MAPPER, SqlHelper.expr("%s", BuildingDao.IS_MAIN));
+
+	private RelatedList<BuildingManual> mBuildings = new RelatedList<BuildingManual>(this,
+			BuildingDao.COMPANY_ID, BuildingDao.MAPPER);
 
 	@Override
-	public Related<BuildingManual> getMainBuilding() {
+	public RelatedInverse<BuildingManual> getMainBuilding() {
 		return mMainBuilding;
+	}
+
+	@Override
+	public RelatedList<BuildingManual> getBuildings() {
+		return mBuildings;
 	}
 
 }

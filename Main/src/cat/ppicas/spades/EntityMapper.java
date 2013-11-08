@@ -62,14 +62,10 @@ public abstract class EntityMapper<T extends Entity> {
 			return null;
 		}
 
-		int colIdIndex = cursorInfo.getColumnIndex(mTable.getColumnId());
-		if (colIdIndex != -1 && cursor.isNull(colIdIndex)) {
-			return null;
-		}
-
 		T entity = newInstance(cursor, cursorInfo);
 
 		// Set the entity ID.
+		int colIdIndex = cursorInfo.getColumnIndex(mTable.getColumnId());
 		if (colIdIndex != -1) {
 			entity.setEntityId(cursor.getLong(colIdIndex));
 		}

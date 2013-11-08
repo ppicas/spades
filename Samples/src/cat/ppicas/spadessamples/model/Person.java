@@ -12,7 +12,7 @@ public class Person implements Entity {
 		FEMALE
 	}
 
-	private long mId;
+	private Long mId;
 	private String mName;
 	private Date mBirthDate;
 	private Gender mGender;
@@ -24,12 +24,12 @@ public class Person implements Entity {
 	// RelatedList<ContactPoint> contactPoints;
 
 	@Override
-	public long getEntityId() {
+	public Long getEntityId() {
 		return mId;
 	}
 
 	@Override
-	public void setEntityId(long id) {
+	public void setEntityId(Long id) {
 		mId = id;
 	}
 

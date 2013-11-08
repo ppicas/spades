@@ -29,6 +29,7 @@ import cat.ppicas.spades.EntityMapper;
 import cat.ppicas.spades.Table;
 import cat.ppicas.spades.TableBuilder;
 import cat.ppicas.spades.models.Company.CompanySize;
+import cat.ppicas.spades.models.auto.BuildingDao;
 
 public class CompanyDao extends Dao<CompanyManual> {
 
@@ -76,7 +77,10 @@ public class CompanyDao extends Dao<CompanyManual> {
 						: CompanySize.valueOf(cursor.getString(index)));
 			}
 
-			company.getMainBuilding().setKey(company.getEntityId());
+			index = cursorInfo.getColumnIndex(BuildingDao.IS_MAIN);
+			if (index != -1 && cursor.getInt(index) == 1) {
+				company.getMainBuilding().fetch(cursor, cursorInfo);
+			}
 		}
 
 		@Override

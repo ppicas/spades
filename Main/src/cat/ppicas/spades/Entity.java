@@ -18,8 +18,8 @@ package cat.ppicas.spades;
 
 public interface Entity {
 
-	public long getEntityId();
+	public Long getEntityId();
 
-	public void setEntityId(long id);
+	public void setEntityId(Long id);
 
 }

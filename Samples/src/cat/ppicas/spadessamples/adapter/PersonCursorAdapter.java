@@ -30,7 +30,7 @@ public class PersonCursorAdapter extends ResourceCursorAdapter {
 
 		name.setText(person.getName());
 		contactPoint.setText("TODO");
-		hasSpouse.setImageResource((person.getSpouse().getKey() != null)
+		hasSpouse.setImageResource((!person.getSpouse().isNull())
 				? android.R.drawable.checkbox_on_background
 				: android.R.drawable.checkbox_off_background);
 	}

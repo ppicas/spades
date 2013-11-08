@@ -19,7 +19,8 @@ package cat.ppicas.spades.models;
 import java.util.Date;
 
 import cat.ppicas.spades.Entity;
-import cat.ppicas.spades.Related;
+import cat.ppicas.spades.RelatedInverse;
+import cat.ppicas.spades.RelatedList;
 
 public abstract class Company implements Entity {
 
@@ -27,19 +28,19 @@ public abstract class Company implements Entity {
 		SMALL, MEDIUM, LARGE
 	}
 
-	private long mId;
+	private Long mId;
 	private String mName = "";
 	private int mFundationYear;
 	private Date mRegistration;
 	private CompanySize mSize;
 
 	@Override
-	public long getEntityId() {
+	public Long getEntityId() {
 		return mId;
 	}
 
 	@Override
-	public void setEntityId(long id) {
+	public void setEntityId(Long id) {
 		mId = id;
 	}
 
@@ -75,6 +76,8 @@ public abstract class Company implements Entity {
 		mSize = size;
 	}
 
-	public abstract Related<? extends Building> getMainBuilding();
+	public abstract RelatedInverse<? extends Building> getMainBuilding();
+
+	public abstract RelatedList<? extends Building> getBuildings();
 
 }

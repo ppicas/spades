@@ -18,27 +18,28 @@ package cat.ppicas.spades;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import cat.ppicas.spades.Column.ColumnId;
 import cat.ppicas.spades.query.Query;
 
 public class Related<T extends Entity> {
 
-	private Column mRelatedColumn;
-	private Table mRelatedTable;
-	private EntityMapper<T> mMapper;
+	private ColumnId mParentColumn;
+	private Table mParentTable;
+	private EntityMapper<T> mParentMapper;
 	private String mExtraWhere;
 
 	private boolean mFetched;
-	private Long mValue;
-	private T mEntity;
+	private Long mRawValue;
+	private T mParent;
 
-	public Related(Column relatedColumn, EntityMapper<T> mapper) {
-		mRelatedColumn = relatedColumn;
-		mRelatedTable = mRelatedColumn.getTable();
-		mMapper = mapper;
+	public Related(ColumnId parentColumn, EntityMapper<T> parentMapper) {
+		mParentColumn = parentColumn;
+		mParentTable = mParentColumn.getTable();
+		mParentMapper = parentMapper;
 	}
 
-	public Related(Column relatedColumn, EntityMapper<T> mapper, String extraWhere) {
-		this(relatedColumn, mapper);
+	public Related(ColumnId parentColumn, EntityMapper<T> parentMapper, String extraWhere) {
+		this(parentColumn, parentMapper);
 		mExtraWhere = extraWhere;
 	}
 
@@ -47,73 +48,77 @@ public class Related<T extends Entity> {
 	}
 
 	public void reset() {
+		mParent = null;
 		mFetched = false;
-		mEntity = null;
 	}
 
 	public T fetch(SQLiteDatabase db) {
-		if (!mFetched && mValue != null) {
+		if (!mFetched && mRawValue != null) {
 			Query query = createFetchQuery();
 			Cursor cursor = query.execute(db);
 			if (cursor.moveToFirst()) {
-				mEntity = mMapper.createFromCursor(cursor, query.getCursorInfo());
+				mParent = mParentMapper.createFromCursor(cursor, query.getCursorInfo());
 			} else {
-				mEntity = null;
+				mParent = null;
 			}
 			cursor.close();
 			mFetched = true;
 		}
 
-		return mEntity;
+		return mParent;
 	}
 
 	public T fetch(Cursor cursor, CursorInfo cursorInfo) {
 		if (!mFetched) {
 			// Check if the cursor contains data for this entity.
-			if (!cursorInfo.hasTable(mRelatedTable)) {
+			if (!cursorInfo.hasTable(mParentTable)) {
 				return null;
 			}
 
 			// Obtain the cursor index of the related column.
-			int colIndex = cursorInfo.getColumnIndex(mRelatedColumn);
-			if (colIndex != -1 && !cursor.isNull(colIndex)) {
-				if (mValue != null && mValue != cursor.getLong(colIndex)) {
+			int parentColIndex = cursorInfo.getColumnIndex(mParentColumn);
+			if (parentColIndex != -1 && !cursor.isNull(parentColIndex)) {
+				if (mRawValue != null && !mRawValue.equals(cursor.getLong(parentColIndex))) {
 					// Protection against incorrect entity assignments (ID != Foreign key).
 					return null;
-				} else if (mValue == null) {
-					// Automatic assignment of mValue.
-					mValue = cursor.getLong(colIndex);
+				} else if (mRawValue == null) {
+					// Automatic assignment of raw value.
+					mRawValue = cursor.getLong(parentColIndex);
 				}
 			}
 
-			mEntity = mMapper.createFromCursor(cursor, cursorInfo);
+			mParent = mParentMapper.createFromCursor(cursor, cursorInfo);
 			mFetched = true;
 		}
 
-		return mEntity;
+		return mParent;
 	}
 
 	public T get() {
-		return mEntity;
+		return mParent;
 	}
 
 	public void set(T entity) {
-		mEntity = entity;
-		mValue = entity.getEntityId();
+		mParent = entity;
+		mRawValue = entity.getEntityId();
 		mFetched = true;
 	}
 
-	public Long getKey() {
-		return mValue;
+	public Long getRawValue() {
+		return mRawValue;
 	}
 
-	public void setKey(Long value) {
+	public void setRawValue(Long value) {
 		reset();
-		mValue = value;
+		mRawValue = value;
+	}
+
+	public boolean isNull() {
+		return mRawValue == null;
 	}
 
 	protected Query createFetchQuery() {
-		Query query = new Query(mRelatedTable).where(mRelatedColumn, "=" + mValue).limit(1);
+		Query query = new Query(mParentTable).where(mParentColumn, "=" + mRawValue).limit(1);
 		if (mExtraWhere != null) {
 			query.where(mExtraWhere);
 		}

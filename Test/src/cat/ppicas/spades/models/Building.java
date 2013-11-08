@@ -21,7 +21,7 @@ import cat.ppicas.spades.Related;
 
 public abstract class Building implements Entity {
 
-	private long mId;
+	private Long mId;
 	private String mAddress;
 	private String mPhone;
 	private int mFloors;
@@ -33,12 +33,12 @@ public abstract class Building implements Entity {
 	}
 
 	@Override
-	public long getEntityId() {
+	public Long getEntityId() {
 		return mId;
 	}
 
 	@Override
-	public void setEntityId(long id) {
+	public void setEntityId(Long id) {
 		mId = id;
 	}
 

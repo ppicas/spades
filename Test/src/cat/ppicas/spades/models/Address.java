@@ -20,18 +20,18 @@ import cat.ppicas.spades.Entity;
 
 public abstract class Address implements Entity {
 
-	private long mId;
+	private Long mId;
 	private String mStreet;
 	private String mTown;
 	private String mPostalCode;
 
 	@Override
-	public long getEntityId() {
+	public Long getEntityId() {
 		return mId;
 	}
 
 	@Override
-	public void setEntityId(long id) {
+	public void setEntityId(Long id) {
 		mId = id;
 	}
 

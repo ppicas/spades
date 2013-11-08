@@ -5,7 +5,7 @@ import cat.ppicas.spades.Related;
 
 public class ContactPoint implements Entity {
 
-	private long mId;
+	private Long mId;
 	private String mName;
 	private String mEmail;
 	private String mPhone;
@@ -13,12 +13,12 @@ public class ContactPoint implements Entity {
 	private Related<Person> mPerson = new Related<Person>(PersonDao.ID, PersonDao.MAPPER);
 
 	@Override
-	public long getEntityId() {
+	public Long getEntityId() {
 		return mId;
 	}
 
 	@Override
-	public void setEntityId(long id) {
+	public void setEntityId(Long id) {
 		mId = id;
 	}
 

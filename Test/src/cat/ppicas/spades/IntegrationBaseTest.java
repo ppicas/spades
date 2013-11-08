@@ -66,7 +66,7 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 
 		mBuildingA = newBuilding();
 		mBuildingA.setMain(false);
-		mBuildingA.getCompany().setKey(mCompany.getEntityId());
+		mBuildingA.getCompany().setRawValue(mCompany.getEntityId());
 		mBuildingA.setAddress("76 Ninth Avenue, New York, NY 10011");
 		mBuildingA.setPhone("+1 212-565-0000");
 		mBuildingA.setFloors(4);
@@ -76,7 +76,7 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 
 		mBuildingB = newBuilding();
 		mBuildingB.setMain(true);
-		mBuildingB.getCompany().setKey(mCompany.getEntityId());
+		mBuildingB.getCompany().setRawValue(mCompany.getEntityId());
 		mBuildingB.setAddress("1600 Amphitheatre Parkway, Mountain View, CA 94043");
 		mBuildingB.setPhone("+1 650-253-0000");
 		mBuildingB.setFloors(8);
@@ -94,13 +94,13 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 	public void test__Insert_return_and_sets_entity_id() throws Exception {
 		long id = mCompanyDao.insert(mCompany);
 		assertTrue(id > 0);
-		assertEquals(id,  mCompany.getEntityId());
+		assertEquals(id, (long)  mCompany.getEntityId());
 	}
 
 	public void test__Get_by_id() throws Exception {
 		Company company = mCompanyDao.get(mCompanyId);
 
-		assertEquals(mCompanyId, company.getEntityId());
+		assertEquals(mCompanyId, (long) company.getEntityId());
 		assertEquals("Google", company.getName());
 		assertEquals(1998, company.getFundationYear());
 		assertEquals(new GregorianCalendar(1998, Calendar.SEPTEMBER, 4).getTime(),
@@ -124,7 +124,7 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 
 		assertEquals(1, companies.size());
 		Company company = companies.get(0);
-		assertEquals(mCompanyId, company.getEntityId());
+		assertEquals(mCompanyId, (long) company.getEntityId());
 		assertEquals("Google", company.getName());
 		assertEquals(1998, company.getFundationYear());
 		assertEquals(new GregorianCalendar(1998, Calendar.SEPTEMBER, 4).getTime(),
@@ -134,7 +134,7 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 	public void test__Query_with_column_selected_and_auto_entities_id() throws Exception {
 		Company company = mCompanyDao.fetchFirst(new Query(mTables.companyTable)
 				.select(mTables.companyFundationYear));
-		assertEquals(mCompanyId, company.getEntityId());
+		assertEquals(mCompanyId, (long) company.getEntityId());
 		assertEquals("", company.getName());
 		assertEquals(1998, company.getFundationYear());
 		assertEquals(null, company.getRegistration());
@@ -144,10 +144,10 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 		Company company = mCompanyDao.fetchFirst(new Query(mTables.companyTable)
 				.setAutoEntitiesId(false)
 				.select(mTables.companyFundationYear));
-		assertEquals(0, company.getEntityId());
+		assertNull(company.getEntityId());
 		assertEquals("", company.getName());
 		assertEquals(1998, company.getFundationYear());
-		assertEquals(null, company.getRegistration());
+		assertNull(company.getRegistration());
 	}
 
 	public void test__Many_to_one_related_fetched_manually() throws Exception {
@@ -173,7 +173,7 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 
 		assertEquals(1, buildings.size());
 		Company company = buildings.get(0).getCompany().get();
-		assertEquals(mCompanyId, company.getEntityId());
+		assertEquals(mCompanyId, (long) company.getEntityId());
 		assertEquals("Google", company.getName());
 		assertEquals(1998, company.getFundationYear());
 		assertEquals(new GregorianCalendar(1998, Calendar.SEPTEMBER, 4).getTime(),
@@ -183,7 +183,7 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 	public void test__Many_to_one_related_fetched_from_entity() throws Exception {
 		Company company = mBuildingA.getCompany().fetch(mDb);
 
-		assertEquals(mCompanyId, company.getEntityId());
+		assertEquals(mCompanyId, (long) company.getEntityId());
 		assertEquals("Google", company.getName());
 		assertEquals(1998, company.getFundationYear());
 		assertEquals(new GregorianCalendar(1998, Calendar.SEPTEMBER, 4).getTime(),
@@ -194,13 +194,18 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 		Company company = mCompanyDao.get(mCompanyId);
 		Building building = company.getMainBuilding().fetch(mDb);
 
-		assertEquals(mBuildingBId, building.getEntityId());
-		assertEquals(mCompanyId, (long) building.getCompany().getKey());
+		assertEquals(mBuildingBId, (long) building.getEntityId());
+		assertEquals(mCompanyId, (long) building.getCompany().getRawValue());
 		assertEquals("1600 Amphitheatre Parkway, Mountain View, CA 94043", building.getAddress());
 		assertEquals("+1 650-253-0000", building.getPhone());
 		assertEquals(8, building.getFloors());
 		assertEquals(1024.512, building.getSurface());
 		assertTrue(building.isMain());
+	}
+
+	public void test_One_to_many_fetched_from_entity() throws Exception {
+		List<? extends Building> buildings = mCompany.getBuildings().fetch(mDb);
+		assertEquals(2, buildings.size());
 	}
 
 	protected abstract Dao<? extends Company> newCompanyDao(SQLiteDatabase db);

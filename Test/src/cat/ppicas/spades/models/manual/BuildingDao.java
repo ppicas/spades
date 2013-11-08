@@ -61,7 +61,7 @@ public class BuildingDao extends Dao<BuildingManual> {
 
 			index = cursorInfo.getColumnIndex(COMPANY_ID);
 			if (index != -1) {
-				building.getCompany().setKey(cursor.getLong(index));
+				building.getCompany().setRawValue(cursor.getLong(index));
 			}
 			index = cursorInfo.getColumnIndex(ADDRESS);
 			if (index != -1) {
@@ -89,7 +89,7 @@ public class BuildingDao extends Dao<BuildingManual> {
 
 		@Override
 		protected void mapContentValues(BuildingManual building, ContentValues values) {
-			values.put(COMPANY_ID.name, building.getCompany().getKey());
+			values.put(COMPANY_ID.name, building.getCompany().getRawValue());
 			if (building.getAddress() != null) {
 				values.put(ADDRESS.name, building.getAddress());
 			}

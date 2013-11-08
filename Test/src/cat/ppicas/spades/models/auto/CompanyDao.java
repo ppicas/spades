@@ -52,8 +52,6 @@ public class CompanyDao extends Dao<CompanyAuto> {
 
 		@Override
 		protected void mapCursorValues(CompanyAuto company, Cursor cursor, CursorInfo cursorInfo) {
-			company.getMainBuilding().setKey(company.getEntityId());
-
 			int isMainIndex = cursorInfo.getColumnIndex(BuildingDao.IS_MAIN);
 			if (isMainIndex != -1 && cursor.getInt(isMainIndex) == 1) {
 				company.getMainBuilding().fetch(cursor, cursorInfo);
