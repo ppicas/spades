@@ -23,8 +23,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="CursorListActivity"
+            android:name="cat.ppicas.spadessamples.CursorListActivity"
             android:label="Cursor List" >
+        </activity>
+        <activity
+            android:name="cat.ppicas.spadessamples.PersonDetailActivity"
+            android:label="@string/title_activity_person_detail" >
         </activity>
     </application>
 

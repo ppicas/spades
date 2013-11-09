@@ -204,7 +204,7 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 	}
 
 	public void test_One_to_many_fetched_from_entity() throws Exception {
-		List<? extends Building> buildings = mCompany.getBuildings().fetchList(mDb);
+		List<? extends Building> buildings = mCompany.getBuildings().fetch(mDb);
 		assertEquals(2, buildings.size());
 	}
 

@@ -16,19 +16,13 @@ public class MainActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		ItemAdapter adapter = new ItemAdapter(this);
+		ArrayAdapter<Item> adapter = new ArrayAdapter<Item>(this, android.R.layout.simple_list_item_1);
 		setListAdapter(adapter);
 
 		adapter.add(new Item("List with CursorAdapter", CursorListActivity.class));
 		adapter.add(new Item("List with ArrayAdapter", null));
 
 		getListView().setOnItemClickListener(new ItemClickListener());
-	}
-
-	private static class ItemAdapter extends ArrayAdapter<Item> {
-		public ItemAdapter(Context context) {
-			super(context, android.R.layout.simple_list_item_1);
-		}
 	}
 
 	private static class Item {
@@ -50,8 +44,7 @@ public class MainActivity extends ListActivity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			Context context = parent.getContext();
-			ItemAdapter adapter = (ItemAdapter) parent.getAdapter();
-			Item item = adapter.getItem(position);
+			Item item = (Item) parent.getAdapter().getItem(position);
 			if (item.activity != null) {
 				DatabaseHelper.deleteDatabase(context);
 				context.startActivity(new Intent(context, item.activity));
