@@ -41,7 +41,6 @@ public class Query {
 	private ArrayList<String> mGroupByClauses = new ArrayList<String>();
 	private String mLimit;
 	private boolean mDistinct;
-	private boolean mMagicColumns = false;
 
 	public Query(Table fromTable) {
 		mSelector.setAutoEntitiesId(true);
@@ -137,18 +136,8 @@ public class Query {
 		return this;
 	}
 
-	public Query enableMagicColumns() {
-		mMagicColumns = true;
-		return this;
-	}
-
 	public Query setDistinct(boolean state) {
 		mDistinct = state;
-		return this;
-	}
-
-	public Query setMagicColumns(boolean state) {
-		mMagicColumns = state;
 		return this;
 	}
 
@@ -164,10 +153,6 @@ public class Query {
 
 	public boolean isDistinct() {
 		return mDistinct;
-	}
-
-	public boolean hasMagicColumns() {
-		return mMagicColumns;
 	}
 
 	public boolean hasAutoEntitiesId() {
@@ -251,7 +236,7 @@ public class Query {
 		int i = 0;
 		String[] columns = new String[selectedCols.size()];
 		for (SelectedColumn selected : selectedCols) {
-			columns[i++] = selected.format(mMagicColumns);
+			columns[i++] = selected.format();
 		}
 		return columns;
 	}

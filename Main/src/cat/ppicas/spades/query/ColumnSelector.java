@@ -29,8 +29,8 @@ class ColumnSelector {
 	private List<Table> mTables = new ArrayList<Table>();
 	private List<Column> mColumns = new ArrayList<Column>();
 	private List<SelectedColumn> mSelected = new ArrayList<SelectedColumn>();
-	private boolean mAutoEntitiesId;
-	private boolean mAutoRowsId;
+	private boolean mAutoEntitiesId = true;
+	private boolean mAutoRowsId = true;
 
 	public ColumnSelector() {
 	}

@@ -53,13 +53,9 @@ class SelectedColumn {
 		return mCustomColumns;
 	}
 
-	public String format(boolean magicColumn) {
+	public String format() {
 		if (!isCustom()) {
-			if (magicColumn) {
-				return mMapper.ref(mColumn) + " AS " + mMapper.alias(mColumn);
-			} else {
-				return mMapper.ref(mColumn);
-			}
+			return mMapper.ref(mColumn);
 		} else {
 			return SqlHelper.expr(mCustomExpression, mCustomColumns);
 		}

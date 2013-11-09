@@ -18,31 +18,12 @@ package cat.ppicas.spades;
 
 import java.util.Arrays;
 
-import android.database.Cursor;
-import cat.ppicas.spades.query.NameMapper;
-
 public class CursorInfoBuilder {
 
 	private final Tables mTables = Tables.getInstance();
 	private int mOffset = 0;
 	private boolean[] mHasTables;
 	private int[][] mColumnIndexes;
-
-	public static CursorInfo getCursorInfo(Cursor cursor) {
-		CursorInfoBuilder builder = new CursorInfoBuilder();
-		NameMapper mapper = new NameMapper();
-
-		for (String name : cursor.getColumnNames()) {
-			Column column = mapper.parseColumnName(name);
-			if (column != null) {
-				builder.add(column);
-			} else {
-				builder.addOffset();
-			}
-		}
-
-		return builder.build();
-	}
 
 	public CursorInfoBuilder() {
 		mHasTables = new boolean[mTables.size()];

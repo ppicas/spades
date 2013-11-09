@@ -34,6 +34,8 @@ public class ColumnSelectorTest extends TestCase {
 		super.setUp();
 
 		mSelector = new ColumnSelector();
+		mSelector.setAutoRowsId(false);
+		mSelector.setAutoEntitiesId(false);
 	}
 
 	public void test__Should_get_selected_columns__When_two_tables_added() throws Exception {
