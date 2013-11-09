@@ -15,6 +15,7 @@ import cat.ppicas.spades.Dao;
 import cat.ppicas.spades.EntityMapper;
 import cat.ppicas.spades.Table;
 import cat.ppicas.spades.TableBuilder;
+import cat.ppicas.spades.query.Query;
 import cat.ppicas.spadessamples.model.Person.Gender;
 
 public class PersonDao extends Dao<Person> {
@@ -55,6 +56,15 @@ public class PersonDao extends Dao<Person> {
 
 	public PersonDao(SQLiteDatabase db) {
 		super(db, TABLE, MAPPER);
+	}
+
+	public List<Person> fetchAllWithRelated(Query query) {
+		Cursor cursor = query.execute(getDb());
+		try {
+			return fetchAllWithRelated(cursor, query.getCursorInfo());
+		} finally {
+			cursor.close();
+		}
 	}
 
 	public List<Person> fetchAllWithRelated(Cursor cursor, CursorInfo cursorInfo) {

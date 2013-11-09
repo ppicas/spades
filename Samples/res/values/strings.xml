@@ -2,6 +2,8 @@
 <resources>
 
     <string name="app_name">Spades Samples</string>
+    <string name="title_activity_cursor_list">Cursor List</string>
+    <string name="title_activity_array_list">Array List</string>
     <string name="title_activity_person_detail">Person Detail</string>
 
 </resources>
