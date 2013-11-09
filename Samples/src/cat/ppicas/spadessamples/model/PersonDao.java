@@ -1,9 +1,6 @@
 package cat.ppicas.spadessamples.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -59,30 +56,18 @@ public class PersonDao extends Dao<Person> {
 	}
 
 	public List<Person> fetchAllWithRelated(Query query) {
-		Cursor cursor = query.execute(getDb());
-		try {
-			return fetchAllWithRelated(cursor, query.getCursorInfo());
-		} finally {
-			cursor.close();
-		}
+		return fetchAll(query, FETCH_STRATEGY_HASH_MAP, mFetchRelatedConsumer);
 	}
 
 	public List<Person> fetchAllWithRelated(Cursor cursor, CursorInfo cursorInfo) {
-		Map<Long, Person> map = new HashMap<Long, Person>();
+		return fetchAll(cursor, cursorInfo, FETCH_STRATEGY_HASH_MAP, mFetchRelatedConsumer);
+	}
 
-		int idColIndex = cursorInfo.getColumnIndex(ID);
-		cursor.moveToPosition(-1);
-		while (cursor.moveToNext()) {
-			Person person = map.get(cursor.getLong(idColIndex));
-			if (person == null) {
-				person = MAPPER.createFromCursor(cursor, cursorInfo);
-				map.put(person.getEntityId(), person);
-			}
-
+	private final EntityConsumer<Person> mFetchRelatedConsumer = new EntityConsumer<Person>() {
+		@Override
+		public void accept(Cursor cursor, CursorInfo cursorInfo, Person person) {
 			person.getContactPoints().fetchAndAddOne(cursor, cursorInfo);
 		}
-
-		return new ArrayList<Person>(map.values());
-	}
+	};
 
 }

@@ -17,7 +17,10 @@
 package cat.ppicas.spades;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -26,13 +29,74 @@ import cat.ppicas.spades.query.Query;
 
 public abstract class Dao<T extends Entity> {
 
-	public static interface EntityConsumer<T extends Entity> {
+	public interface FetchStrategy<T extends Entity> {
+		public List<T> fetchAll(Cursor cursor, CursorInfo cursorInfo, EntityConsumer<T> consumer);
+	}
+
+	public interface EntityConsumer<T extends Entity> {
 		public void accept(Cursor cursor, CursorInfo cursorInfo, T entity);
 	}
+
+	public final FetchStrategy<T> FETCH_STRATEGY_DEFAULT = new FetchStrategy<T>() {
+		@Override
+		public List<T> fetchAll(Cursor cursor, CursorInfo cursorInfo, EntityConsumer<T> consumer) {
+			if (!cursorInfo.hasTable(mTable)) {
+				Collections.emptyList();
+			}
+
+			ArrayList<T> list = new ArrayList<T>();
+
+			int oldPosition = cursor.getPosition();
+
+			cursor.moveToPosition(-1);
+			while (cursor.moveToNext()) {
+				T entity = mMapper.createFromCursor(cursor, cursorInfo);
+				list.add(entity);
+				if (consumer != null) {
+					consumer.accept(cursor, cursorInfo, entity);
+				}
+			}
+
+			cursor.moveToPosition(oldPosition);
+
+			return list;
+		}
+	};
+
+	public final FetchStrategy<T> FETCH_STRATEGY_HASH_MAP = new FetchStrategy<T>() {
+		@Override
+		public List<T> fetchAll(Cursor cursor, CursorInfo cursorInfo, EntityConsumer<T> consumer) {
+			if (!cursorInfo.hasTable(mTable)) {
+				Collections.emptyList();
+			}
+
+			Map<Long, T> map = new HashMap<Long, T>();
+
+			int oldPosition = cursor.getPosition();
+			int idColIndex = cursorInfo.getColumnIndex(mTable.getColumnId());
+
+			cursor.moveToPosition(-1);
+			while (cursor.moveToNext()) {
+				T entity = map.get(cursor.getLong(idColIndex));
+				if (entity == null) {
+					entity = mMapper.createFromCursor(cursor, cursorInfo);
+					map.put(entity.getEntityId(), entity);
+				}
+				if (consumer != null) {
+					consumer.accept(cursor, cursorInfo, entity);
+				}
+			}
+
+			cursor.moveToPosition(oldPosition);
+
+			return new ArrayList<T>(map.values());
+		}
+	};
 
 	private SQLiteDatabase mDb;
 	private Table mTable;
 	private EntityMapper<T> mMapper;
+	private FetchStrategy<T> mFetchStrategy = FETCH_STRATEGY_DEFAULT;
 
 	public Dao(SQLiteDatabase db, Table table, EntityMapper<T> mapper) {
 		mDb = db;
@@ -117,7 +181,7 @@ public abstract class Dao<T extends Entity> {
 	public List<T> fetchAll(Query query) {
 		Cursor cursor = query.execute(mDb);
 		try {
-			return fetchAll(cursor, query.getCursorInfo(), null);
+			return mFetchStrategy.fetchAll(cursor, query.getCursorInfo(), null);
 		} finally {
 			cursor.close();
 		}
@@ -126,31 +190,40 @@ public abstract class Dao<T extends Entity> {
 	public List<T> fetchAll(Query query, EntityConsumer<T> consumer) {
 		Cursor cursor = query.execute(mDb);
 		try {
-			return fetchAll(cursor, query.getCursorInfo(), consumer);
+			return mFetchStrategy.fetchAll(cursor, query.getCursorInfo(), consumer);
+		} finally {
+			cursor.close();
+		}
+	}
+
+	public List<T> fetchAll(Query query, FetchStrategy<T> strategy, EntityConsumer<T> consumer) {
+		Cursor cursor = query.execute(mDb);
+		try {
+			return strategy.fetchAll(cursor, query.getCursorInfo(), consumer);
 		} finally {
 			cursor.close();
 		}
 	}
 
 	public List<T> fetchAll(Cursor cursor, CursorInfo cursorInfo) {
-		return fetchAll(cursor, cursorInfo, null);
+		return mFetchStrategy.fetchAll(cursor, cursorInfo, null);
 	}
 
 	public List<T> fetchAll(Cursor cursor, CursorInfo cursorInfo, EntityConsumer<T> consumer) {
-		ArrayList<T> list = new ArrayList<T>();
+		return mFetchStrategy.fetchAll(cursor, cursorInfo, consumer);
+	}
 
-		if (cursorInfo.hasTable(mTable)) {
-			cursor.moveToPosition(-1);
-			while (cursor.moveToNext()) {
-				T entity = mMapper.createFromCursor(cursor, cursorInfo);
-				if (consumer != null) {
-					consumer.accept(cursor, cursorInfo, entity);
-				}
-				list.add(entity);
-			}
-		}
+	public List<T> fetchAll(Cursor cursor, CursorInfo cursorInfo, FetchStrategy<T> strategy,
+			EntityConsumer<T> consumer) {
+		return strategy.fetchAll(cursor, cursorInfo, consumer);
+	}
 
-		return list;
+	public FetchStrategy<T> getFetchStrategy() {
+		return mFetchStrategy;
+	}
+
+	public void setFetchStrategy(FetchStrategy<T> fetchStrategy) {
+		mFetchStrategy = fetchStrategy;
 	}
 
 	protected SQLiteDatabase getDb() {
