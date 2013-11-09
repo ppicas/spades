@@ -114,6 +114,24 @@ public abstract class Dao<T extends Entity> {
 		}
 	}
 
+	public List<T> fetchAll(Query query) {
+		Cursor cursor = query.execute(mDb);
+		try {
+			return fetchAll(cursor, query.getCursorInfo(), null);
+		} finally {
+			cursor.close();
+		}
+	}
+
+	public List<T> fetchAll(Query query, EntityConsumer<T> consumer) {
+		Cursor cursor = query.execute(mDb);
+		try {
+			return fetchAll(cursor, query.getCursorInfo(), consumer);
+		} finally {
+			cursor.close();
+		}
+	}
+
 	public List<T> fetchAll(Cursor cursor, CursorInfo cursorInfo) {
 		return fetchAll(cursor, cursorInfo, null);
 	}
@@ -133,24 +151,6 @@ public abstract class Dao<T extends Entity> {
 		}
 
 		return list;
-	}
-
-	public List<T> fetchAll(Query query) {
-		Cursor cursor = query.execute(mDb);
-		try {
-			return fetchAll(cursor, query.getCursorInfo(), null);
-		} finally {
-			cursor.close();
-		}
-	}
-
-	public List<T> fetchAll(Query query, EntityConsumer<T> consumer) {
-		Cursor cursor = query.execute(mDb);
-		try {
-			return fetchAll(cursor, query.getCursorInfo(), consumer);
-		} finally {
-			cursor.close();
-		}
 	}
 
 	protected SQLiteDatabase getDb() {

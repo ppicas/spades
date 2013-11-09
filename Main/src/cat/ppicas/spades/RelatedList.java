@@ -59,6 +59,15 @@ public class RelatedList<T extends Entity> {
 		return mChilds;
 	}
 
+	public List<T> fetch(SQLiteDatabase db, Query query) {
+		Cursor cursor = query.execute(db);
+		try {
+			return fetch(cursor, query.getCursorInfo());
+		} finally {
+			cursor.close();
+		}
+	}
+
 	public List<T> fetch(Cursor cursor, CursorInfo cursorInfo) {
 		if (!mFetched) {
 			// Check if the cursor contains data for child entity.
