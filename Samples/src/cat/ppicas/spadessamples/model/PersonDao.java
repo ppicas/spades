@@ -1,5 +1,10 @@
 package cat.ppicas.spadessamples.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -50,6 +55,24 @@ public class PersonDao extends Dao<Person> {
 
 	public PersonDao(SQLiteDatabase db) {
 		super(db, TABLE, MAPPER);
+	}
+
+	public List<Person> fetchAllWithRelated(Cursor cursor, CursorInfo cursorInfo) {
+		Map<Long, Person> map = new HashMap<Long, Person>();
+
+		int idColIndex = cursorInfo.getColumnIndex(ID);
+		cursor.moveToPosition(-1);
+		while (cursor.moveToNext()) {
+			Person person = map.get(cursor.getLong(idColIndex));
+			if (person == null) {
+				person = MAPPER.createFromCursor(cursor, cursorInfo);
+				map.put(person.getEntityId(), person);
+			}
+
+			person.getContactPoints().fetchAndAddOne(cursor, cursorInfo);
+		}
+
+		return new ArrayList<Person>(map.values());
 	}
 
 }
