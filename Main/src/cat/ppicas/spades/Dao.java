@@ -64,11 +64,11 @@ public abstract class Dao<T extends Entity> {
 		return mDb.update(mTable.name, values, colId + "=" + entity.getEntityId(), null);
 	}
 
-	public boolean save(T entity) {
-		if (entity.getEntityId() > 0) {
-			return (update(entity) > 0);
+	public long save(T entity) {
+		if (entity.getEntityId() == null) {
+			return insert(entity);
 		} else {
-			return (insert(entity) != -1);
+			return update(entity);
 		}
 	}
 
@@ -125,10 +125,8 @@ public abstract class Dao<T extends Entity> {
 			cursor.moveToPosition(-1);
 			while (cursor.moveToNext()) {
 				T entity = mMapper.createFromCursor(cursor, cursorInfo);
-				if (entity != null) {
-					if (consumer != null) {
-						consumer.accept(cursor, cursorInfo, entity);
-					}
+				if (consumer != null) {
+					consumer.accept(cursor, cursorInfo, entity);
 				}
 				list.add(entity);
 			}

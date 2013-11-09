@@ -38,6 +38,7 @@ public class Query {
 	private ArrayList<String> mWhereClauses = new ArrayList<String>();
 	private ArrayList<String> mWhereArgs = new ArrayList<String>();
 	private ArrayList<String> mOrderBy = new ArrayList<String>();
+	private ArrayList<String> mGroupByClauses = new ArrayList<String>();
 	private String mLimit;
 	private boolean mDistinct;
 	private boolean mMagicColumns = false;
@@ -76,8 +77,8 @@ public class Query {
 		return this;
 	}
 
-	public Query leftJoin(Table table, String onrExp, Column... onExprCols) {
-		customJoin("LEFT", table, onrExp, onExprCols);
+	public Query leftJoin(Table table, String onExpr, Column... onExprCols) {
+		customJoin("LEFT", table, onExpr, onExprCols);
 		return this;
 	}
 
@@ -98,6 +99,18 @@ public class Query {
 
 	public Query params(String... params) {
 		mWhereArgs.addAll(Arrays.asList(params));
+		return this;
+	}
+
+	public Query groupBy(Column... cols) {
+		for (Column col : cols) {
+			mGroupByClauses.add(mMapper.ref(col));
+		}
+		return this;
+	}
+
+	public Query groupBy(String expr, Column... cols) {
+		mGroupByClauses.add(SqlHelper.expr(expr, cols));
 		return this;
 	}
 
@@ -189,9 +202,10 @@ public class Query {
 		String selection = mWhereClauses.isEmpty() ? null : join(" AND ", mWhereClauses);
 		String[] selectionArgs = mWhereArgs.isEmpty() ? null
 				: (String[]) mWhereArgs.toArray(new String[mWhereArgs.size()]);
+		String groupBy = mGroupByClauses.isEmpty() ? null : join(",", mGroupByClauses);
 		String orderBy = mOrderBy.isEmpty() ? null : join(",", mOrderBy);
 
-		return db.query(mDistinct, tables, columns, selection, selectionArgs, null, null, orderBy, mLimit);
+		return db.query(mDistinct, tables, columns, selection, selectionArgs, groupBy, null, orderBy, mLimit);
 	}
 
 	public int count(SQLiteDatabase db) {
@@ -202,9 +216,10 @@ public class Query {
 		String selection = mWhereClauses.isEmpty() ? null : join(" AND ", mWhereClauses);
 		String[] selectionArgs = mWhereArgs.isEmpty() ? null
 				: (String[]) mWhereArgs.toArray(new String[mWhereArgs.size()]);
+		String groupBy = mGroupByClauses.isEmpty() ? null : join(",", mGroupByClauses);
 
 		int res = 0;
-		Cursor cursor = db.query(tables, columns, selection, selectionArgs, null, null, null);
+		Cursor cursor = db.query(tables, columns, selection, selectionArgs, groupBy, null, null);
 		if (cursor.moveToFirst()) {
 			res = cursor.getInt(0);
 		}

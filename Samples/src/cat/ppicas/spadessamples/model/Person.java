@@ -4,6 +4,7 @@ import java.util.Date;
 
 import cat.ppicas.spades.Entity;
 import cat.ppicas.spades.Related;
+import cat.ppicas.spades.RelatedList;
 
 public class Person implements Entity {
 
@@ -20,8 +21,9 @@ public class Person implements Entity {
 	private int mWeight;
 
 	private Related<Person> mSpouse = new Related<Person>(PersonDao.ID, null);
-	// TODO Related lists.
-	// RelatedList<ContactPoint> contactPoints;
+
+	private RelatedList<ContactPoint> contactPoints = new RelatedList<ContactPoint>(this,
+			ContactPointDao.PERSON_ID, ContactPointDao.MAPPER);
 
 	@Override
 	public Long getEntityId() {
@@ -75,6 +77,10 @@ public class Person implements Entity {
 
 	public Related<Person> getSpouse() {
 		return mSpouse;
+	}
+
+	public RelatedList<ContactPoint> getContactPoints() {
+		return contactPoints;
 	}
 
 }

@@ -39,7 +39,7 @@ public class RelatedList<T extends Entity> {
 		mFetched = false;
 	}
 
-	public List<T> fetch(SQLiteDatabase db) {
+	public List<T> fetchList(SQLiteDatabase db) {
 		if (!mFetched && mParent.getEntityId() != null) {
 			Query query = createFetchQuery();
 			Cursor cursor = query.execute(db);
@@ -59,7 +59,7 @@ public class RelatedList<T extends Entity> {
 		return mChilds;
 	}
 
-	public List<T> fetch(Cursor cursor, CursorInfo cursorInfo) {
+	public List<T> fetchList(Cursor cursor, CursorInfo cursorInfo) {
 		if (!mFetched) {
 			// Check if the cursor contains data for child entity.
 			if (!cursorInfo.hasTable(mChildTable)) {
