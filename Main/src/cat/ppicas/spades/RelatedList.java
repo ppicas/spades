@@ -1,6 +1,7 @@
 package cat.ppicas.spades;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import android.database.Cursor;
@@ -16,7 +17,7 @@ public class RelatedList<T extends Entity> {
 	private String mExtraWhere;
 
 	private boolean mFetched;
-	private List<T> mChilds;
+	private List<T> mChilds = new ArrayList<T>();
 
 	public RelatedList(Entity parent, Column childColumn, EntityMapper<T> childMapper) {
 		mParent = parent;
@@ -35,7 +36,7 @@ public class RelatedList<T extends Entity> {
 	}
 
 	public void reset() {
-		mChilds = null;
+		mChilds.clear();
 		mFetched = false;
 	}
 
@@ -44,16 +45,16 @@ public class RelatedList<T extends Entity> {
 			Query query = createFetchQuery();
 			Cursor cursor = query.execute(db);
 
-			mChilds = new ArrayList<T>();
+			mChilds.clear();
+			mFetched = true;
+
 			cursor.moveToPosition(-1);
 			CursorInfo cursorInfo = query.getCursorInfo();
 			while (cursor.moveToNext()) {
 				T entity = mChildMapper.createFromCursor(cursor, cursorInfo);
 				mChilds.add(entity);
 			}
-
 			cursor.close();
-			mFetched = true;
 		}
 
 		return mChilds;
@@ -75,7 +76,7 @@ public class RelatedList<T extends Entity> {
 				return null;
 			}
 
-			mChilds = new ArrayList<T>();
+			mChilds.clear();
 			mFetched = true;
 
 			Long parentId = mParent.getEntityId();
@@ -114,28 +115,22 @@ public class RelatedList<T extends Entity> {
 			return;
 		}
 
-		if (mChilds == null) {
-			mChilds = new ArrayList<T>();
-		}
 		T child = mChildMapper.createFromCursor(cursor, cursorInfo);
 		mChilds.add(child);
 		mFetched = true;
 	}
 
-	public List<T> get() {
+	public List<T> getList() {
 		return mChilds;
 	}
 
-	public void set(List<T> entities) {
-		mChilds = entities;
+	public void add(T entity) {
+		mChilds.add(entity);
 		mFetched = true;
 	}
 
-	public void add(T entity) {
-		if (mChilds == null) {
-			mChilds = new ArrayList<T>();
-		}
-		mChilds.add(entity);
+	public void add(Collection<? extends T> entities) {
+		mChilds.addAll(entities);
 		mFetched = true;
 	}
 

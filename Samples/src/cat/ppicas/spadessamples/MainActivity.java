@@ -20,7 +20,7 @@ public class MainActivity extends ListActivity {
 		setListAdapter(adapter);
 
 		adapter.add(new Item("List with CursorAdapter", CursorListActivity.class));
-		adapter.add(new Item("List with ArrayAdapter", null));
+		adapter.add(new Item("List with ArrayAdapter", ArrayListActivity.class));
 
 		getListView().setOnItemClickListener(new ItemClickListener());
 	}

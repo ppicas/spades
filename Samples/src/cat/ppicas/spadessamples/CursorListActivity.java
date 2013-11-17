@@ -3,7 +3,6 @@ package cat.ppicas.spadessamples;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,7 +30,6 @@ public class CursorListActivity extends ListActivity {
 				.leftJoin(ContactPointDao.TABLE, "%s = %s", ContactPointDao.PERSON_ID, PersonDao.ID)
 				.groupBy(PersonDao.ID);
 		mCursor = query.execute(db);
-		DatabaseUtils.dumpCursor(mCursor);
 
 		helper.close();
 

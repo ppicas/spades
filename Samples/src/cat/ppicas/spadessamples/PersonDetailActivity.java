@@ -49,7 +49,7 @@ public class PersonDetailActivity extends Activity {
 		info.append("Height: ").append(person.getHeight()).append("\n");
 		info.append("Weight: ").append(person.getWeight()).append("\n");
 
-		for (ContactPoint contact : person.getContactPoints().get()) {
+		for (ContactPoint contact : person.getContactPoints().getList()) {
 			info.append("\n");
 			info.append("Contact '").append(contact.getName()).append("'\n");
 			info.append("\tEmail: ").append(contact.getEmail()).append("\n");

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import cat.ppicas.spades.query.Query;
+import cat.ppicas.spadessamples.adapter.PersonArrayAdapter;
 import cat.ppicas.spadessamples.model.ContactPointDao;
 import cat.ppicas.spadessamples.model.DatabaseHelper;
 import cat.ppicas.spadessamples.model.Person;
@@ -33,7 +34,10 @@ public class ArrayListActivity extends ListActivity {
 
 		helper.close();
 
-		// setListAdapter(new PersonCursorAdapter(this, mCursor, query.getCursorInfo()));
+		PersonArrayAdapter adapter = new PersonArrayAdapter(this);
+		adapter.addAll(people);
+
+		setListAdapter(adapter);
 		getListView().setOnItemClickListener(mListItemClickListener );
 	}
 
