@@ -17,21 +17,20 @@ import cat.ppicas.spadessamples.model.PersonDao;
 
 public class CursorListActivity extends ListActivity {
 
+	private DatabaseHelper mHelper;
 	private Cursor mCursor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		DatabaseHelper helper = new DatabaseHelper(this);
-		SQLiteDatabase db = helper.getReadableDatabase();
+		mHelper = new DatabaseHelper(this);
+		SQLiteDatabase db = mHelper.getReadableDatabase();
 
 		Query query = new Query(PersonDao.TABLE)
 				.leftJoin(ContactPointDao.TABLE, "%s = %s", ContactPointDao.PERSON_ID, PersonDao.ID)
 				.groupBy(PersonDao.ID);
 		mCursor = query.execute(db);
-
-		helper.close();
 
 		setListAdapter(new PersonCursorAdapter(this, mCursor, query.getCursorInfo()));
 		getListView().setOnItemClickListener(mListItemClickListener );
@@ -41,9 +40,8 @@ public class CursorListActivity extends ListActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 
-		if (mCursor != null) {
-			mCursor.close();
-		}
+		mCursor.close();
+		mHelper.close();
 	}
 
 	private final OnItemClickListener mListItemClickListener = new OnItemClickListener() {

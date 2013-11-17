@@ -16,92 +16,31 @@
 
 package cat.ppicas.spades;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import cat.ppicas.spades.fetch.ArrayListFetchStrategy;
+import cat.ppicas.spades.fetch.FetchStrategy;
 import cat.ppicas.spades.query.Query;
 
 public abstract class Dao<T extends Entity> {
-
-	public interface FetchStrategy<T extends Entity> {
-		public List<T> fetchAll(Cursor cursor, CursorInfo cursorInfo, EntityConsumer<T> consumer);
-	}
 
 	public interface EntityConsumer<T extends Entity> {
 		public void accept(Cursor cursor, CursorInfo cursorInfo, T entity);
 	}
 
-	public final FetchStrategy<T> FETCH_STRATEGY_DEFAULT = new FetchStrategy<T>() {
-		@Override
-		public List<T> fetchAll(Cursor cursor, CursorInfo cursorInfo, EntityConsumer<T> consumer) {
-			if (!cursorInfo.hasTable(mTable)) {
-				Collections.emptyList();
-			}
-
-			ArrayList<T> list = new ArrayList<T>();
-
-			int oldPosition = cursor.getPosition();
-
-			cursor.moveToPosition(-1);
-			while (cursor.moveToNext()) {
-				T entity = mMapper.createFromCursor(cursor, cursorInfo);
-				list.add(entity);
-				if (consumer != null) {
-					consumer.accept(cursor, cursorInfo, entity);
-				}
-			}
-
-			cursor.moveToPosition(oldPosition);
-
-			return list;
-		}
-	};
-
-	public final FetchStrategy<T> FETCH_STRATEGY_HASH_MAP = new FetchStrategy<T>() {
-		@Override
-		public List<T> fetchAll(Cursor cursor, CursorInfo cursorInfo, EntityConsumer<T> consumer) {
-			if (!cursorInfo.hasTable(mTable)) {
-				Collections.emptyList();
-			}
-
-			Map<Long, T> map = new HashMap<Long, T>();
-
-			int oldPosition = cursor.getPosition();
-			int idColIndex = cursorInfo.getColumnIndex(mTable.getColumnId());
-
-			cursor.moveToPosition(-1);
-			while (cursor.moveToNext()) {
-				T entity = map.get(cursor.getLong(idColIndex));
-				if (entity == null) {
-					entity = mMapper.createFromCursor(cursor, cursorInfo);
-					map.put(entity.getEntityId(), entity);
-				}
-				if (consumer != null) {
-					consumer.accept(cursor, cursorInfo, entity);
-				}
-			}
-
-			cursor.moveToPosition(oldPosition);
-
-			return new ArrayList<T>(map.values());
-		}
-	};
-
 	private SQLiteDatabase mDb;
 	private Table mTable;
 	private EntityMapper<T> mMapper;
-	private FetchStrategy<T> mFetchStrategy = FETCH_STRATEGY_DEFAULT;
+	private FetchStrategy<T> mFetchStrategy;
 
 	public Dao(SQLiteDatabase db, Table table, EntityMapper<T> mapper) {
 		mDb = db;
 		mTable = table;
 		mMapper = mapper;
+		mFetchStrategy = new ArrayListFetchStrategy<T>(table, mapper);
 	}
 
 	public long insert(T entity) {

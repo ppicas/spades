@@ -12,6 +12,7 @@ import cat.ppicas.spades.Dao;
 import cat.ppicas.spades.EntityMapper;
 import cat.ppicas.spades.Table;
 import cat.ppicas.spades.TableBuilder;
+import cat.ppicas.spades.fetch.HashMapFetchStrategy;
 import cat.ppicas.spades.query.Query;
 import cat.ppicas.spadessamples.model.Person.Gender;
 
@@ -51,16 +52,19 @@ public class PersonDao extends Dao<Person> {
 		}
 	};
 
+	private HashMapFetchStrategy<Person> mHashMapFetchStrategy;
+
 	public PersonDao(SQLiteDatabase db) {
 		super(db, TABLE, MAPPER);
+		mHashMapFetchStrategy = new HashMapFetchStrategy<Person>(TABLE, MAPPER);
 	}
 
 	public List<Person> fetchAllWithRelated(Query query) {
-		return fetchAll(query, FETCH_STRATEGY_HASH_MAP, mFetchRelatedConsumer);
+		return fetchAll(query, mHashMapFetchStrategy, mFetchRelatedConsumer);
 	}
 
 	public List<Person> fetchAllWithRelated(Cursor cursor, CursorInfo cursorInfo) {
-		return fetchAll(cursor, cursorInfo, FETCH_STRATEGY_HASH_MAP, mFetchRelatedConsumer);
+		return fetchAll(cursor, cursorInfo, mHashMapFetchStrategy, mFetchRelatedConsumer);
 	}
 
 	private final EntityConsumer<Person> mFetchRelatedConsumer = new EntityConsumer<Person>() {
