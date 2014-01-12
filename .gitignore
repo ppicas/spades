@@ -2,6 +2,9 @@
 /local.properties
 *.iml
 
-/.gradle
+/.gradle/
+/gradle/
+/gradlew
+/gradlew.bat
 
 .DS_Store

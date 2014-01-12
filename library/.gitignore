@@ -6,5 +6,5 @@
 
 /libs/*.properties
 
-/.gradle
+/.gradle/
 /build/
