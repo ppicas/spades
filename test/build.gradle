@@ -1,8 +1,8 @@
-apply plugin: 'android'
+apply plugin: 'android-library'
 
 dependencies {
-	compile project(':Main')
-	compile files('libs/android-support-v4.jar')
+	instrumentTestCompile project(':library')
+	instrumentTestCompile files('libs/hamcrest-all-1.3.jar')
 }
 
 android {
@@ -12,6 +12,11 @@ android {
 	sourceSets {
 		main {
 			manifest.srcFile 'AndroidManifest.xml'
+			res.srcDirs = ['res']
+		}
+
+		instrumentTest {
+			// manifest.srcFile 'AndroidManifest.xml'
 			java.srcDirs = ['src']
 			resources.srcDirs = ['src']
 			res.srcDirs = ['res']
