@@ -1,0 +1,21 @@
+apply plugin: 'android'
+
+dependencies {
+	compile project(':Main')
+	compile files('libs/android-support-v4.jar')
+}
+
+android {
+	compileSdkVersion 19
+	buildToolsVersion '19.0.1'
+
+	sourceSets {
+		main {
+			manifest.srcFile 'AndroidManifest.xml'
+			java.srcDirs = ['src']
+			resources.srcDirs = ['src']
+			res.srcDirs = ['res']
+			assets.srcDirs = ['assets']
+		}
+	}
+}

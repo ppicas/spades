@@ -5,3 +5,6 @@
 /.project
 
 /libs/*.properties
+
+/.gradle
+/build/
