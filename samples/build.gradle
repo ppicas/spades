@@ -1,13 +1,15 @@
 apply plugin: 'android'
 
 dependencies {
-	compile project(':library')
-	compile files('libs/android-support-v4.jar')
+	compile(project(':library')) {
+		exclude group: 'com.google.android'
+	}
+	compile 'com.android.support:support-v4:19.0.1'
 }
 
 android {
-	compileSdkVersion 19
-	buildToolsVersion '19.0.1'
+	compileSdkVersion androidCompileSdkVersion
+	buildToolsVersion androidBuildToolsVersion
 
 	sourceSets {
 		main {

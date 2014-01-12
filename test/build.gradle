@@ -1,13 +1,15 @@
 apply plugin: 'android-library'
 
 dependencies {
-	instrumentTestCompile project(':library')
-	instrumentTestCompile files('libs/hamcrest-all-1.3.jar')
+	instrumentTestCompile(project(':library')) {
+		exclude group: 'com.google.android'
+	}
+	instrumentTestCompile 'org.hamcrest:hamcrest-all:1.3'
 }
 
 android {
-	compileSdkVersion 19
-	buildToolsVersion '19.0.1'
+	compileSdkVersion androidCompileSdkVersion
+	buildToolsVersion androidBuildToolsVersion
 
 	sourceSets {
 		main {
@@ -16,7 +18,6 @@ android {
 		}
 
 		instrumentTest {
-			// manifest.srcFile 'AndroidManifest.xml'
 			java.srcDirs = ['src']
 			resources.srcDirs = ['src']
 			res.srcDirs = ['res']
