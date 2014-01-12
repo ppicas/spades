@@ -16,7 +16,12 @@
 
 package cat.picas.spades;
 
-public class CursorInfo {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class CursorInfo implements Parcelable {
+
+    public static final Creator<CursorInfo> CREATOR = new CursorInfoCreator();
 
 	private boolean[] mHasTables;
 	private int[][] mColumnIndexes;
@@ -26,7 +31,10 @@ public class CursorInfo {
 		mColumnIndexes = columnIndexes;
 	}
 
-	public boolean hasTable(Table table) {
+    private CursorInfo() {
+    }
+
+    public boolean hasTable(Table table) {
 		return mHasTables[table.index];
 	}
 
@@ -49,5 +57,41 @@ public class CursorInfo {
 	public int getColumnIndex(int tableIndex, int columnIndex) {
 		return mColumnIndexes[tableIndex][columnIndex];
 	}
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBooleanArray(mHasTables);
+        dest.writeInt(mColumnIndexes.length);
+        for (int[] indexes : mColumnIndexes) {
+            dest.writeIntArray(indexes);
+        }
+    }
+
+    private void readFromParcel(Parcel source) {
+        source.readBooleanArray(mHasTables);
+        mColumnIndexes = new int[source.readInt()][];
+        for (int[] indexes : mColumnIndexes) {
+            source.readIntArray(indexes);
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    private static class CursorInfoCreator implements Creator<CursorInfo> {
+        @Override
+        public CursorInfo createFromParcel(Parcel source) {
+            CursorInfo cursorInfo = new CursorInfo();
+            cursorInfo.readFromParcel(source);
+            return cursorInfo;
+        }
+
+        @Override
+        public CursorInfo[] newArray(int size) {
+            return new CursorInfo[size];
+        }
+    }
 
 }
