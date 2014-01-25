@@ -14,12 +14,19 @@ android {
 	sourceSets {
 		main {
 			manifest.srcFile 'AndroidManifest.xml'
+			java.srcDirs = []
+			resources.srcDirs = []
+			aidl.srcDirs = []
+			renderscript.srcDirs = []
 			res.srcDirs = ['res']
+			assets.srcDirs = []
 		}
 
 		instrumentTest {
 			java.srcDirs = ['src']
 			resources.srcDirs = ['src']
+			aidl.srcDirs = ['src']
+			renderscript.srcDirs = ['src']
 			res.srcDirs = ['res']
 			assets.srcDirs = ['assets']
 		}
