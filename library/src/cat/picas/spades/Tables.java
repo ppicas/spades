@@ -22,13 +22,17 @@ import java.util.List;
 
 public class Tables {
 
-	private static Tables sInstance;
+	private static volatile Tables sInstance;
 
 	private List<Table> mTables = new ArrayList<Table>();
 
 	public static Tables getInstance() {
 		if (sInstance == null) {
-			sInstance = new Tables();
+			synchronized (Tables.class) {
+				if (sInstance == null) {
+					sInstance = new Tables();
+				}
+			}
 		}
 
 		return sInstance;

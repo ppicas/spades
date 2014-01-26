@@ -37,13 +37,17 @@ public abstract class Dao<T extends Entity> {
 	private FetchStrategy<T> mFetchStrategy;
 
 	public Dao(SQLiteDatabase db, Table table, EntityMapper<T> mapper) {
+		this(db, table, mapper, new ArrayListFetchStrategy<T>(table, mapper));
+	}
+
+	public Dao(SQLiteDatabase db, Table table, EntityMapper<T> mapper, FetchStrategy<T> fetchStrategy) {
 		mDb = db;
 		mTable = table;
 		mMapper = mapper;
-		mFetchStrategy = new ArrayListFetchStrategy<T>(table, mapper);
+		mFetchStrategy = fetchStrategy;
 	}
 
-	public long insert(T entity) {
+    public long insert(T entity) {
 		ContentValues values = new ContentValues();
 		mMapper.putContentValues(entity, values);
 		values.putNull(mTable.getColumnId().name);
