@@ -33,11 +33,11 @@ public class SqlHelper {
 	}
 
 	public static String expr(Column col, String exp) {
-		return String.format("%s " + exp, new Object[] { sMapper.ref(col) });
+		return String.format("%s %s", sMapper.ref(col), exp);
 	}
 
 	public static String expr(String expr, Column... cols) {
-		return String.format(expr, (Object[]) sMapper.refs(cols));
+		return String.format(expr, sMapper.refs(cols));
 	}
 
 	public static String and(Iterable<String> exprs) {
