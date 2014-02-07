@@ -20,7 +20,7 @@ public class Person implements Entity {
 	private double mHeight;
 	private int mWeight;
 
-	private Related<Person> mSpouse = new Related<Person>(PersonDao.ID, null);
+	private Related<Person> mSpouse = new Related<Person>(PersonDao.ID, PersonDao.MAPPER);
 
 	private RelatedList<ContactPoint> contactPoints = new RelatedList<ContactPoint>(this,
 			ContactPointDao.PERSON_ID, ContactPointDao.MAPPER);
