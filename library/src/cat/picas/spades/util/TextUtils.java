@@ -92,11 +92,11 @@ public class TextUtils {
 
 
 	private static String concat(String[] words) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder builder = new StringBuilder();
 		for (String word : words) {
-			buffer.append(word);
+			builder.append(word);
 		}
-		return buffer.toString();
+		return builder.toString();
 	}
 
 	private static String[] capitalize(String[] words) {
