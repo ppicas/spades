@@ -21,7 +21,8 @@ import cat.picas.spades.models.Building;
 
 public class BuildingAuto extends Building {
 
-	private Related<CompanyAuto> mCompany = new Related<CompanyAuto>(CompanyDao.ID, CompanyDao.MAPPER);
+	private final Related<CompanyAuto> mCompany = new Related<CompanyAuto>(
+            CompanyDao.ID, CompanyDao.MAPPER);
 
 	@Override
 	public Related<CompanyAuto> getCompany() {

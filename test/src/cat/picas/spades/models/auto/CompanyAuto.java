@@ -23,10 +23,10 @@ import cat.picas.spades.models.Company;
 
 public class CompanyAuto extends Company {
 
-	private RelatedInverse<BuildingAuto> mMainBuilding = new RelatedInverse<BuildingAuto>(this,
+	private final RelatedInverse<BuildingAuto> mMainBuilding = new RelatedInverse<BuildingAuto>(this,
 			BuildingDao.COMPANY_ID, BuildingDao.MAPPER, SqlHelper.expr("%s", BuildingDao.IS_MAIN));
 
-	private RelatedList<BuildingAuto> mBuildings = new RelatedList<BuildingAuto>(this,
+	private final RelatedList<BuildingAuto> mBuildings = new RelatedList<BuildingAuto>(this,
 			BuildingDao.COMPANY_ID, BuildingDao.MAPPER);
 
 	@Override

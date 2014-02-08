@@ -49,7 +49,7 @@ public class PersonCursorAdapter extends ResourceCursorAdapter {
 
 		nameView.setText(person.getName());
 		contactPointView.setText(getContactPoint(contactPoint));
-		hasSpouseView.setImageResource((!person.getSpouse().isNull())
+		hasSpouseView.setImageResource((!person.spouse.isNull())
 				? android.R.drawable.checkbox_on_background
 				: android.R.drawable.checkbox_off_background);
 	}

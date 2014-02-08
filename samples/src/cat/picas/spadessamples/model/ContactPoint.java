@@ -21,12 +21,12 @@ import cat.picas.spades.Related;
 
 public class ContactPoint implements Entity {
 
-	private Long mId;
-	private String mName;
-	private String mEmail;
-	private String mPhone;
+    public final Related<Person> person = new Related<Person>(PersonDao.ID, PersonDao.MAPPER);
 
-	private Related<Person> mPerson = new Related<Person>(PersonDao.ID, PersonDao.MAPPER);
+    private Long mId;
+    private String mName;
+    private String mEmail;
+	private String mPhone;
 
 	@Override
 	public Long getEntityId() {
@@ -60,10 +60,6 @@ public class ContactPoint implements Entity {
 
 	public void setPhone(String phone) {
 		mPhone = phone;
-	}
-
-	public Related<Person> getPerson() {
-		return mPerson;
 	}
 
 }

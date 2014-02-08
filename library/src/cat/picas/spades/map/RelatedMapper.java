@@ -29,7 +29,7 @@ public class RelatedMapper implements ValueMapper {
 	public void putContetValue(Field relatedField, Object object, ContentValues values, String key, boolean notNull) {
 		try {
 			Related<?> related = (Related<?>) relatedField.get(object);
-			Long value = related.getRawValue();
+			Long value = related.getValue();
 			if (value != null || (value == null && !notNull)) {
 				values.put(key, value);
 			}
@@ -42,7 +42,7 @@ public class RelatedMapper implements ValueMapper {
 	public void setFieldValue(Field relatedField, Object object, Cursor cursor, int index) {
 		try {
 			Related<?> related = (Related<?>) relatedField.get(object);
-			related.setRawValue(cursor.isNull(index) ? null : cursor.getLong(index));
+			related.setValue(cursor.isNull(index) ? null : cursor.getLong(index));
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}

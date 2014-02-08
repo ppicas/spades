@@ -86,7 +86,7 @@ public class PersonDao extends Dao<Person> {
 	private final EntityConsumer<Person> mFetchRelatedConsumer = new EntityConsumer<Person>() {
 		@Override
 		public void accept(Cursor cursor, CursorInfo cursorInfo, Person person) {
-			person.getContactPoints().fetchAndAddOne(cursor, cursorInfo);
+			person.contactPoints.fetchAndAddOne(cursor, cursorInfo);
 		}
 	};
 

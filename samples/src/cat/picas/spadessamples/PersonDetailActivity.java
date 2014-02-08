@@ -46,7 +46,7 @@ public class PersonDetailActivity extends Activity {
 		PersonDao dao = new PersonDao(db);
 		Person person = dao.get(id);
 		if (person != null) {
-			person.getContactPoints().fetch(db);
+			person.contactPoints.fetch(db);
 		}
 		db.close();
 
@@ -65,7 +65,7 @@ public class PersonDetailActivity extends Activity {
 		info.append("Height: ").append(person.getHeight()).append("\n");
 		info.append("Weight: ").append(person.getWeight()).append("\n");
 
-		for (ContactPoint contact : person.getContactPoints().getList()) {
+		for (ContactPoint contact : person.contactPoints.getList()) {
 			info.append("\n");
 			info.append("Contact '").append(contact.getName()).append("'\n");
 			info.append("\tEmail: ").append(contact.getEmail()).append("\n");

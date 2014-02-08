@@ -23,11 +23,11 @@ import cat.picas.spades.models.Company;
 
 public class CompanyManual extends Company {
 
-	private RelatedInverse<BuildingManual> mMainBuilding = new RelatedInverse<BuildingManual>(this,
-			BuildingDao.COMPANY_ID, BuildingDao.MAPPER, SqlHelper.expr("%s", BuildingDao.IS_MAIN));
+	private final RelatedInverse<BuildingManual> mMainBuilding = new RelatedInverse<BuildingManual>(
+            this, BuildingDao.COMPANY_ID, BuildingDao.MAPPER, SqlHelper.expr("%s", BuildingDao.IS_MAIN));
 
-	private RelatedList<BuildingManual> mBuildings = new RelatedList<BuildingManual>(this,
-			BuildingDao.COMPANY_ID, BuildingDao.MAPPER);
+	private final RelatedList<BuildingManual> mBuildings = new RelatedList<BuildingManual>(
+            this, BuildingDao.COMPANY_ID, BuildingDao.MAPPER);
 
 	@Override
 	public RelatedInverse<BuildingManual> getMainBuilding() {

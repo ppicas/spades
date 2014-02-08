@@ -104,11 +104,11 @@ public class Related<T extends Entity> {
 		mFetched = true;
 	}
 
-	public Long getRawValue() {
+	public Long getValue() {
 		return mRawValue;
 	}
 
-	public void setRawValue(Long value) {
+	public void setValue(Long value) {
 		reset();
 		mRawValue = value;
 	}

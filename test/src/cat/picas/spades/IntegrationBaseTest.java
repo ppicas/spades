@@ -66,7 +66,7 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 
 		mBuildingA = newBuilding();
 		mBuildingA.setMain(false);
-		mBuildingA.getCompany().setRawValue(mCompany.getEntityId());
+		mBuildingA.getCompany().setValue(mCompany.getEntityId());
 		mBuildingA.setAddress("76 Ninth Avenue, New York, NY 10011");
 		mBuildingA.setPhone("+1 212-565-0000");
 		mBuildingA.setFloors(4);
@@ -76,7 +76,7 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 
 		mBuildingB = newBuilding();
 		mBuildingB.setMain(true);
-		mBuildingB.getCompany().setRawValue(mCompany.getEntityId());
+		mBuildingB.getCompany().setValue(mCompany.getEntityId());
 		mBuildingB.setAddress("1600 Amphitheatre Parkway, Mountain View, CA 94043");
 		mBuildingB.setPhone("+1 650-253-0000");
 		mBuildingB.setFloors(8);
@@ -195,7 +195,7 @@ public abstract class IntegrationBaseTest extends AndroidTestCase {
 		Building building = company.getMainBuilding().fetch(mDb);
 
 		assertEquals(mBuildingBId, (long) building.getEntityId());
-		assertEquals(mCompanyId, (long) building.getCompany().getRawValue());
+		assertEquals(mCompanyId, (long) building.getCompany().getValue());
 		assertEquals("1600 Amphitheatre Parkway, Mountain View, CA 94043", building.getAddress());
 		assertEquals("+1 650-253-0000", building.getPhone());
 		assertEquals(8, building.getFloors());

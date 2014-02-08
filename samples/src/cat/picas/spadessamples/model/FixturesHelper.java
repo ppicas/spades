@@ -38,7 +38,7 @@ public class FixturesHelper {
 		personB.setGender(Gender.FEMALE);
 		personB.setHeight(1.64);
 		personB.setWeight(62);
-		personB.getSpouse().set(personA);
+		personB.spouse.set(personA);
 		personDao.insert(personB);
 
 		// Person C.
@@ -47,7 +47,7 @@ public class FixturesHelper {
 		personDao.insert(personC);
 
 		// Set person B as person A spouse.
-		personA.getSpouse().set(personB);
+		personA.spouse.set(personB);
 		personDao.save(personA);
 
 		// Person A main contact point.
@@ -55,14 +55,14 @@ public class FixturesHelper {
 		contactPoint.setName("Main");
 		contactPoint.setEmail("nulla@example.com");
 		contactPoint.setPhone("111-222-333");
-		contactPoint.getPerson().set(personA);
+		contactPoint.person.set(personA);
 		contactPointDao.insert(contactPoint);
 
 		// Person A alternative email contact point.
 		contactPoint = new ContactPoint();
 		contactPoint.setName("Alternative email");
 		contactPoint.setEmail("nulla_male@other.com");
-		contactPoint.getPerson().set(personA);
+		contactPoint.person.set(personA);
 		contactPointDao.insert(contactPoint);
 	}
 }

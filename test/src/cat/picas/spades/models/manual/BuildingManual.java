@@ -21,7 +21,8 @@ import cat.picas.spades.models.Building;
 
 public class BuildingManual extends Building {
 
-	private Related<CompanyManual> mCompany = new Related<CompanyManual>(CompanyDao.ID, CompanyDao.MAPPER);
+	private final Related<CompanyManual> mCompany = new Related<CompanyManual>(
+            CompanyDao.ID, CompanyDao.MAPPER);
 
 	@Override
 	public Related<CompanyManual> getCompany() {

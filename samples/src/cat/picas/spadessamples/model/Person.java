@@ -29,17 +29,17 @@ public class Person implements Entity {
 		FEMALE
 	}
 
+    public final Related<Person> spouse = new Related<Person>(PersonDao.ID, null);
+
+    public final RelatedList<ContactPoint> contactPoints = new RelatedList<ContactPoint>(this,
+            ContactPointDao.PERSON_ID, ContactPointDao.MAPPER);
+
 	private Long mId;
 	private String mName;
 	private Date mBirthDate;
 	private Gender mGender;
 	private double mHeight;
 	private int mWeight;
-
-	private Related<Person> mSpouse = new Related<Person>(PersonDao.ID, null);
-
-	private RelatedList<ContactPoint> contactPoints = new RelatedList<ContactPoint>(this,
-			ContactPointDao.PERSON_ID, ContactPointDao.MAPPER);
 
 	@Override
 	public Long getEntityId() {
@@ -89,14 +89,6 @@ public class Person implements Entity {
 
 	public void setWeight(int weight) {
 		mWeight = weight;
-	}
-
-	public Related<Person> getSpouse() {
-		return mSpouse;
-	}
-
-	public RelatedList<ContactPoint> getContactPoints() {
-		return contactPoints;
 	}
 
 }

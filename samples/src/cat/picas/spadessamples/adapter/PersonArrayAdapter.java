@@ -40,7 +40,7 @@ public class PersonArrayAdapter extends ArrayAdapter<Person> {
 
 		Person person = getItem(position);
 
-		List<ContactPoint> contactPoints = person.getContactPoints().getList();
+		List<ContactPoint> contactPoints = person.contactPoints.getList();
 		ContactPoint contactPoint = !contactPoints.isEmpty() ? contactPoints.get(0) : null;
 
 		TextView nameView = (TextView) view.findViewById(R.id.name);
@@ -49,7 +49,7 @@ public class PersonArrayAdapter extends ArrayAdapter<Person> {
 
 		nameView.setText(person.getName());
 		contactPointView.setText(getContactPoint(contactPoint));
-		hasSpouseView.setImageResource((!person.getSpouse().isNull())
+		hasSpouseView.setImageResource((!person.spouse.isNull())
 				? android.R.drawable.checkbox_on_background
 				: android.R.drawable.checkbox_off_background);
 
