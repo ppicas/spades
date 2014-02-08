@@ -29,7 +29,7 @@ public class Person implements Entity {
 		FEMALE
 	}
 
-    public final Related<Person> spouse = new Related<Person>(PersonDao.ID, null);
+    public final Related<Person> spouse = new Related<Person>(PersonDao.ID, PersonDao.MAPPER);
 
     public final RelatedList<ContactPoint> contactPoints = new RelatedList<ContactPoint>(this,
             ContactPointDao.PERSON_ID, ContactPointDao.MAPPER);
