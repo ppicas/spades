@@ -1,9 +1,7 @@
 apply plugin: 'android'
 
 dependencies {
-	compile(project(':library')) {
-		exclude group: 'com.google.android'
-	}
+	compile project(':library')
 	compile 'com.android.support:support-v4:19.0.1'
 }
 

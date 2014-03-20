@@ -1,12 +1,19 @@
 apply plugin: 'java'
 
+configurations {
+    // Adds the provided scope for the dependencies
+    provided
+}
+
 dependencies {
-	compile('com.google.android:android:4.1.1.4')
+	provided('com.google.android:android:4.1.1.4')
 }
 
 sourceSets {
 	main {
 		java.srcDirs = ['src']
 		resources.srcDirs = ['src']
+
+        compileClasspath += configurations.provided
 	}
 }
