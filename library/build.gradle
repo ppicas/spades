@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'maven-publish'
 
 configurations {
     // Adds the provided scope for the dependencies
@@ -16,4 +17,12 @@ sourceSets {
 
         compileClasspath += configurations.provided
 	}
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
 }
