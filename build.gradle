@@ -1,6 +1,6 @@
 allprojects {
 	group = 'cat.picas.spades'
-	version = '0.4-alpha'
+	version = '0.4.1-alpha'
 }
 
 subprojects {

@@ -16,11 +16,11 @@
 
 package cat.picas.spadessamples.model;
 
-import java.util.List;
-
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import java.util.List;
+
 import cat.picas.spades.Column;
 import cat.picas.spades.Column.ColumnId;
 import cat.picas.spades.CursorInfo;
@@ -57,14 +57,6 @@ public class PersonDao extends Dao<Person> {
 		@Override
 		protected Person newInstance(Cursor cursor, CursorInfo cursorInfo) {
 			return new Person();
-		}
-
-		@Override
-		protected void mapContentValues(Person entity, ContentValues values) {
-		}
-
-		@Override
-		protected void mapCursorValues(Person entity, Cursor cursor, CursorInfo cursorInfo) {
 		}
 	};
 

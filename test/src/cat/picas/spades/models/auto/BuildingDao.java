@@ -16,9 +16,9 @@
 
 package cat.picas.spades.models.auto;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import cat.picas.spades.Column;
 import cat.picas.spades.Column.ColumnId;
 import cat.picas.spades.CursorInfo;
@@ -57,10 +57,6 @@ public class BuildingDao extends Dao<BuildingAuto> {
 		@Override
 		protected void mapCursorValues(BuildingAuto building, Cursor cursor, CursorInfo cursorInfo) {
 			building.getCompany().fetch(cursor, cursorInfo);
-		}
-
-		@Override
-		protected void mapContentValues(BuildingAuto building, ContentValues values) {
 		}
 
 	};

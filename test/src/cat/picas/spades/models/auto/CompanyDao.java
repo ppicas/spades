@@ -16,9 +16,9 @@
 
 package cat.picas.spades.models.auto;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import cat.picas.spades.Column;
 import cat.picas.spades.Column.ColumnId;
 import cat.picas.spades.CursorInfo;
@@ -56,10 +56,6 @@ public class CompanyDao extends Dao<CompanyAuto> {
 			if (isMainIndex != -1 && cursor.getInt(isMainIndex) == 1) {
 				company.getMainBuilding().fetch(cursor, cursorInfo);
 			}
-		}
-
-		@Override
-		protected void mapContentValues(CompanyAuto company, ContentValues values) {
 		}
 
 	};

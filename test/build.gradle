@@ -20,7 +20,7 @@ android {
 			assets.srcDirs = []
 		}
 
-		instrumentTest {
+		androidTest {
 			java.srcDirs = ['src']
 			resources.srcDirs = ['src']
 			aidl.srcDirs = ['src']

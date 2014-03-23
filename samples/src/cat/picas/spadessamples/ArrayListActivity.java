@@ -51,7 +51,9 @@ public class ArrayListActivity extends ListActivity {
 		helper.close();
 
 		PersonArrayAdapter adapter = new PersonArrayAdapter(this);
-		adapter.addAll(people);
+        for (Person person : people) {
+            adapter.add(person);
+        }
 
 		setListAdapter(adapter);
 		getListView().setOnItemClickListener(mListItemClickListener );

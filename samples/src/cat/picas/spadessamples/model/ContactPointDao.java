@@ -16,9 +16,9 @@
 
 package cat.picas.spadessamples.model;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import cat.picas.spades.Column;
 import cat.picas.spades.Column.ColumnId;
 import cat.picas.spades.CursorInfo;
@@ -48,14 +48,6 @@ public class ContactPointDao extends Dao<ContactPoint> {
 		@Override
 		protected ContactPoint newInstance(Cursor cursor, CursorInfo cursorInfo) {
 			return new ContactPoint();
-		}
-
-		@Override
-		protected void mapContentValues(ContactPoint entity, ContentValues values) {
-		}
-
-		@Override
-		protected void mapCursorValues(ContactPoint entity, Cursor cursor, CursorInfo cursorInfo) {
 		}
 	};
 

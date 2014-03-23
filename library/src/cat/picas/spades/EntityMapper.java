@@ -86,8 +86,10 @@ public abstract class EntityMapper<T extends Entity> {
 
 	protected abstract T newInstance(Cursor cursor, CursorInfo cursorInfo);
 
-	protected abstract void mapContentValues(T entity, ContentValues values);
+	protected void mapContentValues(T entity, ContentValues values) {
+    }
 
-	protected abstract void mapCursorValues(T entity, Cursor cursor, CursorInfo cursorInfo);
+	protected void mapCursorValues(T entity, Cursor cursor, CursorInfo cursorInfo) {
+    }
 
 }
