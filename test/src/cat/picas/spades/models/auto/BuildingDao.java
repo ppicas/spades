@@ -48,17 +48,10 @@ public class BuildingDao extends Dao<BuildingAuto> {
 	public static final Column IS_MAIN = TABLE.getColumn("is_main");
 
 	public static final EntityMapper<BuildingAuto> MAPPER = new EntityMapper<BuildingAuto>(TABLE) {
-
 		@Override
 		protected BuildingAuto newInstance(Cursor cursor, CursorInfo cursorInfo) {
 			return new BuildingAuto();
 		}
-
-		@Override
-		protected void mapCursorValues(BuildingAuto building, Cursor cursor, CursorInfo cursorInfo) {
-			building.getCompany().fetch(cursor, cursorInfo);
-		}
-
 	};
 
 	public BuildingDao(SQLiteDatabase db) {

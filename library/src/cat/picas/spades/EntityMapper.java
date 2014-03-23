@@ -22,6 +22,8 @@ import java.util.List;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import cat.picas.spades.map.MappedField;
+
 public abstract class EntityMapper<T extends Entity> {
 
 	private Table mTable;
@@ -74,7 +76,18 @@ public abstract class EntityMapper<T extends Entity> {
 		for (Column column : mMappedColumns) {
 			int index = cursorInfo.getColumnIndex(column);
 			if (index != -1) {
-				column.getMappedField().setFieldValue(entity, cursor, index);
+                MappedField mappedField = column.getMappedField();
+                mappedField.setFieldValue(entity, cursor, index);
+
+                // Auto fetch Related mapped fields.
+                if (mappedField.getField().getType() == Related.class) {
+                    try {
+                        Related<?> relatedField = (Related<?>) mappedField.getField().get(entity);
+                        relatedField.fetch(cursor, cursorInfo);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
 			}
 		}
 
