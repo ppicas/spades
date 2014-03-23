@@ -21,7 +21,7 @@ import android.os.Parcelable;
 
 public class CursorInfo implements Parcelable {
 
-    public static final Creator<CursorInfo> CREATOR = new CursorInfoCreator();
+	public static final Creator<CursorInfo> CREATOR = new CursorInfoCreator();
 
 	private boolean[] mHasTables;
 	private int[][] mColumnIndexes;
@@ -31,10 +31,10 @@ public class CursorInfo implements Parcelable {
 		mColumnIndexes = columnIndexes;
 	}
 
-    private CursorInfo() {
-    }
+	private CursorInfo() {
+	}
 
-    public boolean hasTable(Table table) {
+	public boolean hasTable(Table table) {
 		return mHasTables[table.index];
 	}
 
@@ -58,40 +58,40 @@ public class CursorInfo implements Parcelable {
 		return mColumnIndexes[tableIndex][columnIndex];
 	}
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeBooleanArray(mHasTables);
-        dest.writeInt(mColumnIndexes.length);
-        for (int[] indexes : mColumnIndexes) {
-            dest.writeIntArray(indexes);
-        }
-    }
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeBooleanArray(mHasTables);
+		dest.writeInt(mColumnIndexes.length);
+		for (int[] indexes : mColumnIndexes) {
+			dest.writeIntArray(indexes);
+		}
+	}
 
-    private void readFromParcel(Parcel source) {
-        source.readBooleanArray(mHasTables);
-        mColumnIndexes = new int[source.readInt()][];
-        for (int[] indexes : mColumnIndexes) {
-            source.readIntArray(indexes);
-        }
-    }
+	private void readFromParcel(Parcel source) {
+		source.readBooleanArray(mHasTables);
+		mColumnIndexes = new int[source.readInt()][];
+		for (int[] indexes : mColumnIndexes) {
+			source.readIntArray(indexes);
+		}
+	}
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+	@Override
+	public int describeContents() {
+		return 0;
+	}
 
-    private static class CursorInfoCreator implements Creator<CursorInfo> {
-        @Override
-        public CursorInfo createFromParcel(Parcel source) {
-            CursorInfo cursorInfo = new CursorInfo();
-            cursorInfo.readFromParcel(source);
-            return cursorInfo;
-        }
+	private static class CursorInfoCreator implements Creator<CursorInfo> {
+		@Override
+		public CursorInfo createFromParcel(Parcel source) {
+			CursorInfo cursorInfo = new CursorInfo();
+			cursorInfo.readFromParcel(source);
+			return cursorInfo;
+		}
 
-        @Override
-        public CursorInfo[] newArray(int size) {
-            return new CursorInfo[size];
-        }
-    }
+		@Override
+		public CursorInfo[] newArray(int size) {
+			return new CursorInfo[size];
+		}
+	}
 
 }

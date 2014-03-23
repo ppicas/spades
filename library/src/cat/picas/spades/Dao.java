@@ -47,7 +47,7 @@ public abstract class Dao<T extends Entity> {
 		mFetchStrategy = fetchStrategy;
 	}
 
-    public long insert(T entity) {
+	public long insert(T entity) {
 		ContentValues values = new ContentValues();
 		mMapper.putContentValues(entity, values);
 		values.putNull(mTable.getColumnId().name);

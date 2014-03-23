@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+
 import cat.picas.spadessamples.model.DatabaseHelper;
 
 public class MainActivity extends ListActivity {

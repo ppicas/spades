@@ -23,25 +23,25 @@ import cat.picas.spades.models.auto.BuildingDao;
 import cat.picas.spades.models.auto.CompanyDao;
 
 public class CursorInfoTest extends AndroidTestCase {
-    public void test__Should_serialize_and_unserialize_all_fields() throws Exception {
-        // Given
-        CursorInfoBuilder builder = new CursorInfoBuilder();
-        builder.add(CompanyDao.NAME);
-        builder.add(CompanyDao.REGISTRATION);
-        CursorInfo cursorInfo = builder.build();
+	public void test__Should_serialize_and_unserialize_all_fields() throws Exception {
+		// Given
+		CursorInfoBuilder builder = new CursorInfoBuilder();
+		builder.add(CompanyDao.NAME);
+		builder.add(CompanyDao.REGISTRATION);
+		CursorInfo cursorInfo = builder.build();
 
-        // When
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("cursorInfo", cursorInfo);
-        cursorInfo = bundle.getParcelable("cursorInfo");
+		// When
+		Bundle bundle = new Bundle();
+		bundle.putParcelable("cursorInfo", cursorInfo);
+		cursorInfo = bundle.getParcelable("cursorInfo");
 
-        // Then
-        assertTrue(cursorInfo.hasTable(CompanyDao.TABLE));
-        assertFalse(cursorInfo.hasTable(BuildingDao.TABLE));
-        // And
-        assertTrue(cursorInfo.hasColumn(CompanyDao.NAME));
-        assertTrue(cursorInfo.hasColumn(CompanyDao.REGISTRATION));
-        assertFalse(cursorInfo.hasColumn(CompanyDao.ID));
-        assertFalse(cursorInfo.hasColumn(BuildingDao.PHONE));
-    }
+		// Then
+		assertTrue(cursorInfo.hasTable(CompanyDao.TABLE));
+		assertFalse(cursorInfo.hasTable(BuildingDao.TABLE));
+		// And
+		assertTrue(cursorInfo.hasColumn(CompanyDao.NAME));
+		assertTrue(cursorInfo.hasColumn(CompanyDao.REGISTRATION));
+		assertFalse(cursorInfo.hasColumn(CompanyDao.ID));
+		assertFalse(cursorInfo.hasColumn(BuildingDao.PHONE));
+	}
 }

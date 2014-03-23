@@ -21,11 +21,11 @@ import cat.picas.spades.Related;
 
 public class ContactPoint implements Entity {
 
-    public final Related<Person> person = new Related<Person>(PersonDao.ID, PersonDao.MAPPER);
+	public final Related<Person> person = new Related<Person>(PersonDao.ID, PersonDao.MAPPER);
 
-    private Long mId;
-    private String mName;
-    private String mEmail;
+	private Long mId;
+	private String mName;
+	private String mEmail;
 	private String mPhone;
 
 	@Override

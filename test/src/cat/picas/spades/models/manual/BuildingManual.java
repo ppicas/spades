@@ -22,7 +22,7 @@ import cat.picas.spades.models.Building;
 public class BuildingManual extends Building {
 
 	private final Related<CompanyManual> mCompany = new Related<CompanyManual>(
-            CompanyDao.ID, CompanyDao.MAPPER);
+			CompanyDao.ID, CompanyDao.MAPPER);
 
 	@Override
 	public Related<CompanyManual> getCompany() {

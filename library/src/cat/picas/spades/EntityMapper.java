@@ -16,6 +16,8 @@
 
 package cat.picas.spades;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,18 +78,9 @@ public abstract class EntityMapper<T extends Entity> {
 		for (Column column : mMappedColumns) {
 			int index = cursorInfo.getColumnIndex(column);
 			if (index != -1) {
-                MappedField mappedField = column.getMappedField();
-                mappedField.setFieldValue(entity, cursor, index);
-
-                // Auto fetch Related mapped fields.
-                if (mappedField.getField().getType() == Related.class) {
-                    try {
-                        Related<?> relatedField = (Related<?>) mappedField.getField().get(entity);
-                        relatedField.fetch(cursor, cursorInfo);
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+				MappedField mappedField = column.getMappedField();
+				mappedField.setFieldValue(entity, cursor, index);
+				autoFetchRelatedField(cursor, cursorInfo, entity, mappedField);
 			}
 		}
 
@@ -100,9 +93,45 @@ public abstract class EntityMapper<T extends Entity> {
 	protected abstract T newInstance(Cursor cursor, CursorInfo cursorInfo);
 
 	protected void mapContentValues(T entity, ContentValues values) {
-    }
+	}
 
 	protected void mapCursorValues(T entity, Cursor cursor, CursorInfo cursorInfo) {
-    }
+	}
+
+	/**
+	 * Auto fetch Related mapped fields.
+	 *
+	 * @param cursor a {@code Cursor} object with the current query
+	 * @param cursorInfo a {@code CursorInfo} object holding the {@code Cursor} info
+	 * @param entity an {@code Entity} instance that holds the {@link Related} field
+	 * @param mappedField the {@link MappedField} of the {@code Related} field
+	 */
+	private void autoFetchRelatedField(Cursor cursor, CursorInfo cursorInfo, T entity,
+			MappedField mappedField) {
+
+		Field field = mappedField.getField();
+
+		// Check that the class of the Field is Related, and that its parameterized type hasn't
+		// the same type as the Entity. The latest check it's to avoid the Related fields that
+		// point to the same Entity.
+		if (field.getGenericType() instanceof ParameterizedType) {
+			ParameterizedType type = (ParameterizedType) field.getGenericType();
+
+			if (type.getRawType() != Related.class
+					|| type.getActualTypeArguments().length != 1
+					|| type.getActualTypeArguments()[0] == entity.getClass()) {
+				return;
+			}
+		} else {
+			return;
+		}
+
+		try {
+			Related<?> relatedField = (Related<?>) field.get(entity);
+			relatedField.fetch(cursor, cursorInfo);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 }
