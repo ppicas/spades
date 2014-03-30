@@ -17,6 +17,7 @@
 package cat.picas.spades;
 
 import android.text.TextUtils;
+
 import cat.picas.spades.map.MappedField;
 
 public class ColumnBuilder {
@@ -100,6 +101,21 @@ public class ColumnBuilder {
 		return this;
 	}
 
+	public ColumnBuilder foreignKey(String columnName) {
+		return foreignKey(columnName, OnDelete.CASCADE);
+	}
+
+	public ColumnBuilder foreignKey(String columnName, OnDelete onDelete) {
+		if (!mTableBuilder.hasColumn(columnName)) {
+			throw new RuntimeException(new NoSuchFieldException(columnName));
+		}
+		mDefinition += " REFERENCES " + mTableBuilder.getTableName() + "(" + columnName + ") "
+				+ "ON DELETE " + onDelete.name().replace('_', ' ');
+		indexed(false, true);
+
+		return this;
+	}
+
 	public ColumnBuilder indexed(boolean unique, boolean ascendant) {
 		mIndexed = true;
 		mIndexIsUnique = unique;
@@ -116,6 +132,10 @@ public class ColumnBuilder {
 	public TableBuilder end() {
 		mTableBuilder.addColumnBuilder(this);
 		return mTableBuilder;
+	}
+
+	protected String getName() {
+		return mName;
 	}
 
 	protected Column build(int index, Table table) {

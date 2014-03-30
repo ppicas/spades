@@ -39,7 +39,7 @@ public class PersonDao extends Dao<Person> {
 			.columnAuto("name").notNull().end()
 			.columnAuto("birth_date").end()
 			.columnAuto("gender").notNull().defaultValue(Gender.MALE).end()
-			.columnAuto("spouse_id").end() // TODO Missing capacity to set self references.
+			.columnAuto("spouse_id").foreignKey("id").end()
 			.columnAuto("height").indexed(false, true).end()
 			.columnAuto("weight").end()
 			.build();

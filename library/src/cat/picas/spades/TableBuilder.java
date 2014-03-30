@@ -106,6 +106,20 @@ public class TableBuilder {
 		mColumnBuilders.add(columnBuilder);
 	}
 
+	protected String getTableName() {
+		return mTableName;
+	}
+
+	protected boolean hasColumn(String columnName) {
+		for (ColumnBuilder columnBuilder : mColumnBuilders) {
+			if (columnName.equals(columnBuilder.getName())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	private ColumnBuilder columnAuto(String columnName, Field field) {
 		if (field == null) {
 			throw new IllegalArgumentException(new NoSuchFieldException());
@@ -116,5 +130,4 @@ public class TableBuilder {
 
 		return new ColumnBuilder(columnName, mappedField, this);
 	}
-
 }
