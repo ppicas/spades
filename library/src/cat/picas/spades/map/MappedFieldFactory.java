@@ -28,12 +28,16 @@ import cat.picas.spades.Related;
 
 public class MappedFieldFactory {
 
-	private static MappedFieldFactory sInstance;
+	private static volatile MappedFieldFactory sInstance;
 
 	public static MappedFieldFactory getInstance() {
 		if (sInstance == null) {
-			sInstance = new MappedFieldFactory();
-			registerCoreValueMappers(sInstance);
+			synchronized (MappedFieldFactory.class) {
+				if (sInstance == null) {
+					sInstance = new MappedFieldFactory();
+					registerCoreValueMappers(sInstance);
+				}
+			}
 		}
 
 		return sInstance;

@@ -37,7 +37,7 @@ public class SqlHelper {
 	}
 
 	public static String expr(String expr, Column... cols) {
-		return String.format(expr, sMapper.refs(cols));
+		return String.format(expr, (Object[]) sMapper.refs(cols));
 	}
 
 	public static String and(Iterable<String> exprs) {
