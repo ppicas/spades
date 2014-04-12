@@ -111,6 +111,10 @@ public class TableBuilder {
 	}
 
 	protected boolean hasColumn(String columnName) {
+		if (columnName.equals(mColumnIdName)) {
+			return true;
+		}
+
 		for (ColumnBuilder columnBuilder : mColumnBuilders) {
 			if (columnName.equals(columnBuilder.getName())) {
 				return true;

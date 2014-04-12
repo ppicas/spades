@@ -42,13 +42,11 @@ public class TextUtils {
 	}
 
 	/**
-	 * Generate a list of possible entity field names from the words of a table
-	 * column name.
-	 *
+	 * Generate a list of possible entity field names from the words of a table column name.
 	 * <p>
-	 * For example if we have a column name {@code two_words} then this method
-	 * will receive the following words array: {@code two} and {@code words}.
-	 * Then with the previous array it will generate the following list:
+	 * For example if we have a column name {@code two_words} then this method will receive the
+	 * following words array: {@code two} and {@code words}. Then with the previous array it will
+	 * generate the following list:
 	 * <ul>
 	 * <li>mTwoWords</li>
 	 * <li>twoWords</li>
@@ -58,6 +56,10 @@ public class TextUtils {
 	 * <li>Two_Words</li>
 	 * <li>TWO_WORDS</li>
 	 * </ul>
+	 * </p>
+	 * <p>
+	 * Also, if the first word is "is" or the last word is "id",
+	 * will generate the above variations but without one of this words.
 	 * </p>
 	 *
 	 * @param words An array of words.
@@ -80,10 +82,10 @@ public class TextUtils {
 		names.add(join("_", capitalizedWords));
 		names.add(join("_", lowerCasedWords).toUpperCase(Locale.US));
 
-		if (words[0].equals("is")) {
+		if (words[0].equals("is") && words.length > 1) {
 			names.addAll(generateFieldNames(Arrays.copyOfRange(words, 1, words.length)));
 		}
-		if (words[words.length - 1].equals("id")) {
+		if (words[words.length - 1].equals("id") && words.length > 1) {
 			names.addAll(generateFieldNames(Arrays.copyOfRange(words, 0, words.length - 1)));
 		}
 
