@@ -31,10 +31,10 @@ public class CompanyDao extends Dao<CompanyAuto> {
 
 	public static final Table TABLE = new TableBuilder("companies_auto", CompanyAuto.class)
 			.columnId("id")
-			.columnAuto("name").notNull().end()
-			.columnAuto("fundation_year").notNull().indexed(false, true).end()
-			.columnAuto("registration").end()
-			.columnAuto("size").end()
+			.columnAuto("name", "mName").notNull().end()
+			.columnAuto("fundation_year", "mFundationYear").notNull().indexed(false, true).end()
+			.columnAuto("registration", "mRegistration").end()
+			.columnAuto("size", "mSize").end()
 			.build();
 
 	public static final ColumnId ID = TABLE.getColumnId();

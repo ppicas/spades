@@ -23,25 +23,29 @@ import junit.framework.TestCase;
 
 public class ReflectionUtilsTest extends TestCase {
 
-	public void test__Should_find_a_matching_field__When_field_exists_in_the_passed_class() throws Exception {
+	public void test__Should_find_a_matching_field__When_field_exists_in_extended_class() throws Exception {
+		Field field = ReflectionUtils.findField(Bar.class, "barField");
+		assertEquals("barField", field.getName());
+	}
+
+	public void test__Should_find_a_matching_field__When_field_not_exists() throws Exception {
+		Field field = ReflectionUtils.findField(Bar.class, "invalidField");
+		assertNull(field);
+	}
+
+	public void test__Should_find_a_matching_from_fields__When_field_exists_in_the_passed_class() throws Exception {
 		Field field = ReflectionUtils.findField(Bar.class,
 				Arrays.asList("invalidField", "barField"));
 		assertEquals("barField", field.getName());
 	}
 
-	public void test__Should_find_a_matching_field__When_field_exists_in_extended_class() throws Exception {
+	public void test__Should_find_a_matching_from_fields__When_field_exists_in_extended_class() throws Exception {
 		Field field = ReflectionUtils.findField(Bar.class,
 				Arrays.asList("invalidField", "fooField"));
 		assertEquals("fooField", field.getName());
 	}
 
-	public void test__Should_find_a_matching_field__When_the_order_names_is_important() throws Exception {
-		Field field = ReflectionUtils.findField(Bar.class,
-				Arrays.asList("fooField", "barField2", "barField"));
-		assertEquals("fooField", field.getName());
-	}
-
-	public void test__Should_find_a_matching_field__When_field_not_exists() throws Exception {
+	public void test__Should_find_a_matching_from_fields__When_field_not_exists() throws Exception {
 		Field field = ReflectionUtils.findField(Bar.class,
 				Arrays.asList("invalidField", "invalidField2"));
 		assertNull(field);

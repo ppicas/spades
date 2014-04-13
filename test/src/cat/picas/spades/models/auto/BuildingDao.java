@@ -31,12 +31,12 @@ public class BuildingDao extends Dao<BuildingAuto> {
 
 	public static final Table TABLE = new TableBuilder("buildings_auto", BuildingAuto.class)
 			.columnId("id")
-			.columnAuto("company_id").notNull().foreignKey(CompanyDao.ID).end()
-			.columnAuto("address").notNull().defaultValue("").end()
-			.columnAuto("phone").end()
-			.columnAuto("floors").notNull().defaultValue(0).end()
-			.columnAuto("surface").notNull().defaultValue(0).end()
-			.columnAuto("is_main").notNull().defaultValue(false).end()
+			.columnAuto("company_id", "mCompany").notNull().foreignKey(CompanyDao.ID).end()
+			.columnAuto("address", "mAddress").notNull().defaultValue("").end()
+			.columnAuto("phone", "mPhone").end()
+			.columnAuto("floors", "mFloors").notNull().defaultValue(0).end()
+			.columnAuto("surface", "mSurface").notNull().defaultValue(0).end()
+			.columnAuto("is_main", "mMain").notNull().defaultValue(false).end()
 			.build();
 
 	public static final ColumnId ID = TABLE.getColumnId();

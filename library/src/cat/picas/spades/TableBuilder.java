@@ -19,14 +19,12 @@ package cat.picas.spades;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import cat.picas.spades.Column.ColumnId;
 import cat.picas.spades.ColumnBuilder.ColumnType;
 import cat.picas.spades.map.MappedField;
 import cat.picas.spades.map.MappedFieldFactory;
 import cat.picas.spades.util.ReflectionUtils;
-import cat.picas.spades.util.TextUtils;
 
 public class TableBuilder {
 
@@ -66,16 +64,16 @@ public class TableBuilder {
 		return new ColumnBuilder(columnName, ColumnType.REAL, this);
 	}
 
-	public ColumnBuilder columnAuto(String columnName) {
-		String[] words = TextUtils.splitIdentifierWords(columnName);
-		Set<String> fieldNames = TextUtils.generateFieldNames(words);
-		Field field = ReflectionUtils.findField(mEntityClass, fieldNames);
-		return columnAuto(columnName, field);
-	}
-
 	public ColumnBuilder columnAuto(String columnName, String fieldName) {
 		Field field = ReflectionUtils.findField(mEntityClass, fieldName);
-		return columnAuto(columnName, field);
+		if (field == null) {
+			throw new IllegalArgumentException(new NoSuchFieldException(fieldName));
+		}
+
+		MappedFieldFactory factory = MappedFieldFactory.getInstance();
+		MappedField mappedField = factory.createForField(field);
+
+		return new ColumnBuilder(columnName, mappedField, this);
 	}
 
 	public ColumnBuilder columnCustom(String columnName, String definition) {
@@ -132,14 +130,4 @@ public class TableBuilder {
 		return false;
 	}
 
-	private ColumnBuilder columnAuto(String columnName, Field field) {
-		if (field == null) {
-			throw new IllegalArgumentException(new NoSuchFieldException());
-		}
-
-		MappedFieldFactory factory = MappedFieldFactory.getInstance();
-		MappedField mappedField = factory.createForField(field);
-
-		return new ColumnBuilder(columnName, mappedField, this);
-	}
 }

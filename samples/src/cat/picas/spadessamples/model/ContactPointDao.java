@@ -31,10 +31,10 @@ public class ContactPointDao extends Dao<ContactPoint> {
 
 	public static final Table TABLE = new TableBuilder("contact_point", ContactPoint.class)
 			.columnId("id")
-			.columnAuto("person_id").notNull().foreignKey(PersonDao.ID).end()
-			.columnAuto("name").notNull().end()
-			.columnAuto("email").end()
-			.columnAuto("phone").end()
+			.columnAuto("person_id", "person").notNull().foreignKey(PersonDao.ID).end()
+			.columnAuto("name", "mName").notNull().end()
+			.columnAuto("email", "mEmail").end()
+			.columnAuto("phone", "mPhone").end()
 			.build();
 
 	public static final ColumnId ID = TABLE.getColumnId();

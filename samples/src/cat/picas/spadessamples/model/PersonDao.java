@@ -36,12 +36,12 @@ public class PersonDao extends Dao<Person> {
 
 	public static final Table TABLE = new TableBuilder("person", Person.class)
 			.columnId("id")
-			.columnAuto("name").notNull().end()
-			.columnAuto("birth_date").end()
-			.columnAuto("gender").notNull().defaultValue(Gender.MALE).end()
-			.columnAuto("spouse_id").foreignKey("id").end()
-			.columnAuto("height").indexed(false, true).end()
-			.columnAuto("weight").end()
+			.columnAuto("name", "mName").notNull().end()
+			.columnAuto("birth_date", "mBirthDate").end()
+			.columnAuto("gender", "mGender").notNull().defaultValue(Gender.MALE).end()
+			.columnAuto("spouse_id", "spouse").foreignKey("id").end()
+			.columnAuto("height", "mHeight").indexed(false, true).end()
+			.columnAuto("weight", "mWeight").end()
 			.build();
 
 	public static final ColumnId ID = TABLE.getColumnId();

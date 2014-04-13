@@ -44,11 +44,13 @@ public class ReflectionUtils {
 	}
 
 	public static Field findField(Class<?> cls, Collection<String> fieldNames) {
-		for (String fieldName : fieldNames) {
-			Field field = findField(cls, fieldName);
-			if (field != null) {
-				return field;
+		while (cls != null) {
+			for (Field field : cls.getDeclaredFields()) {
+				if (fieldNames.contains(field.getName())) {
+					return field;
+				}
 			}
+			cls = cls.getSuperclass();
 		}
 
 		return null;

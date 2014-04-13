@@ -18,7 +18,6 @@ package cat.picas.spades;
 
 import cat.picas.spades.query.ColumnSelectorTest;
 import cat.picas.spades.util.ReflectionUtilsTest;
-import cat.picas.spades.util.TextUtilsTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -31,7 +30,6 @@ public class AllTests {
 		suite.addTestSuite(ManualModelsIntegrationTest.class);
 		suite.addTestSuite(ColumnSelectorTest.class);
 		suite.addTestSuite(ReflectionUtilsTest.class);
-		suite.addTestSuite(TextUtilsTest.class);
 		//$JUnit-END$
 		return suite;
 	}
