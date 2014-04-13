@@ -26,7 +26,7 @@ public class Column {
 		}
 
 		@Override
-		protected ColumnId alias(Table table) {
+		protected ColumnId clone(Table table, int index) {
 			return new ColumnId(index, name, table);
 		}
 	}
@@ -89,7 +89,7 @@ public class Column {
 		mIndexIsAscendant = ascendant;
 	}
 
-	protected Column alias(Table table) {
+	protected Column clone(Table table, int index) {
 		Column column = new Column(index, name, table, mDefinition, mNotNull);
 		column.mMappedField = mMappedField;
 		column.mIndexed = mIndexed;

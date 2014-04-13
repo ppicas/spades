@@ -41,8 +41,6 @@ public class AliasTableActivity extends ListActivity {
 		mHelper = new DatabaseHelper(this);
 		SQLiteDatabase db = mHelper.getReadableDatabase();
 
-		PersonDao dao = new PersonDao(db);
-
 		Query query = new Query(TABLE)
 				.leftJoin(SpouseDao.TABLE, "%s = %s", SpouseDao.ID, PersonDao.SPOUSE_ID)
 				.select(PersonDao.NAME, SpouseDao.NAME);

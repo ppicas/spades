@@ -77,9 +77,9 @@ public class Table {
 	public Table alias() {
 		Tables tables = Tables.getInstance();
 		Table table = new Table(tables.nextTableIndex(), name, mEntity);
-		table.setColumnId(mColumnId.alias(table));
+		table.setColumnId(mColumnId.clone(table, mColumnId.index));
 		for (Column column : mColumns) {
-			table.addColumn(column.alias(table));
+			table.addColumn(column.clone(table, column.index));
 		}
 		tables.addTable(table);
 		return table;

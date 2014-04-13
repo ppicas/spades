@@ -84,7 +84,8 @@ public class TableBuilder {
 
 	public TableBuilder columnsFrom(Table table) {
 		for (Column column : table.getColumns()) {
-			mColumnBuilders.add(new ReferenceColumnBuilder(column.alias(table)));
+			Column clonedColumn = column.clone(table, table.nextColumnIndex());
+			mColumnBuilders.add(new ReferenceColumnBuilder(clonedColumn));
 		}
 		return this;
 	}
