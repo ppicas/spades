@@ -49,13 +49,13 @@ public class PersonDao extends Dao<Person> {
 	public static final Column NAME = TABLE.getColumn("name");
 	public static final Column BIRTH_DATE = TABLE.getColumn("birth_date");
 	public static final Column GENDER = TABLE.getColumn("gender");
-	public static final Column SPOUSE = TABLE.getColumn("spouse_id");
+	public static final Column SPOUSE_ID = TABLE.getColumn("spouse_id");
 	public static final Column HEIGHT = TABLE.getColumn("height");
 	public static final Column WEIGHT = TABLE.getColumn("weight");
 
 	public static final EntityMapper<Person> MAPPER = new EntityMapper<Person>(TABLE) {
 		@Override
-		protected Person newInstance(Cursor cursor, CursorInfo cursorInfo) {
+		public Person newInstance(Cursor cursor, CursorInfo cursorInfo) {
 			return new Person();
 		}
 	};
@@ -81,5 +81,21 @@ public class PersonDao extends Dao<Person> {
 			person.contactPoints.fetchAndAddOne(cursor, cursorInfo);
 		}
 	};
+
+	public static class SpouseDao {
+
+		public static final Table TABLE = PersonDao.TABLE.alias();
+
+		public static final ColumnId ID = TABLE.getColumnId();
+
+		public static final Column NAME = TABLE.getColumn(PersonDao.NAME.name);
+
+		public static final EntityMapper<Person> MAPPER = new EntityMapper<Person>(TABLE) {
+			@Override
+			public Person newInstance(Cursor cursor, CursorInfo cursorInfo) {
+				return new Person();
+			}
+		};
+	}
 
 }

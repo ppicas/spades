@@ -49,7 +49,7 @@ public class BuildingDao extends Dao<BuildingAuto> {
 
 	public static final EntityMapper<BuildingAuto> MAPPER = new EntityMapper<BuildingAuto>(TABLE) {
 		@Override
-		protected BuildingAuto newInstance(Cursor cursor, CursorInfo cursorInfo) {
+		public BuildingAuto newInstance(Cursor cursor, CursorInfo cursorInfo) {
 			return new BuildingAuto();
 		}
 	};

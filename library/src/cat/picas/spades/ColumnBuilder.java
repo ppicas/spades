@@ -20,7 +20,7 @@ import android.text.TextUtils;
 
 import cat.picas.spades.map.MappedField;
 
-public class ColumnBuilder {
+public class ColumnBuilder extends BaseColumnBuilder {
 
 	public enum ColumnType {
 		TEXT,
@@ -134,10 +134,12 @@ public class ColumnBuilder {
 		return mTableBuilder;
 	}
 
+	@Override
 	protected String getName() {
 		return mName;
 	}
 
+	@Override
 	protected Column build(int index, Table table) {
 		Column column = new Column(index, mName, table, mDefinition, mNotNull);
 		if (mMappedField != null) {

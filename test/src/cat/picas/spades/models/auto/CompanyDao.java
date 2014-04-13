@@ -46,12 +46,12 @@ public class CompanyDao extends Dao<CompanyAuto> {
 	public static final EntityMapper<CompanyAuto> MAPPER = new EntityMapper<CompanyAuto>(TABLE) {
 
 		@Override
-		protected CompanyAuto newInstance(Cursor cursor, CursorInfo cursorInfo) {
+		public CompanyAuto newInstance(Cursor cursor, CursorInfo cursorInfo) {
 			return new CompanyAuto();
 		}
 
 		@Override
-		protected void mapCursorValues(CompanyAuto company, Cursor cursor, CursorInfo cursorInfo) {
+		public void mapCursorValues(CompanyAuto company, Cursor cursor, CursorInfo cursorInfo) {
 			int isMainIndex = cursorInfo.getColumnIndex(BuildingDao.IS_MAIN);
 			if (isMainIndex != -1 && cursor.getInt(isMainIndex) == 1) {
 				company.getMainBuilding().fetch(cursor, cursorInfo);

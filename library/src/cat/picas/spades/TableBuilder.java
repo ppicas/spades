@@ -33,7 +33,7 @@ public class TableBuilder {
 	private String mTableName;
 	private Class<? extends Entity> mEntityClass;
 
-	private List<ColumnBuilder> mColumnBuilders = new ArrayList<ColumnBuilder>();
+	private List<BaseColumnBuilder> mColumnBuilders = new ArrayList<BaseColumnBuilder>();
 	private String mColumnIdName;
 
 	public TableBuilder(String tableName, Class<? extends Entity> entityClass) {
@@ -82,6 +82,13 @@ public class TableBuilder {
 		return new ColumnBuilder(columnName, definition, this);
 	}
 
+	public TableBuilder columnsFrom(Table table) {
+		for (Column column : table.getColumns()) {
+			mColumnBuilders.add(new ReferenceColumnBuilder(column.alias(table)));
+		}
+		return this;
+	}
+
 	public Table build() {
 		if (mColumnIdName == null || mColumnIdName.isEmpty()) {
 			throw new IllegalStateException("You must define a ColumnId");
@@ -95,14 +102,14 @@ public class TableBuilder {
 		table.addColumn(columnId);
 		table.setColumnId(columnId);
 
-		for (ColumnBuilder columnBuilder : mColumnBuilders) {
+		for (BaseColumnBuilder columnBuilder : mColumnBuilders) {
 			table.addColumn(columnBuilder.build(table.nextColumnIndex(), table));
 		}
 
 		return table;
 	}
 
-	protected void addColumnBuilder(ColumnBuilder columnBuilder) {
+	protected void addColumnBuilder(BaseColumnBuilder columnBuilder) {
 		mColumnBuilders.add(columnBuilder);
 	}
 
@@ -115,7 +122,7 @@ public class TableBuilder {
 			return true;
 		}
 
-		for (ColumnBuilder columnBuilder : mColumnBuilders) {
+		for (BaseColumnBuilder columnBuilder : mColumnBuilders) {
 			if (columnName.equals(columnBuilder.getName())) {
 				return true;
 			}

@@ -50,12 +50,12 @@ public class CompanyDao extends Dao<CompanyManual> {
 	public static final EntityMapper<CompanyManual> MAPPER = new EntityMapper<CompanyManual>(TABLE) {
 
 		@Override
-		protected CompanyManual newInstance(Cursor cursor, CursorInfo cursorInfo) {
+		public CompanyManual newInstance(Cursor cursor, CursorInfo cursorInfo) {
 			return new CompanyManual();
 		}
 
 		@Override
-		protected void mapCursorValues(CompanyManual company, Cursor cursor, CursorInfo cursorInfo) {
+		public void mapCursorValues(CompanyManual company, Cursor cursor, CursorInfo cursorInfo) {
 			int index;
 
 			index = cursorInfo.getColumnIndex(NAME);
@@ -84,7 +84,7 @@ public class CompanyDao extends Dao<CompanyManual> {
 		}
 
 		@Override
-		protected void mapContentValues(CompanyManual company, ContentValues values) {
+		public void mapContentValues(CompanyManual company, ContentValues values) {
 			values.put(NAME.name, company.getName());
 			values.put(FUNDATION_YEAR.name, company.getFundationYear());
 			Date date = company.getRegistration();

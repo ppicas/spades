@@ -36,8 +36,9 @@ public class MainActivity extends ListActivity {
 		ArrayAdapter<Item> adapter = new ArrayAdapter<Item>(this, android.R.layout.simple_list_item_1);
 		setListAdapter(adapter);
 
-		adapter.add(new Item("List with CursorAdapter", CursorListActivity.class));
-		adapter.add(new Item("List with ArrayAdapter", ArrayListActivity.class));
+		adapter.add(new Item("CursorAdapter sample", CursorListActivity.class));
+		adapter.add(new Item("ArrayAdapter sample", ArrayListActivity.class));
+		adapter.add(new Item("Table alias sample", AliasTableActivity.class));
 
 		getListView().setOnItemClickListener(new ItemClickListener());
 	}

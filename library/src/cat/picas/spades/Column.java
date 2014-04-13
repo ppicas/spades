@@ -24,6 +24,11 @@ public class Column {
 		protected ColumnId(int index, String name, Table table) {
 			super(index, name, table, "INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL", true);
 		}
+
+		@Override
+		protected ColumnId alias(Table table) {
+			return new ColumnId(index, name, table);
+		}
 	}
 
 	public final int index;
@@ -82,6 +87,16 @@ public class Column {
 		mIndexed = true;
 		mIndexIsUnique = unique;
 		mIndexIsAscendant = ascendant;
+	}
+
+	protected Column alias(Table table) {
+		Column column = new Column(index, name, table, mDefinition, mNotNull);
+		column.mMappedField = mMappedField;
+		column.mIndexed = mIndexed;
+		column.mIndexIsUnique = mIndexIsUnique;
+		column.mIndexIsAscendant = mIndexIsAscendant;
+
+		return column;
 	}
 
 }

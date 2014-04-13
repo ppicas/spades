@@ -51,12 +51,12 @@ public class BuildingDao extends Dao<BuildingManual> {
 	public static final EntityMapper<BuildingManual> MAPPER = new EntityMapper<BuildingManual>(TABLE) {
 
 		@Override
-		protected BuildingManual newInstance(Cursor cursor, CursorInfo cursorInfo) {
+		public BuildingManual newInstance(Cursor cursor, CursorInfo cursorInfo) {
 			return new BuildingManual();
 		}
 
 		@Override
-		protected void mapCursorValues(BuildingManual building, Cursor cursor, CursorInfo cursorInfo) {
+		public void mapCursorValues(BuildingManual building, Cursor cursor, CursorInfo cursorInfo) {
 			int index;
 
 			index = cursorInfo.getColumnIndex(COMPANY_ID);
@@ -88,7 +88,7 @@ public class BuildingDao extends Dao<BuildingManual> {
 		}
 
 		@Override
-		protected void mapContentValues(BuildingManual building, ContentValues values) {
+		public void mapContentValues(BuildingManual building, ContentValues values) {
 			values.put(COMPANY_ID.name, building.getCompany().getValue());
 			if (building.getAddress() != null) {
 				values.put(ADDRESS.name, building.getAddress());

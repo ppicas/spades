@@ -46,7 +46,7 @@ public class ContactPointDao extends Dao<ContactPoint> {
 
 	public static final EntityMapper<ContactPoint> MAPPER = new EntityMapper<ContactPoint>(TABLE) {
 		@Override
-		protected ContactPoint newInstance(Cursor cursor, CursorInfo cursorInfo) {
+		public ContactPoint newInstance(Cursor cursor, CursorInfo cursorInfo) {
 			return new ContactPoint();
 		}
 	};

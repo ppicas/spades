@@ -31,9 +31,9 @@ public class Table {
 	public final int index;
 	public final String name;
 
-	private Class<? extends Entity> mEntity;
-	private List<Column> mColumns = new ArrayList<Column>();
-	private Map<String, Column> mColumnsNameMap = new HashMap<String, Column>();
+	private final Class<? extends Entity> mEntity;
+	private final List<Column> mColumns = new ArrayList<Column>();
+	private final Map<String, Column> mColumnsNameMap = new HashMap<String, Column>();
 	private ColumnId mColumnId;
 
 	protected Table(int index, String name, Class<? extends Entity> entityClass) {
@@ -72,6 +72,17 @@ public class Table {
 
 	public ColumnId getColumnId() {
 		return mColumnId;
+	}
+
+	public Table alias() {
+		Tables tables = Tables.getInstance();
+		Table table = new Table(tables.nextTableIndex(), name, mEntity);
+		table.setColumnId(mColumnId.alias(table));
+		for (Column column : mColumns) {
+			table.addColumn(column.alias(table));
+		}
+		tables.addTable(table);
+		return table;
 	}
 
 	public void createTable(SQLiteDatabase db) {

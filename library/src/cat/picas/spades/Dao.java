@@ -25,7 +25,7 @@ import cat.picas.spades.fetch.ArrayListFetchStrategy;
 import cat.picas.spades.fetch.FetchStrategy;
 import cat.picas.spades.query.Query;
 
-public abstract class Dao<T extends Entity> {
+public class Dao<T extends Entity> {
 
 	public interface EntityConsumer<T extends Entity> {
 		public void accept(Cursor cursor, CursorInfo cursorInfo, T entity);

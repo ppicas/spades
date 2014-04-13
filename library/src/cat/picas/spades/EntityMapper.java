@@ -54,6 +54,8 @@ public abstract class EntityMapper<T extends Entity> {
 		return new CursorInfoBuilder().add(mTable).build();
 	}
 
+	public abstract T newInstance(Cursor cursor, CursorInfo cursorInfo);
+
 	public void putContentValues(T entity, ContentValues values) {
 		for (Column column : mMappedColumns) {
 			column.getMappedField().putContetValue(entity, values, column.name, column.isNotNull());
@@ -90,12 +92,10 @@ public abstract class EntityMapper<T extends Entity> {
 		return entity;
 	}
 
-	protected abstract T newInstance(Cursor cursor, CursorInfo cursorInfo);
-
-	protected void mapContentValues(T entity, ContentValues values) {
+	public void mapContentValues(T entity, ContentValues values) {
 	}
 
-	protected void mapCursorValues(T entity, Cursor cursor, CursorInfo cursorInfo) {
+	public void mapCursorValues(T entity, Cursor cursor, CursorInfo cursorInfo) {
 	}
 
 	/**

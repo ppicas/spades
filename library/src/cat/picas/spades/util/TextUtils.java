@@ -58,8 +58,8 @@ public class TextUtils {
 	 * </ul>
 	 * </p>
 	 * <p>
-	 * Also, if the first word is "is" or the last word is "id",
-	 * will generate the above variations but without one of this words.
+	 * Also, if the first word is "is" or the last word is "id", will generate the above
+	 * variations but without one of this words.
 	 * </p>
 	 *
 	 * @param words An array of words.

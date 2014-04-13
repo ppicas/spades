@@ -29,7 +29,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name="cat.picas.spadessamples.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,16 +38,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CursorListActivity"
+            android:name="cat.picas.spadessamples.CursorListActivity"
             android:label="@string/title_activity_cursor_list" >
         </activity>
         <activity
-            android:name=".ArrayListActivity"
+            android:name="cat.picas.spadessamples.ArrayListActivity"
             android:label="@string/title_activity_array_list" >
         </activity>
         <activity
-            android:name=".PersonDetailActivity"
+            android:name="cat.picas.spadessamples.PersonDetailActivity"
             android:label="@string/title_activity_person_detail" >
+        </activity>
+        <activity
+            android:name="cat.picas.spadessamples.AliasTableActivity"
+            android:label="@string/title_activity_alias_table" >
         </activity>
     </application>
 
