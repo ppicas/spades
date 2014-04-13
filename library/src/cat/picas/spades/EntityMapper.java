@@ -73,7 +73,13 @@ public abstract class EntityMapper<T extends Entity> {
 		// Set the entity ID.
 		int colIdIndex = cursorInfo.getColumnIndex(mTable.getColumnId());
 		if (colIdIndex != -1) {
-			entity.setEntityId(cursor.isNull(colIdIndex) ? null : cursor.getLong(colIdIndex));
+			if (cursor.isNull(colIdIndex)) {
+				// As the entity ID is selected (the cursor has the column) and the value is null,
+				// we should return null as this row doesn't contain any entity instance.
+				return null;
+			} else {
+				entity.setEntityId(cursor.getLong(colIdIndex));
+			}
 		}
 
 		// Automatic population of the entity fields via reflection.

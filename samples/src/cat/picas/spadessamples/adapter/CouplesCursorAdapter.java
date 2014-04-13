@@ -47,7 +47,7 @@ public class CouplesCursorAdapter extends ResourceCursorAdapter {
 		TextView spouseNameView = (TextView) view.findViewById(R.id.spouse_name);
 
 		nameView.setText(person.getName());
-		spouseNameView.setText((couple.getEntityId() != null) ? couple.getName() : "Not married");
+		spouseNameView.setText((couple != null) ? couple.getName() : "Not married");
 	}
 
 }

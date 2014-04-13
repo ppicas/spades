@@ -49,9 +49,11 @@ public class ArrayListFetchStrategy<T extends Entity> implements FetchStrategy<T
 		cursor.moveToPosition(-1);
 		while (cursor.moveToNext()) {
 			T entity = mMapper.createFromCursor(cursor, cursorInfo);
-			list.add(entity);
-			if (consumer != null) {
-				consumer.accept(cursor, cursorInfo, entity);
+			if (entity != null) {
+				list.add(entity);
+				if (consumer != null) {
+					consumer.accept(cursor, cursorInfo, entity);
+				}
 			}
 		}
 

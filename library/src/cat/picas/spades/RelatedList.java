@@ -52,7 +52,9 @@ public class RelatedList<T extends Entity> {
 			CursorInfo cursorInfo = query.getCursorInfo();
 			while (cursor.moveToNext()) {
 				T entity = mChildMapper.createFromCursor(cursor, cursorInfo);
-				mChilds.add(entity);
+				if (entity != null) {
+					mChilds.add(entity);
+				}
 			}
 			cursor.close();
 		}
@@ -94,7 +96,9 @@ public class RelatedList<T extends Entity> {
 				}
 
 				T entity = mChildMapper.createFromCursor(cursor, cursorInfo);
-				mChilds.add(entity);
+				if (entity != null) {
+					mChilds.add(entity);
+				}
 			}
 			cursor.moveToPosition(oldPosition);
 		}
@@ -116,7 +120,9 @@ public class RelatedList<T extends Entity> {
 		}
 
 		T child = mChildMapper.createFromCursor(cursor, cursorInfo);
-		mChilds.add(child);
+		if (child != null) {
+			mChilds.add(child);
+		}
 		mFetched = true;
 	}
 

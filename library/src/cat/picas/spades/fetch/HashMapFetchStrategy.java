@@ -54,9 +54,11 @@ public class HashMapFetchStrategy<T extends Entity> implements FetchStrategy<T> 
 			T entity = map.get(cursor.getLong(idColIndex));
 			if (entity == null) {
 				entity = mMapper.createFromCursor(cursor, cursorInfo);
-				map.put(entity.getEntityId(), entity);
+				if (entity != null) {
+					map.put(entity.getEntityId(), entity);
+				}
 			}
-			if (consumer != null) {
+			if (consumer != null && entity != null) {
 				consumer.accept(cursor, cursorInfo, entity);
 			}
 		}
