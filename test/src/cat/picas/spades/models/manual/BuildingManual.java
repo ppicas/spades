@@ -16,16 +16,16 @@
 
 package cat.picas.spades.models.manual;
 
-import cat.picas.spades.Related;
+import cat.picas.spades.RelatedParent;
 import cat.picas.spades.models.Building;
 
 public class BuildingManual extends Building {
 
-	private final Related<CompanyManual> mCompany = new Related<CompanyManual>(
+	private final RelatedParent<CompanyManual> mCompany = new RelatedParent<CompanyManual>(
 			CompanyDao.ID, CompanyDao.MAPPER);
 
 	@Override
-	public Related<CompanyManual> getCompany() {
+	public RelatedParent<CompanyManual> getCompany() {
 		return mCompany;
 	}
 

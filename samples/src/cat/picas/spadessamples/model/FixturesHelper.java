@@ -41,14 +41,14 @@ public class FixturesHelper {
 		personB.spouse.set(personA);
 		personDao.insert(personB);
 
+		// Set person B as person A spouse.
+		personA.spouse.set(personB);
+		personDao.save(personA);
+
 		// Person C.
 		Person personC = new Person();
 		personC.setName("Lorem Vadecun");
 		personDao.insert(personC);
-
-		// Set person B as person A spouse.
-		personA.spouse.set(personB);
-		personDao.save(personA);
 
 		// Person A main contact point.
 		ContactPoint contactPoint = new ContactPoint();

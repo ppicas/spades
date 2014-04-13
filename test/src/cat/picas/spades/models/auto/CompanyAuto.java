@@ -16,21 +16,21 @@
 
 package cat.picas.spades.models.auto;
 
-import cat.picas.spades.RelatedInverse;
+import cat.picas.spades.RelatedChild;
 import cat.picas.spades.RelatedList;
 import cat.picas.spades.SqlHelper;
 import cat.picas.spades.models.Company;
 
 public class CompanyAuto extends Company {
 
-	private final RelatedInverse<BuildingAuto> mMainBuilding = new RelatedInverse<BuildingAuto>(this,
+	private final RelatedChild<BuildingAuto> mMainBuilding = new RelatedChild<BuildingAuto>(this,
 			BuildingDao.COMPANY_ID, BuildingDao.MAPPER, SqlHelper.expr("%s", BuildingDao.IS_MAIN));
 
 	private final RelatedList<BuildingAuto> mBuildings = new RelatedList<BuildingAuto>(this,
 			BuildingDao.COMPANY_ID, BuildingDao.MAPPER);
 
 	@Override
-	public RelatedInverse<BuildingAuto> getMainBuilding() {
+	public RelatedChild<BuildingAuto> getMainBuilding() {
 		return mMainBuilding;
 	}
 

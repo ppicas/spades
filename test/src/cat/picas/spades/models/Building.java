@@ -17,7 +17,7 @@
 package cat.picas.spades.models;
 
 import cat.picas.spades.Entity;
-import cat.picas.spades.Related;
+import cat.picas.spades.RelatedParent;
 
 public abstract class Building implements Entity {
 
@@ -42,7 +42,7 @@ public abstract class Building implements Entity {
 		mId = id;
 	}
 
-	public abstract Related<? extends Company> getCompany();
+	public abstract RelatedParent<? extends Company> getCompany();
 
 	public String getAddress() {
 		return mAddress;

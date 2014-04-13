@@ -24,7 +24,7 @@ import java.util.Map;
 import android.content.ContentValues;
 import android.database.Cursor;
 import cat.picas.spades.ColumnBuilder.ColumnType;
-import cat.picas.spades.Related;
+import cat.picas.spades.RelatedParent;
 
 public class MappedFieldFactory {
 
@@ -64,7 +64,7 @@ public class MappedFieldFactory {
 
 		factory.registerValueMapper(Date.class, new DateMapper(), ColumnType.INTEGER);
 
-		factory.registerValueMapper(Related.class, new RelatedMapper(), ColumnType.INTEGER);
+		factory.registerValueMapper(RelatedParent.class, new RelatedParentMapper(), ColumnType.INTEGER);
 
 		factory.registerValueMapper(Enum.class, new EnumMapper(), ColumnType.TEXT);
 	}

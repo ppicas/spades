@@ -16,16 +16,16 @@
 
 package cat.picas.spades.models.auto;
 
-import cat.picas.spades.Related;
+import cat.picas.spades.RelatedParent;
 import cat.picas.spades.models.Building;
 
 public class BuildingAuto extends Building {
 
-	private final Related<CompanyAuto> mCompany = new Related<CompanyAuto>(
+	private final RelatedParent<CompanyAuto> mCompany = new RelatedParent<CompanyAuto>(
 			CompanyDao.ID, CompanyDao.MAPPER);
 
 	@Override
-	public Related<CompanyAuto> getCompany() {
+	public RelatedParent<CompanyAuto> getCompany() {
 		return mCompany;
 	}
 

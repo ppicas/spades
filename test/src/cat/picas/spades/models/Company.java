@@ -19,7 +19,7 @@ package cat.picas.spades.models;
 import java.util.Date;
 
 import cat.picas.spades.Entity;
-import cat.picas.spades.RelatedInverse;
+import cat.picas.spades.RelatedChild;
 import cat.picas.spades.RelatedList;
 
 public abstract class Company implements Entity {
@@ -76,7 +76,7 @@ public abstract class Company implements Entity {
 		mSize = size;
 	}
 
-	public abstract RelatedInverse<? extends Building> getMainBuilding();
+	public abstract RelatedChild<? extends Building> getMainBuilding();
 
 	public abstract RelatedList<? extends Building> getBuildings();
 

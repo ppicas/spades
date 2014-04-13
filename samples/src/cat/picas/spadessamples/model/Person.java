@@ -19,7 +19,7 @@ package cat.picas.spadessamples.model;
 import java.util.Date;
 
 import cat.picas.spades.Entity;
-import cat.picas.spades.Related;
+import cat.picas.spades.RelatedParent;
 import cat.picas.spades.RelatedList;
 
 public class Person implements Entity {
@@ -29,7 +29,7 @@ public class Person implements Entity {
 		FEMALE
 	}
 
-	public final Related<Person> spouse = new Related<Person>(PersonDao.ID, PersonDao.MAPPER);
+	public final RelatedParent<Person> spouse = new RelatedParent<Person>(PersonDao.ID, PersonDao.MAPPER);
 
 	public final RelatedList<ContactPoint> contactPoints = new RelatedList<ContactPoint>(this,
 			ContactPointDao.PERSON_ID, ContactPointDao.MAPPER);

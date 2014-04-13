@@ -17,11 +17,11 @@
 package cat.picas.spadessamples.model;
 
 import cat.picas.spades.Entity;
-import cat.picas.spades.Related;
+import cat.picas.spades.RelatedParent;
 
 public class ContactPoint implements Entity {
 
-	public final Related<Person> person = new Related<Person>(PersonDao.ID, PersonDao.MAPPER);
+	public final RelatedParent<Person> person = new RelatedParent<Person>(PersonDao.ID, PersonDao.MAPPER);
 
 	private Long mId;
 	private String mName;

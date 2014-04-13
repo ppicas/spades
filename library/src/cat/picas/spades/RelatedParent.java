@@ -21,7 +21,7 @@ import android.database.sqlite.SQLiteDatabase;
 import cat.picas.spades.Column.ColumnId;
 import cat.picas.spades.query.Query;
 
-public class Related<T extends Entity> {
+public class RelatedParent<T extends Entity> {
 
 	private ColumnId mParentColumn;
 	private Table mParentTable;
@@ -32,13 +32,13 @@ public class Related<T extends Entity> {
 	private Long mRawValue;
 	private T mParent;
 
-	public Related(ColumnId parentColumn, EntityMapper<T> parentMapper) {
+	public RelatedParent(ColumnId parentColumn, EntityMapper<T> parentMapper) {
 		mParentColumn = parentColumn;
 		mParentTable = mParentColumn.getTable();
 		mParentMapper = parentMapper;
 	}
 
-	public Related(ColumnId parentColumn, EntityMapper<T> parentMapper, String extraWhere) {
+	public RelatedParent(ColumnId parentColumn, EntityMapper<T> parentMapper, String extraWhere) {
 		this(parentColumn, parentMapper);
 		mExtraWhere = extraWhere;
 	}

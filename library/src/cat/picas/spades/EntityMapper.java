@@ -105,25 +105,25 @@ public abstract class EntityMapper<T extends Entity> {
 	}
 
 	/**
-	 * Auto fetch Related mapped fields.
+	 * Auto fetch RelatedParent mapped fields.
 	 *
 	 * @param cursor a {@code Cursor} object with the current query
 	 * @param cursorInfo a {@code CursorInfo} object holding the {@code Cursor} info
-	 * @param entity an {@code Entity} instance that holds the {@link Related} field
-	 * @param mappedField the {@link MappedField} of the {@code Related} field
+	 * @param entity an {@code Entity} instance that holds the {@link RelatedParent} field
+	 * @param mappedField the {@link MappedField} of the {@code RelatedParent} field
 	 */
 	private void autoFetchRelatedField(Cursor cursor, CursorInfo cursorInfo, T entity,
 			MappedField mappedField) {
 
 		Field field = mappedField.getField();
 
-		// Check that the class of the Field is Related, and that its parameterized type hasn't
-		// the same type as the Entity. The latest check it's to avoid the Related fields that
+		// Check that the class of the Field is RelatedParent, and that its parameterized type hasn't
+		// the same type as the Entity. The latest check it's to avoid the RelatedParent fields that
 		// point to the same Entity.
 		if (field.getGenericType() instanceof ParameterizedType) {
 			ParameterizedType type = (ParameterizedType) field.getGenericType();
 
-			if (type.getRawType() != Related.class
+			if (type.getRawType() != RelatedParent.class
 					|| type.getActualTypeArguments().length != 1
 					|| type.getActualTypeArguments()[0] == entity.getClass()) {
 				return;
@@ -133,8 +133,8 @@ public abstract class EntityMapper<T extends Entity> {
 		}
 
 		try {
-			Related<?> relatedField = (Related<?>) field.get(entity);
-			relatedField.fetch(cursor, cursorInfo);
+			RelatedParent<?> relatedParentField = (RelatedParent<?>) field.get(entity);
+			relatedParentField.fetch(cursor, cursorInfo);
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}

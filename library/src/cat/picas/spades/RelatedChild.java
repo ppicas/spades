@@ -20,7 +20,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import cat.picas.spades.query.Query;
 
-public class RelatedInverse<T extends Entity> {
+public class RelatedChild<T extends Entity> {
 
 	private Entity mParent;
 	private Column mChildColumn;
@@ -31,14 +31,15 @@ public class RelatedInverse<T extends Entity> {
 	private boolean mFetched;
 	private T mChild;
 
-	public RelatedInverse(Entity parent, Column childColumn, EntityMapper<T> childMapper) {
+	public RelatedChild(Entity parent, Column childColumn, EntityMapper<T> childMapper) {
 		mParent = parent;
 		mChildColumn = childColumn;
 		mChildTable = mChildColumn.getTable();
 		mChildMapper = childMapper;
 	}
 
-	public RelatedInverse(Entity parent, Column childColumn, EntityMapper<T> childMapper, String extraWhere) {
+	public RelatedChild(Entity parent, Column childColumn, EntityMapper<T> childMapper,
+			String extraWhere) {
 		this(parent, childColumn, childMapper);
 		mExtraWhere = extraWhere;
 	}
