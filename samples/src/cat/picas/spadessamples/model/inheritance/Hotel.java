@@ -16,11 +16,26 @@
 
 package cat.picas.spadessamples.model.inheritance;
 
-public class Hotel extends Place {
+import cat.picas.spades.Entity;
+import cat.picas.spades.Related;
 
+public class Hotel implements Entity {
+
+	public final Related<Place> place = new Related<Place>(PlaceDao.ID, PlaceDao.MAPPER);
+
+	private Long mId;
 	private int mTotalRooms;
-
 	private int mAvailableRooms;
+
+	@Override
+	public Long getEntityId() {
+		return mId;
+	}
+
+	@Override
+	public void setEntityId(Long id) {
+		mId = id;
+	}
 
 	public int getTotalRooms() {
 		return mTotalRooms;
@@ -36,11 +51,6 @@ public class Hotel extends Place {
 
 	public void setAvailableRooms(int availableRooms) {
 		mAvailableRooms = availableRooms;
-	}
-
-	@Override
-	public Type getType() {
-		return Type.HOTEL;
 	}
 
 }

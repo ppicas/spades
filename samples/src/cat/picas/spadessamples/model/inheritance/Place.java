@@ -18,13 +18,12 @@ package cat.picas.spadessamples.model.inheritance;
 
 import cat.picas.spades.Entity;
 
-public abstract class Place implements Entity {
+public class Place implements Entity {
 
 	private Long mId;
-
 	private String mName;
-
 	private String mAddress;
+	private Type mType;
 
 	@Override
 	public Long getEntityId() {
@@ -52,7 +51,13 @@ public abstract class Place implements Entity {
 		mAddress = address;
 	}
 
-	public abstract Type getType();
+	public Type getType() {
+		return mType;
+	}
+
+	public void setType(Type type) {
+		mType = type;
+	}
 
 	public enum Type { HOTEL, RESTAURANT }
 

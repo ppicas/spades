@@ -16,9 +16,25 @@
 
 package cat.picas.spadessamples.model.inheritance;
 
-public class Restaurant extends Place {
+import cat.picas.spades.Entity;
+import cat.picas.spades.Related;
 
+public class Restaurant implements Entity {
+
+	public final Related<Place> place = new Related<Place>(PlaceDao.ID, PlaceDao.MAPPER);
+
+	private Long mId;
 	private int mMichelineStars;
+
+	@Override
+	public Long getEntityId() {
+		return mId;
+	}
+
+	@Override
+	public void setEntityId(Long id) {
+		mId = id;
+	}
 
 	public int getMichelineStars() {
 		return mMichelineStars;
@@ -26,11 +42,6 @@ public class Restaurant extends Place {
 
 	public void setMichelineStars(int michelineStars) {
 		mMichelineStars = michelineStars;
-	}
-
-	@Override
-	public Type getType() {
-		return Type.RESTAURANT;
 	}
 
 }
