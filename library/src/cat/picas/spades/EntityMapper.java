@@ -16,20 +16,12 @@
 
 package cat.picas.spades;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.database.Cursor;
-
-import cat.picas.spades.map.MappedField;
 
 public abstract class EntityMapper<T extends Entity> {
 
 	private Table mTable;
-	private List<Column> mMappedColumns = new ArrayList<Column>();
 
 	public EntityMapper(Table table) {
 		mTable = table;
@@ -38,11 +30,6 @@ public abstract class EntityMapper<T extends Entity> {
 		}
 		if (mTable.getColumnId() == null) {
 			throw new IllegalStateException("ColumnId not defined");
-		}
-		for (Column column : table.getColumns()) {
-			if (column.getMappedField() != null) {
-				mMappedColumns.add(column);
-			}
 		}
 	}
 
@@ -54,12 +41,7 @@ public abstract class EntityMapper<T extends Entity> {
 		return new CursorInfoBuilder().add(mTable).build();
 	}
 
-	public abstract T newInstance(Cursor cursor, CursorInfo cursorInfo);
-
 	public void putContentValues(T entity, ContentValues values) {
-		for (Column column : mMappedColumns) {
-			column.getMappedField().putContetValue(entity, values, column.name, column.isNotNull());
-		}
 		mapContentValues(entity, values);
 	}
 
@@ -82,62 +64,16 @@ public abstract class EntityMapper<T extends Entity> {
 			}
 		}
 
-		// Automatic population of the entity fields via reflection.
-		for (Column column : mMappedColumns) {
-			int index = cursorInfo.getColumnIndex(column);
-			if (index != -1) {
-				MappedField mappedField = column.getMappedField();
-				mappedField.setFieldValue(entity, cursor, index);
-				autoFetchRelatedField(cursor, cursorInfo, entity, mappedField);
-			}
-		}
-
 		// Manual population of the entity implemented by user.
 		mapCursorValues(entity, cursor, cursorInfo);
 
 		return entity;
 	}
 
-	public void mapContentValues(T entity, ContentValues values) {
-	}
+	protected abstract T newInstance(Cursor cursor, CursorInfo cursorInfo);
 
-	public void mapCursorValues(T entity, Cursor cursor, CursorInfo cursorInfo) {
-	}
+	protected abstract void mapContentValues(T entity, ContentValues values);
 
-	/**
-	 * Auto fetch RelatedParent mapped fields.
-	 *
-	 * @param cursor a {@code Cursor} object with the current query
-	 * @param cursorInfo a {@code CursorInfo} object holding the {@code Cursor} info
-	 * @param entity an {@code Entity} instance that holds the {@link RelatedParent} field
-	 * @param mappedField the {@link MappedField} of the {@code RelatedParent} field
-	 */
-	private void autoFetchRelatedField(Cursor cursor, CursorInfo cursorInfo, T entity,
-			MappedField mappedField) {
-
-		Field field = mappedField.getField();
-
-		// Check that the class of the Field is RelatedParent, and that its parameterized type hasn't
-		// the same type as the Entity. The latest check it's to avoid the RelatedParent fields that
-		// point to the same Entity.
-		if (field.getGenericType() instanceof ParameterizedType) {
-			ParameterizedType type = (ParameterizedType) field.getGenericType();
-
-			if (type.getRawType() != RelatedParent.class
-					|| type.getActualTypeArguments().length != 1
-					|| type.getActualTypeArguments()[0] == entity.getClass()) {
-				return;
-			}
-		} else {
-			return;
-		}
-
-		try {
-			RelatedParent<?> relatedParentField = (RelatedParent<?>) field.get(entity);
-			relatedParentField.fetch(cursor, cursorInfo);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-	}
+	protected abstract void mapCursorValues(T entity, Cursor cursor, CursorInfo cursorInfo);
 
 }

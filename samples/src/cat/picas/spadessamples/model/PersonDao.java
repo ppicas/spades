@@ -21,6 +21,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.List;
 
+import cat.picas.spades.AutoEntityMapper;
 import cat.picas.spades.Column;
 import cat.picas.spades.Column.ColumnId;
 import cat.picas.spades.CursorInfo;
@@ -53,12 +54,7 @@ public class PersonDao extends Dao<Person> {
 	public static final Column HEIGHT = TABLE.getColumn("height");
 	public static final Column WEIGHT = TABLE.getColumn("weight");
 
-	public static final EntityMapper<Person> MAPPER = new EntityMapper<Person>(TABLE) {
-		@Override
-		public Person newInstance(Cursor cursor, CursorInfo cursorInfo) {
-			return new Person();
-		}
-	};
+	public static final EntityMapper<Person> MAPPER = new AutoEntityMapper<Person>(TABLE);
 
 	private HashMapFetchStrategy<Person> mHashMapFetchStrategy;
 
@@ -90,12 +86,7 @@ public class PersonDao extends Dao<Person> {
 
 		public static final Column NAME = TABLE.getColumn(PersonDao.NAME.name);
 
-		public static final EntityMapper<Person> MAPPER = new EntityMapper<Person>(TABLE) {
-			@Override
-			public Person newInstance(Cursor cursor, CursorInfo cursorInfo) {
-				return new Person();
-			}
-		};
+		public static final EntityMapper<Person> MAPPER = new AutoEntityMapper<Person>(TABLE);
 	}
 
 }

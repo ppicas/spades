@@ -1,11 +1,9 @@
 package cat.picas.spadessamples.model.inheritance;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import cat.picas.spades.AutoEntityMapper;
 import cat.picas.spades.Column;
-import cat.picas.spades.CursorInfo;
 import cat.picas.spades.Dao;
 import cat.picas.spades.EntityMapper;
 import cat.picas.spades.Table;
@@ -25,12 +23,7 @@ public class RestaurantDao extends Dao<Restaurant> {
 	public static final Column PLACE_ID = TABLE.getColumn("place_id");
 	public static final Column MICHELINE_STARS = TABLE.getColumn("micheline_stars");
 
-	public static final EntityMapper<Restaurant> MAPPER = new EntityMapper<Restaurant>(TABLE) {
-		@Override
-		public Restaurant newInstance(Cursor cursor, CursorInfo cursorInfo) {
-			return new Restaurant();
-		}
-	};
+	public static final EntityMapper<Restaurant> MAPPER = new AutoEntityMapper<Restaurant>(TABLE);
 
 	public RestaurantDao(SQLiteDatabase db, Table table, EntityMapper<Restaurant> mapper) {
 		super(db, TABLE, MAPPER);

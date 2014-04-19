@@ -16,12 +16,11 @@
 
 package cat.picas.spades.models.auto;
 
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import cat.picas.spades.AutoEntityMapper;
 import cat.picas.spades.Column;
 import cat.picas.spades.Column.ColumnId;
-import cat.picas.spades.CursorInfo;
 import cat.picas.spades.Dao;
 import cat.picas.spades.EntityMapper;
 import cat.picas.spades.Table;
@@ -47,12 +46,7 @@ public class BuildingDao extends Dao<BuildingAuto> {
 	public static final Column SURFACE = TABLE.getColumn("surface");
 	public static final Column IS_MAIN = TABLE.getColumn("is_main");
 
-	public static final EntityMapper<BuildingAuto> MAPPER = new EntityMapper<BuildingAuto>(TABLE) {
-		@Override
-		public BuildingAuto newInstance(Cursor cursor, CursorInfo cursorInfo) {
-			return new BuildingAuto();
-		}
-	};
+	public static final EntityMapper<BuildingAuto> MAPPER = new AutoEntityMapper<BuildingAuto>(TABLE);
 
 	public BuildingDao(SQLiteDatabase db) {
 		super(db, TABLE, MAPPER);

@@ -16,12 +16,11 @@
 
 package cat.picas.spadessamples.model;
 
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import cat.picas.spades.AutoEntityMapper;
 import cat.picas.spades.Column;
 import cat.picas.spades.Column.ColumnId;
-import cat.picas.spades.CursorInfo;
 import cat.picas.spades.Dao;
 import cat.picas.spades.EntityMapper;
 import cat.picas.spades.Table;
@@ -44,12 +43,7 @@ public class ContactPointDao extends Dao<ContactPoint> {
 	public static final Column EMAIL = TABLE.getColumn("email");
 	public static final Column PHONE = TABLE.getColumn("phone");
 
-	public static final EntityMapper<ContactPoint> MAPPER = new EntityMapper<ContactPoint>(TABLE) {
-		@Override
-		public ContactPoint newInstance(Cursor cursor, CursorInfo cursorInfo) {
-			return new ContactPoint();
-		}
-	};
+	public static final EntityMapper<ContactPoint> MAPPER = new AutoEntityMapper<ContactPoint>(TABLE);
 
 	public ContactPointDao(SQLiteDatabase db) {
 		super(db, TABLE, MAPPER);

@@ -19,6 +19,7 @@ package cat.picas.spades.models.auto;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import cat.picas.spades.AutoEntityMapper;
 import cat.picas.spades.Column;
 import cat.picas.spades.Column.ColumnId;
 import cat.picas.spades.CursorInfo;
@@ -43,15 +44,11 @@ public class CompanyDao extends Dao<CompanyAuto> {
 	public static final Column REGISTRATION = TABLE.getColumn("registration");
 	public static final Column SIZE = TABLE.getColumn("size");
 
-	public static final EntityMapper<CompanyAuto> MAPPER = new EntityMapper<CompanyAuto>(TABLE) {
-
-		@Override
-		public CompanyAuto newInstance(Cursor cursor, CursorInfo cursorInfo) {
-			return new CompanyAuto();
-		}
-
+	public static final EntityMapper<CompanyAuto> MAPPER = new AutoEntityMapper<CompanyAuto>(TABLE) {
 		@Override
 		public void mapCursorValues(CompanyAuto company, Cursor cursor, CursorInfo cursorInfo) {
+			super.mapCursorValues(company, cursor, cursorInfo);
+
 			int isMainIndex = cursorInfo.getColumnIndex(BuildingDao.IS_MAIN);
 			if (isMainIndex != -1 && cursor.getInt(isMainIndex) == 1) {
 				company.getMainBuilding().fetch(cursor, cursorInfo);

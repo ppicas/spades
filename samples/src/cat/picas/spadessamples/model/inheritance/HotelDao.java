@@ -1,10 +1,9 @@
 package cat.picas.spadessamples.model.inheritance;
 
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import cat.picas.spades.AutoEntityMapper;
 import cat.picas.spades.Column;
-import cat.picas.spades.CursorInfo;
 import cat.picas.spades.Dao;
 import cat.picas.spades.EntityMapper;
 import cat.picas.spades.Table;
@@ -26,12 +25,7 @@ public class HotelDao extends Dao<Hotel> {
 	public static final Column TOTAL_ROOMS = TABLE.getColumn("total_rooms");
 	public static final Column AVAILABLE_ROOMS = TABLE.getColumn("available_rooms");
 
-	public static final EntityMapper<Hotel> MAPPER = new EntityMapper<Hotel>(TABLE) {
-		@Override
-		public Hotel newInstance(Cursor cursor, CursorInfo cursorInfo) {
-			return new Hotel();
-		}
-	};
+	public static final EntityMapper<Hotel> MAPPER = new AutoEntityMapper<Hotel>(TABLE);
 
 	public HotelDao(SQLiteDatabase db, Table table, EntityMapper<Restaurant> mapper) {
 		super(db, TABLE, MAPPER);

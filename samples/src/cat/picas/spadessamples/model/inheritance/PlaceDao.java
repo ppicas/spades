@@ -1,10 +1,7 @@
 package cat.picas.spadessamples.model.inheritance;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-
+import cat.picas.spades.AutoEntityMapper;
 import cat.picas.spades.Column;
-import cat.picas.spades.CursorInfo;
 import cat.picas.spades.EntityMapper;
 import cat.picas.spades.Table;
 import cat.picas.spades.TableBuilder;
@@ -25,11 +22,6 @@ public class PlaceDao {
 	public static final Column ADDRESS = TABLE.getColumn("address");
 	public static final Column TYPE = TABLE.getColumn("type");
 
-	public static final EntityMapper<Place> MAPPER = new EntityMapper<Place>(TABLE) {
-		@Override
-		public Place newInstance(Cursor cursor, CursorInfo cursorInfo) {
-			return null;
-		}
-	};
+	public static final EntityMapper<Place> MAPPER = new AutoEntityMapper<Place>(TABLE);
 
 }
