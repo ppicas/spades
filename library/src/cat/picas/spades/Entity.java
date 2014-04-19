@@ -16,8 +16,18 @@
 
 package cat.picas.spades;
 
+/**
+ * The classes implementing this interface will represent a database entity. In other words,
+ * every instance of the class will represent a row of a database table.
+ */
 public interface Entity {
 
+	/**
+	 * Returns a {@code Long} representing the unique ID of this entity.
+	 *
+	 * @return The unique ID of this Entity as {@code Long}, or {@code null} if this Entity doesn't
+	 * have ID.
+	 */
 	public Long getEntityId();
 
 	public void setEntityId(Long id);
