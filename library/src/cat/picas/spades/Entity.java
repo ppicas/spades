@@ -25,11 +25,17 @@ public interface Entity {
 	/**
 	 * Returns a {@code Long} representing the unique ID of this entity.
 	 *
-	 * @return The unique ID of this Entity as {@code Long}, or {@code null} if this Entity doesn't
+	 * @return Returns the unique ID of this Entity as {@code Long}, or {@code null} if this Entity doesn't
 	 * have ID.
 	 */
 	public Long getEntityId();
 
+	/**
+	 * Change the unique ID of this Entity.
+	 *
+	 * @param id a {@code Long} on {@code null} if doesn't have ID
+	 * @see #getEntityId()
+	 */
 	public void setEntityId(Long id);
 
 }

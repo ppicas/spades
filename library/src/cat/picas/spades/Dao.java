@@ -25,6 +25,31 @@ import cat.picas.spades.fetch.ArrayListFetchStrategy;
 import cat.picas.spades.fetch.FetchStrategy;
 import cat.picas.spades.query.Query;
 
+/**
+ * This class is used to do CRUD operations with {@link Entity} objects. With an instance of
+ * this class you can do operations with Entity objects, or in other words: read, create, update
+ * or delete rows of a table.
+ * <p>
+ * To use this class you will need a {@link SQLiteDatabase} connection, a {@link Table} definition
+ * and a {@link EntityMapper} to read or write the {@code Entity} fields during table row
+ * operations.
+ * <p>
+ * A common pattern is to extend this class, and define the related {@code Table} and
+ * {@code EntityMapper} as static final fields. For example, given an {@code Entity} called
+ * {@code Example} the following code will define a {@code Dao} class to operate with this
+ * {@code Entity}.
+ * <p>
+ * <pre>
+ * <code>
+ * public class ExampleDao extends Dao<Example> {
+ *
+ * }
+ * </code>
+ * </pre>
+ *
+ * @see Table
+ * @see EntityMapper
+ */
 public class Dao<T extends Entity> {
 
 	public interface EntityConsumer<T extends Entity> {
