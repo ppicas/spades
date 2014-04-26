@@ -39,13 +39,11 @@ import cat.picas.spades.query.Query;
  * {@code Example} the following code will define a {@code Dao} class to operate with this
  * {@code Entity}.
  * <p>
- * <pre>
- * <code>
- * public class ExampleDao extends Dao<Example> {
+ * <pre><code>
+ * public class ExampleDao extends Dao{@code <Example>} {
  *
  * }
- * </code>
- * </pre>
+ * </code></pre>
  *
  * @see Table
  * @see EntityMapper
