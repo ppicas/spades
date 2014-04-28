@@ -37,7 +37,7 @@ class ColumnSelector {
 
 	public void addTable(Table table) {
 		if (mTables.contains(table)) {
-			throw new IllegalStateException("Table already selected");
+			throw new IllegalArgumentException("Table already selected");
 		}
 		mTables.add(table);
 	}

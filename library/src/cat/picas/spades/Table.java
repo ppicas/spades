@@ -48,7 +48,7 @@ public class Table {
 
 	public Column getColumn(String name) {
 		if (!mColumnsNameMap.containsKey(name)) {
-			throw new NoSuchElementException("The column '" + name + "' is not defined");
+			throw new IllegalArgumentException("The column '" + name + "' is not defined");
 		}
 
 		return mColumnsNameMap.get(name);
@@ -81,7 +81,7 @@ public class Table {
 		for (Column column : mColumns) {
 			table.addColumn(column.clone(table, column.index));
 		}
-		tables.addTable(table);
+		tables.addTable(table, false);
 		return table;
 	}
 

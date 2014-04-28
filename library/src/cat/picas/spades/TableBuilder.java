@@ -41,7 +41,7 @@ public class TableBuilder {
 
 	public TableBuilder columnId(String columnName) {
 		if (mColumnIdName != null) {
-			throw new IllegalStateException("ColumnId is already defined");
+			throw new IllegalArgumentException("ColumnId is already defined");
 		}
 		mColumnIdName = columnName;
 
@@ -90,12 +90,12 @@ public class TableBuilder {
 
 	public Table build() {
 		if (mColumnIdName == null || mColumnIdName.isEmpty()) {
-			throw new IllegalStateException("You must define a ColumnId");
+			throw new IllegalArgumentException("You must define a ColumnId");
 		}
 
 		Tables tables = Tables.getInstance();
 		Table table = new Table(tables.nextTableIndex(), mTableName, mEntityClass);
-		tables.addTable(table);
+		tables.addTable(table, true);
 
 		ColumnId columnId = new ColumnId(table.nextColumnIndex(), mColumnIdName, table);
 		table.addColumn(columnId);

@@ -60,7 +60,19 @@ public class Tables {
 		return mTables.size();
 	}
 
-	protected void addTable(Table table) {
+	protected void addTable(Table table, boolean validate) {
+		if (validate) {
+			for (Table existingTable : mTables) {
+				if (existingTable.name.equals(table.name)) {
+					throw new IllegalArgumentException("A Table named '" + table.name
+							+ "' is already defined");
+				} else if (existingTable.getEntity() == table.getEntity()) {
+					throw new IllegalArgumentException("A Table for the Entity '" +
+							table.getEntity().getSimpleName() + "' is already defined");
+				}
+			}
+		}
+
 		mTables.add(table);
 	}
 

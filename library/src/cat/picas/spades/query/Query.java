@@ -69,7 +69,7 @@ public class Query {
 
 	public Query from(Table table) {
 		if (mSelector.hasTables()) {
-			throw new IllegalStateException("From clause already defined");
+			throw new IllegalArgumentException("From clause already defined");
 		}
 		mSelector.addTable(table);
 		mFromClauses.add(table.name + " AS " + mMapper.alias(table));
@@ -222,7 +222,7 @@ public class Query {
 
 	protected void checkFromClause() {
 		if (!mSelector.hasTables()) {
-			throw new IllegalStateException("Missing from clause");
+			throw new IllegalArgumentException("Missing from clause");
 		}
 	}
 
