@@ -40,7 +40,54 @@ import cat.picas.spades.query.Query;
  * {@code Entity}.
  * <p>
  * <pre><code>
- * public class ExampleDao extends Dao{@code <Example>} {
+ * public class Example implements Entity {
+ *
+ *     private Long mId;
+ *
+ *     private String mName;
+ *
+ *     {@literal @Override}
+ *     public Long getEntityId() {
+ *         return mId;
+ *     }
+ *
+ *     {@literal @Override}
+ *     public void setEntityId(Long id) {
+ *         mId = id;
+ *     }
+ *
+ *     public String getName() {
+ *         return mName;
+ *     }
+ *
+ *     public void setName(String name) {
+ *         mName = name;
+ *     }
+ *
+ * }
+ *
+ * public class ExampleDao extends Dao{@literal <Example>} {
+ *
+ *     // First declare a Table that defines the table for the entity. Every table
+ *     // must declared only once, that is that must exist only Table instance
+ *     // per database table.
+ *     //
+ *     // "examples" is the table name in the SQLite database.
+ *     public static final Table TABLE = new TableBuilder("examples", Example.class)
+ *             // Every table must have a column ID. "id" is the name of the column in the
+ *             // table database.
+ *             .columnId("id")
+ *
+ *             // Defines the column "name" in the database table. In this case this
+ *             // column is defined with the type 'auto', this type requires the name
+ *             // of the field in the Entity class ("mName") in order to use reflection
+ *             // and resolve the type at runtime.
+ *             .columnAuto("name", "mName").end()
+ *
+ *             // Create the Table
+ *             .build();
+ *
+ *     // The next step is define a... TODO
  *
  * }
  * </code></pre>
