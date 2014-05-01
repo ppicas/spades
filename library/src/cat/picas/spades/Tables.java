@@ -18,6 +18,7 @@ package cat.picas.spades;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Formatter;
 import java.util.List;
 
 public class Tables {
@@ -63,12 +64,11 @@ public class Tables {
 	protected void addTable(Table table, boolean validate) {
 		if (validate) {
 			for (Table existingTable : mTables) {
-				if (existingTable.name.equals(table.name)) {
-					throw new IllegalArgumentException("A Table named '" + table.name
-							+ "' is already defined");
-				} else if (existingTable.getEntity() == table.getEntity()) {
-					throw new IllegalArgumentException("A Table for the Entity '" +
-							table.getEntity().getSimpleName() + "' is already defined");
+				if (existingTable.name.equals(table.name)
+						&& existingTable.name.equals(table.name)) {
+					throw new IllegalArgumentException(String.format(
+							"A Table named '%s' is already defined for the Entity '%s'",
+							table.name, table.getEntity().getSimpleName()));
 				}
 			}
 		}
