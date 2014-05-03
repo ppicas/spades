@@ -27,25 +27,24 @@ import cat.picas.spades.CursorInfo;
 import cat.picas.spades.Dao;
 import cat.picas.spades.EntityMapper;
 import cat.picas.spades.Table;
-import cat.picas.spades.TableBuilder;
+import cat.picas.spades.Tables;
 import cat.picas.spades.models.Company.CompanySize;
 import cat.picas.spades.models.auto.BuildingDao;
 
 public class CompanyDao extends Dao<CompanyManual> {
 
-	public static final Table TABLE = new TableBuilder("companies_manual", CompanyManual.class)
-			.columnId("id")
-			.columnText("name").notNull().end()
-			.columnInteger("fundation_year").notNull().indexed(false, true).end()
-			.columnInteger("registration").end()
-			.columnText("size").end()
-			.build();
+	public static final Table TABLE = Tables.newTable("companies_manual", CompanyManual.class);
 
-	public static final ColumnId ID = TABLE.getColumnId();
-	public static final Column NAME = TABLE.getColumn("name");
-	public static final Column FUNDATION_YEAR = TABLE.getColumn("fundation_year");
-	public static final Column REGISTRATION = TABLE.getColumn("registration");
-	public static final Column SIZE = TABLE.getColumn("size");
+	public static final ColumnId ID = TABLE.newColumnId("id");
+
+	public static final Column NAME = TABLE.newColumnText("name").notNull().end();
+
+	public static final Column FUNDATION_YEAR = TABLE.newColumnInteger("fundation_year")
+			.notNull().indexed(false, true).end();
+
+	public static final Column REGISTRATION = TABLE.newColumnInteger("registration").end();
+
+	public static final Column SIZE = TABLE.newColumnText("size").end();
 
 	public static final EntityMapper<CompanyManual> MAPPER = new EntityMapper<CompanyManual>(TABLE) {
 
@@ -59,26 +58,26 @@ public class CompanyDao extends Dao<CompanyManual> {
 			int index;
 
 			index = cursorInfo.getColumnIndex(NAME);
-			if (index != -1) {
+			if (index != CursorInfo.INVALID_INDEX) {
 				company.setName(cursor.getString(index));
 			}
 			index = cursorInfo.getColumnIndex(FUNDATION_YEAR);
-			if (index != -1) {
+			if (index != CursorInfo.INVALID_INDEX) {
 				company.setFundationYear(cursor.getInt(index));
 			}
 			index = cursorInfo.getColumnIndex(REGISTRATION);
-			if (index != -1) {
+			if (index != CursorInfo.INVALID_INDEX) {
 				company.setRegistration(cursor.isNull(index) ? null
 						: new Date(cursor.getLong(index)));
 			}
 			index = cursorInfo.getColumnIndex(SIZE);
-			if (index != -1) {
+			if (index != CursorInfo.INVALID_INDEX) {
 				company.setSize(cursor.isNull(index) ? null
 						: CompanySize.valueOf(cursor.getString(index)));
 			}
 
 			index = cursorInfo.getColumnIndex(BuildingDao.IS_MAIN);
-			if (index != -1 && cursor.getInt(index) == 1) {
+			if (index != CursorInfo.INVALID_INDEX && cursor.getInt(index) == 1) {
 				company.getMainBuilding().fetch(cursor, cursorInfo);
 			}
 		}

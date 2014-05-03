@@ -7,21 +7,18 @@ import cat.picas.spades.Column;
 import cat.picas.spades.Dao;
 import cat.picas.spades.EntityMapper;
 import cat.picas.spades.Table;
-import cat.picas.spades.TableBuilder;
+import cat.picas.spades.Tables;
 
 import static cat.picas.spades.Column.ColumnId;
 
 public class RestaurantDao extends Dao<Restaurant> {
 
-	public static final Table TABLE = new TableBuilder("restaurants", Restaurant.class)
-			.columnId("id")
-			.columnAuto("place_id", "place").notNull().foreignKey(PlaceDao.ID).end()
-			.columnAuto("micheline_stars", "mMichelineStars").end()
-			.build();
+	public static final Table TABLE = Tables.newTable("restaurants", Restaurant.class);
 
-	public static final ColumnId ID = TABLE.getColumnId();
-	public static final Column PLACE_ID = TABLE.getColumn("place_id");
-	public static final Column MICHELINE_STARS = TABLE.getColumn("micheline_stars");
+	public static final ColumnId ID = TABLE.newColumnId("id");
+
+	public static final Column PLACE_ID = TABLE.newColumnAuto("place_id", "place").notNull().foreignKey(PlaceDao.ID).end();
+	public static final Column MICHELINE_STARS = TABLE.newColumnAuto("micheline_stars", "mMichelineStars").end();
 
 	public static final EntityMapper<Restaurant> MAPPER = new AutoEntityMapper<Restaurant>(TABLE);
 

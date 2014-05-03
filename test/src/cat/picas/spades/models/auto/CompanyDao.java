@@ -26,23 +26,23 @@ import cat.picas.spades.CursorInfo;
 import cat.picas.spades.Dao;
 import cat.picas.spades.EntityMapper;
 import cat.picas.spades.Table;
-import cat.picas.spades.TableBuilder;
+import cat.picas.spades.Tables;
 
 public class CompanyDao extends Dao<CompanyAuto> {
 
-	public static final Table TABLE = new TableBuilder("companies_auto", CompanyAuto.class)
-			.columnId("id")
-			.columnAuto("name", "mName").notNull().end()
-			.columnAuto("fundation_year", "mFundationYear").notNull().indexed(false, true).end()
-			.columnAuto("registration", "mRegistration").end()
-			.columnAuto("size", "mSize").end()
-			.build();
+	public static final Table TABLE = Tables.newTable("companies_auto", CompanyAuto.class);
 
-	public static final ColumnId ID = TABLE.getColumnId();
-	public static final Column NAME = TABLE.getColumn("name");
-	public static final Column FUNDATION_YEAR = TABLE.getColumn("fundation_year");
-	public static final Column REGISTRATION = TABLE.getColumn("registration");
-	public static final Column SIZE = TABLE.getColumn("size");
+	public static final ColumnId ID = TABLE.newColumnId("id");
+
+	public static final Column NAME = TABLE.newColumnAuto("name", "mName").notNull().end();
+
+	public static final Column FUNDATION_YEAR = TABLE.newColumnAuto("fundation_year",
+			"mFundationYear").notNull().indexed(false, true).end();
+
+	public static final Column REGISTRATION = TABLE.newColumnAuto("registration",
+			"mRegistration").end();
+
+	public static final Column SIZE = TABLE.newColumnAuto("size", "mSize").end();
 
 	public static final EntityMapper<CompanyAuto> MAPPER = new AutoEntityMapper<CompanyAuto>(TABLE) {
 		@Override
@@ -50,7 +50,7 @@ public class CompanyDao extends Dao<CompanyAuto> {
 			super.mapCursorValues(company, cursor, cursorInfo);
 
 			int isMainIndex = cursorInfo.getColumnIndex(BuildingDao.IS_MAIN);
-			if (isMainIndex != -1 && cursor.getInt(isMainIndex) == 1) {
+			if (isMainIndex != CursorInfo.INVALID_INDEX && cursor.getInt(isMainIndex) == 1) {
 				company.getMainBuilding().fetch(cursor, cursorInfo);
 			}
 		}

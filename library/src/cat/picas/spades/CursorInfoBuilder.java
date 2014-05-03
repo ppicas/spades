@@ -32,7 +32,7 @@ public class CursorInfoBuilder {
 		mColumnIndexes = new int[mTables.size()][];
 		for (Table table : mTables.getTables()) {
 			mColumnIndexes[table.index] = new int[table.getColumnsSize()];
-			Arrays.fill(mColumnIndexes[table.index], -1);
+			Arrays.fill(mColumnIndexes[table.index], CursorInfo.INVALID_INDEX);
 		}
 	}
 
@@ -53,7 +53,7 @@ public class CursorInfoBuilder {
 
 	public CursorInfoBuilder add(Column column) {
 		Table table = column.getTable();
-		if (mColumnIndexes[table.index][column.index] == -1) {
+		if (mColumnIndexes[table.index][column.index] == CursorInfo.INVALID_INDEX) {
 			mHasTables[table.index] = true;
 			mColumnIndexes[table.index][column.index] = mOffset++;
 		}

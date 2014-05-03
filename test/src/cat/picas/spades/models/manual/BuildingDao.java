@@ -25,28 +25,31 @@ import cat.picas.spades.CursorInfo;
 import cat.picas.spades.Dao;
 import cat.picas.spades.EntityMapper;
 import cat.picas.spades.Table;
-import cat.picas.spades.TableBuilder;
+import cat.picas.spades.Tables;
 import cat.picas.spades.models.auto.CompanyDao;
 
 public class BuildingDao extends Dao<BuildingManual> {
 
-	public static final Table TABLE = new TableBuilder("buildings_manual", BuildingManual.class)
-			.columnId("id")
-			.columnInteger("company_id").notNull().foreignKey(CompanyDao.ID).end()
-			.columnText("address").notNull().defaultValue("").end()
-			.columnText("phone").end()
-			.columnInteger("floors").notNull().defaultValue(0).end()
-			.columnReal("surface").notNull().defaultValue(0).end()
-			.columnInteger("is_main").notNull().defaultValue(false).end()
-			.build();
+	public static final Table TABLE = Tables.newTable("buildings_manual", BuildingManual.class);
 
-	public static final ColumnId ID = TABLE.getColumnId();
-	public static final Column COMPANY_ID = TABLE.getColumn("company_id");
-	public static final Column ADDRESS = TABLE.getColumn("address");
-	public static final Column PHONE = TABLE.getColumn("phone");
-	public static final Column FLOORS = TABLE.getColumn("floors");
-	public static final Column SURFACE = TABLE.getColumn("surface");
-	public static final Column IS_MAIN = TABLE.getColumn("is_main");
+	public static final ColumnId ID = TABLE.newColumnId("id");
+
+	public static final Column COMPANY_ID = TABLE.newColumnInteger("company_id")
+			.notNull().foreignKey(CompanyDao.ID).end();
+
+	public static final Column ADDRESS = TABLE.newColumnText("address")
+			.notNull().defaultValue("").end();
+
+	public static final Column PHONE = TABLE.newColumnText("phone").end();
+
+	public static final Column FLOORS = TABLE.newColumnInteger("floors")
+			.notNull().defaultValue(0).end();
+
+	public static final Column SURFACE = TABLE.newColumnReal("surface")
+			.notNull().defaultValue(0).end();
+
+	public static final Column IS_MAIN = TABLE.newColumnInteger("is_main")
+			.notNull().defaultValue(false).end();
 
 	public static final EntityMapper<BuildingManual> MAPPER = new EntityMapper<BuildingManual>(TABLE) {
 
@@ -60,27 +63,27 @@ public class BuildingDao extends Dao<BuildingManual> {
 			int index;
 
 			index = cursorInfo.getColumnIndex(COMPANY_ID);
-			if (index != -1) {
+			if (index != CursorInfo.INVALID_INDEX) {
 				building.getCompany().setValue(cursor.getLong(index));
 			}
 			index = cursorInfo.getColumnIndex(ADDRESS);
-			if (index != -1) {
+			if (index != CursorInfo.INVALID_INDEX) {
 				building.setAddress(cursor.getString(index));
 			}
 			index = cursorInfo.getColumnIndex(PHONE);
-			if (index != -1) {
+			if (index != CursorInfo.INVALID_INDEX) {
 				building.setPhone(cursor.isNull(index) ? null : cursor.getString(index));
 			}
 			index = cursorInfo.getColumnIndex(FLOORS);
-			if (index != -1) {
+			if (index != CursorInfo.INVALID_INDEX) {
 				building.setFloors(cursor.getInt(index));
 			}
 			index = cursorInfo.getColumnIndex(SURFACE);
-			if (index != -1) {
+			if (index != CursorInfo.INVALID_INDEX) {
 				building.setSurface(cursor.getDouble(index));
 			}
 			index = cursorInfo.getColumnIndex(IS_MAIN);
-			if (index != -1) {
+			if (index != CursorInfo.INVALID_INDEX) {
 				building.setMain(cursor.getInt(index) == 1);
 			}
 

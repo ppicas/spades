@@ -90,8 +90,8 @@ public class RelatedList<T extends Entity> {
 				// If we have enough information check if the child entity ID is
 				// equal to the parent ID, if they are different then we discard
 				// this row.
-				if (childColIndex != -1 && !cursor.isNull(childColIndex) && parentId != null
-						&& !parentId.equals(cursor.getLong(childColIndex))) {
+				if (childColIndex != CursorInfo.INVALID_INDEX && !cursor.isNull(childColIndex)
+						&& parentId != null && !parentId.equals(cursor.getLong(childColIndex))) {
 					continue;
 				}
 
@@ -114,7 +114,8 @@ public class RelatedList<T extends Entity> {
 
 		// We only add the children that can be validated as a related entity of this parent.
 		int childColIndex = cursorInfo.getColumnIndex(mChildColumn);
-		if (childColIndex == -1 || cursor.isNull(childColIndex) || mParent.getEntityId() == null
+		if (childColIndex == CursorInfo.INVALID_INDEX
+				|| cursor.isNull(childColIndex) || mParent.getEntityId() == null
 				|| !mParent.getEntityId().equals(cursor.getLong(childColIndex))) {
 			return;
 		}

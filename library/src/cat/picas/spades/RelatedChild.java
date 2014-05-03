@@ -80,7 +80,8 @@ public class RelatedChild<T extends Entity> {
 			// equal to the parent ID, if they are different then we discard
 			// this child.
 			int childColIndex = cursorInfo.getColumnIndex(mChildColumn);
-			if (childColIndex != -1 && !cursor.isNull(childColIndex) && mParent.getEntityId() != null
+			if (childColIndex != CursorInfo.INVALID_INDEX
+					&& !cursor.isNull(childColIndex) && mParent.getEntityId() != null
 					&& !mParent.getEntityId().equals(cursor.getLong(childColIndex))) {
 				return null;
 			}

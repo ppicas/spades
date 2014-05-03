@@ -24,27 +24,30 @@ import cat.picas.spades.Column.ColumnId;
 import cat.picas.spades.Dao;
 import cat.picas.spades.EntityMapper;
 import cat.picas.spades.Table;
-import cat.picas.spades.TableBuilder;
+import cat.picas.spades.Tables;
 
 public class BuildingDao extends Dao<BuildingAuto> {
 
-	public static final Table TABLE = new TableBuilder("buildings_auto", BuildingAuto.class)
-			.columnId("id")
-			.columnAuto("company_id", "mCompany").notNull().foreignKey(CompanyDao.ID).end()
-			.columnAuto("address", "mAddress").notNull().defaultValue("").end()
-			.columnAuto("phone", "mPhone").end()
-			.columnAuto("floors", "mFloors").notNull().defaultValue(0).end()
-			.columnAuto("surface", "mSurface").notNull().defaultValue(0).end()
-			.columnAuto("is_main", "mMain").notNull().defaultValue(false).end()
-			.build();
+	public static final Table TABLE = Tables.newTable("buildings_auto", BuildingAuto.class);
 
-	public static final ColumnId ID = TABLE.getColumnId();
-	public static final Column COMPANY_ID = TABLE.getColumn("company_id");
-	public static final Column ADDRESS = TABLE.getColumn("address");
-	public static final Column PHONE = TABLE.getColumn("phone");
-	public static final Column FLOORS = TABLE.getColumn("floors");
-	public static final Column SURFACE = TABLE.getColumn("surface");
-	public static final Column IS_MAIN = TABLE.getColumn("is_main");
+	public static final ColumnId ID = TABLE.newColumnId("id");
+
+	public static final Column COMPANY_ID = TABLE.newColumnAuto("company_id", "mCompany")
+			.notNull().foreignKey(CompanyDao.ID).end();
+
+	public static final Column ADDRESS = TABLE.newColumnAuto("address", "mAddress")
+			.notNull().defaultValue("").end();
+
+	public static final Column PHONE = TABLE.newColumnAuto("phone", "mPhone").end();
+
+	public static final Column FLOORS = TABLE.newColumnAuto("floors", "mFloors")
+			.notNull().defaultValue(0).end();
+
+	public static final Column SURFACE = TABLE.newColumnAuto("surface", "mSurface")
+			.notNull().defaultValue(0).end();
+
+	public static final Column IS_MAIN = TABLE.newColumnAuto("is_main", "mMain")
+			.notNull().defaultValue(false).end();
 
 	public static final EntityMapper<BuildingAuto> MAPPER = new AutoEntityMapper<BuildingAuto>(TABLE);
 

@@ -77,7 +77,7 @@ public class RelatedParent<T extends Entity> {
 
 			// Obtain the cursor index of the related column.
 			int parentColIndex = cursorInfo.getColumnIndex(mParentColumn);
-			if (parentColIndex != -1 && !cursor.isNull(parentColIndex)) {
+			if (parentColIndex != CursorInfo.INVALID_INDEX && !cursor.isNull(parentColIndex)) {
 				if (mRawValue != null && !mRawValue.equals(cursor.getLong(parentColIndex))) {
 					// Protection against incorrect entity assignments (ID != Foreign key).
 					return null;

@@ -16,9 +16,9 @@
 
 package cat.picas.spades;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Formatter;
 import java.util.List;
 
 public class Tables {
@@ -37,6 +37,13 @@ public class Tables {
 		}
 
 		return sInstance;
+	}
+
+	public static Table newTable(String tableName, Class<? extends Entity> entityClass) {
+		Tables tables = getInstance();
+		Table table = new Table(tables.nextTableIndex(), tableName, entityClass);
+		tables.addTable(table, true);
+		return table;
 	}
 
 	private Tables() {}
@@ -75,5 +82,4 @@ public class Tables {
 
 		mTables.add(table);
 	}
-
 }

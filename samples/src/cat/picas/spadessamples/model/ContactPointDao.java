@@ -24,24 +24,32 @@ import cat.picas.spades.Column.ColumnId;
 import cat.picas.spades.Dao;
 import cat.picas.spades.EntityMapper;
 import cat.picas.spades.Table;
-import cat.picas.spades.TableBuilder;
+import cat.picas.spades.Tables;
 
 public class ContactPointDao extends Dao<ContactPoint> {
 
-	public static final Table TABLE = new TableBuilder("contact_point", ContactPoint.class)
-			.columnId("id")
-			.columnAuto("person_id", "person").notNull().foreignKey(PersonDao.ID).end()
-			.columnAuto("name", "mName").notNull().end()
-			.columnAuto("email", "mEmail").end()
-			.columnAuto("phone", "mPhone").end()
-			.build();
+	public static final Table TABLE = Tables.newTable("contact_point", ContactPoint.class);
 
-	public static final ColumnId ID = TABLE.getColumnId();
+	public static final ColumnId ID = TABLE.newColumnId("id");
 
-	public static final Column PERSON_ID = TABLE.getColumn("person_id");
-	public static final Column NAME = TABLE.getColumn("name");
-	public static final Column EMAIL = TABLE.getColumn("email");
-	public static final Column PHONE = TABLE.getColumn("phone");
+	public static final Column PERSON_ID = TABLE
+			.newColumnAuto("person_id", "person")
+			.notNull()
+			.foreignKey(PersonDao.ID)
+			.end();
+
+	public static final Column NAME = TABLE
+			.newColumnAuto("name", "mName")
+			.notNull()
+			.end();
+
+	public static final Column EMAIL = TABLE
+			.newColumnAuto("email", "mEmail")
+			.end();
+
+	public static final Column PHONE = TABLE
+			.newColumnAuto("phone", "mPhone")
+			.end();
 
 	public static final EntityMapper<ContactPoint> MAPPER = new AutoEntityMapper<ContactPoint>(TABLE);
 

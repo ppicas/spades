@@ -19,6 +19,7 @@ package cat.picas.spades;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.SparseArray;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,6 +27,9 @@ import java.util.List;
 import java.util.Map;
 
 import cat.picas.spades.Column.ColumnId;
+import cat.picas.spades.map.MappedField;
+import cat.picas.spades.map.MappedFieldFactory;
+import cat.picas.spades.util.ReflectionUtils;
 
 public class Table {
 
@@ -75,6 +79,51 @@ public class Table {
 
 	public ColumnId getColumnId() {
 		return mColumnId;
+	}
+
+	public ColumnId newColumnId(String columnName) {
+		if (mColumnId != null) {
+			throw new IllegalArgumentException("A ColumnId is already defined");
+		}
+		mColumnId = new ColumnId(nextColumnIndex(), columnName, this);
+		addColumn(mColumnId);
+		return mColumnId;
+	}
+
+	public ColumnBuilder newColumnText(String columnName) {
+		return new ColumnBuilder(columnName, ColumnBuilder.ColumnType.TEXT, this);
+	}
+
+	public ColumnBuilder newColumnNumeric(String columnName) {
+		return new ColumnBuilder(columnName, ColumnBuilder.ColumnType.NUMERIC, this);
+	}
+
+	public ColumnBuilder newColumnInteger(String columnName) {
+		return new ColumnBuilder(columnName, ColumnBuilder.ColumnType.INTEGER, this);
+	}
+
+	public ColumnBuilder newColumnReal(String columnName) {
+		return new ColumnBuilder(columnName, ColumnBuilder.ColumnType.REAL, this);
+	}
+
+	public ColumnBuilder newColumnAuto(String columnName, String fieldName) {
+		Field field = ReflectionUtils.findField(mEntity, fieldName);
+		if (field == null) {
+			throw new IllegalArgumentException(new NoSuchFieldException(fieldName));
+		}
+
+		MappedFieldFactory factory = MappedFieldFactory.getInstance();
+		MappedField mappedField = factory.createForField(field);
+
+		return new ColumnBuilder(columnName, mappedField, this);
+	}
+
+	public ColumnBuilder newColumnCustom(String columnName, String definition) {
+		return new ColumnBuilder(columnName, definition, this);
+	}
+
+	public Column copyColumn(Column columnToCopy) {
+		return columnToCopy.clone(this, nextColumnIndex());
 	}
 
 	public Table alias() {
@@ -130,6 +179,9 @@ public class Table {
 	}
 
 	protected void addColumn(Column column) {
+		if (mColumnsNameMap.containsKey(column.name)) {
+			throw new IllegalArgumentException("A Column named '" + column + "' is already defined");
+		}
 		mColumns.add(column);
 		mColumnsNameMap.put(column.name, column);
 	}
@@ -140,6 +192,17 @@ public class Table {
 
 	protected void setColumnId(ColumnId columnId) {
 		mColumnId = columnId;
+	}
+
+	protected void validate() {
+		if (mColumns.isEmpty()) {
+			throw new IllegalArgumentException("Columns list is empty in table '" +
+					getClass().getSimpleName() + "'");
+		}
+		if (mColumnId == null) {
+			throw new IllegalArgumentException("ColumnId not defined for table '" +
+					getClass().getSimpleName() + "'");
+		}
 	}
 
 	private String generateIndexName(int num) {

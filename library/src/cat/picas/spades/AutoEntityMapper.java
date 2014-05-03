@@ -69,7 +69,7 @@ public class AutoEntityMapper<T extends Entity> extends EntityMapper<T> {
 		// Automatic population of the entity fields via reflection.
 		for (Column column : mMappedColumns) {
 			int index = cursorInfo.getColumnIndex(column);
-			if (index != -1) {
+			if (index != CursorInfo.INVALID_INDEX) {
 				MappedField mappedField = column.getMappedField();
 				mappedField.setFieldValue(entity, cursor, index);
 				autoFetchRelatedParentField(cursor, cursorInfo, entity, mappedField);

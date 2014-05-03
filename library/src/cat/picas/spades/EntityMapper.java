@@ -24,13 +24,8 @@ public abstract class EntityMapper<T extends Entity> {
 	private Table mTable;
 
 	public EntityMapper(Table table) {
+		table.validate();
 		mTable = table;
-		if (mTable.getColumnsSize() == 0) {
-			throw new IllegalArgumentException("Columns list is empty");
-		}
-		if (mTable.getColumnId() == null) {
-			throw new IllegalArgumentException("ColumnId not defined");
-		}
 	}
 
 	public Table getTable() {
@@ -54,7 +49,7 @@ public abstract class EntityMapper<T extends Entity> {
 
 		// Set the entity ID.
 		int colIdIndex = cursorInfo.getColumnIndex(mTable.getColumnId());
-		if (colIdIndex != -1) {
+		if (colIdIndex != CursorInfo.INVALID_INDEX) {
 			if (cursor.isNull(colIdIndex)) {
 				// As the entity ID is selected (the cursor has the column) and the value is null,
 				// we should return null as this row doesn't contain any entity instance.

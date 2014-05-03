@@ -4,23 +4,19 @@ import cat.picas.spades.AutoEntityMapper;
 import cat.picas.spades.Column;
 import cat.picas.spades.EntityMapper;
 import cat.picas.spades.Table;
-import cat.picas.spades.TableBuilder;
+import cat.picas.spades.Tables;
 
 import static cat.picas.spades.Column.ColumnId;
 
 public class PlaceDao {
 
-	public static final Table TABLE = new TableBuilder("places", Place.class)
-			.columnId("id")
-			.columnAuto("name", "mName").notNull().end()
-			.columnAuto("address", "mAddress").end()
-			.columnAuto("type", "mType").end()
-			.build();
+	public static final Table TABLE = Tables.newTable("places", Place.class);
 
-	public static final ColumnId ID = TABLE.getColumnId();
-	public static final Column NAME = TABLE.getColumn("name");
-	public static final Column ADDRESS = TABLE.getColumn("address");
-	public static final Column TYPE = TABLE.getColumn("type");
+	public static final ColumnId ID = TABLE.newColumnId("id");
+
+	public static final Column NAME = TABLE.newColumnAuto("name", "mName").notNull().end();
+	public static final Column ADDRESS = TABLE.newColumnAuto("address", "mAddress").end();
+	public static final Column TYPE = TABLE.newColumnAuto("type", "mType").end();
 
 	public static final EntityMapper<Place> MAPPER = new AutoEntityMapper<Place>(TABLE);
 

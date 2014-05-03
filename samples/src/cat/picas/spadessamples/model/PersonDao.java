@@ -26,33 +26,46 @@ import cat.picas.spades.Column;
 import cat.picas.spades.Column.ColumnId;
 import cat.picas.spades.CursorInfo;
 import cat.picas.spades.Dao;
-import cat.picas.spades.EntityMapper;
 import cat.picas.spades.Table;
-import cat.picas.spades.TableBuilder;
+import cat.picas.spades.Tables;
 import cat.picas.spades.fetch.HashMapFetchStrategy;
 import cat.picas.spades.query.Query;
 import cat.picas.spadessamples.model.Person.Gender;
 
 public class PersonDao extends Dao<Person> {
 
-	public static final Table TABLE = new TableBuilder("person", Person.class)
-			.columnId("id")
-			.columnAuto("spouse_id", "spouse").foreignKey("id").end()
-			.columnAuto("name", "mName").notNull().end()
-			.columnAuto("birth_date", "mBirthDate").end()
-			.columnAuto("gender", "mGender").notNull().defaultValue(Gender.MALE).end()
-			.columnAuto("height", "mHeight").indexed(false, true).end()
-			.columnAuto("weight", "mWeight").end()
-			.build();
+	public static final Table TABLE = Tables.newTable("person", Person.class);
 
-	public static final ColumnId ID = TABLE.getColumnId();
+	public static final ColumnId ID = TABLE.newColumnId("id");
 
-	public static final Column SPOUSE_ID = TABLE.getColumn("spouse_id");
-	public static final Column NAME = TABLE.getColumn("name");
-	public static final Column BIRTH_DATE = TABLE.getColumn("birth_date");
-	public static final Column GENDER = TABLE.getColumn("gender");
-	public static final Column HEIGHT = TABLE.getColumn("height");
-	public static final Column WEIGHT = TABLE.getColumn("weight");
+	public static final Column SPOUSE_ID = TABLE
+			.newColumnAuto("spouse_id", "spouse")
+			.foreignKey(ID)
+			.end();
+
+	public static final Column NAME = TABLE
+			.newColumnAuto("name", "mName")
+			.notNull()
+			.end();
+
+	public static final Column BIRTH_DATE = TABLE
+			.newColumnAuto("birth_date", "mBirthDate")
+			.end();
+
+	public static final Column GENDER = TABLE
+			.newColumnAuto("gender", "mGender")
+			.notNull()
+			.defaultValue(Gender.MALE)
+			.end();
+
+	public static final Column HEIGHT = TABLE
+			.newColumnAuto("height", "mHeight")
+			.indexed(false, true)
+			.end();
+
+	public static final Column WEIGHT = TABLE
+			.newColumnAuto("weight", "mWeight")
+			.end();
 
 	public static final AutoEntityMapper<Person> MAPPER = new AutoEntityMapper<Person>(TABLE);
 

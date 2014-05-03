@@ -111,6 +111,7 @@ public class Dao<T extends Entity> {
 	}
 
 	public Dao(SQLiteDatabase db, Table table, EntityMapper<T> mapper, FetchStrategy<T> fetchStrategy) {
+		table.validate();
 		mDb = db;
 		mTable = table;
 		mMapper = mapper;
@@ -120,7 +121,6 @@ public class Dao<T extends Entity> {
 	public long insert(T entity) {
 		ContentValues values = new ContentValues();
 		mMapper.putContentValues(entity, values);
-		values.putNull(mTable.getColumnId().name);
 
 		long newId = mDb.insertOrThrow(mTable.name, null, values);
 		if (newId != -1) {

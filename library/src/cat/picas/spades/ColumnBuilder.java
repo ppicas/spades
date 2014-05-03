@@ -20,7 +20,7 @@ import android.text.TextUtils;
 
 import cat.picas.spades.map.MappedField;
 
-public class ColumnBuilder extends BaseColumnBuilder {
+public class ColumnBuilder {
 
 	public enum ColumnType {
 		TEXT,
@@ -39,26 +39,26 @@ public class ColumnBuilder extends BaseColumnBuilder {
 
 	private String mName;
 	private String mDefinition;
+	private Table mTable;
 	private boolean mNotNull;
 	private MappedField mMappedField;
-	private TableBuilder mTableBuilder;
 	private boolean mIndexed;
 	private boolean mIndexIsUnique;
 	private boolean mIndexIsAscendant;
 
-	protected ColumnBuilder(String columnName, ColumnType columnType, TableBuilder builder) {
-		this(columnName, columnType.name(), builder);
+	protected ColumnBuilder(String columnName, ColumnType columnType, Table table) {
+		this(columnName, columnType.name(), table);
 	}
 
-	protected ColumnBuilder(String columnName, MappedField mappedField, TableBuilder builder) {
-		this(columnName, mappedField.getColumnType(), builder);
+	protected ColumnBuilder(String columnName, MappedField mappedField, Table table) {
+		this(columnName, mappedField.getColumnType(), table);
 		mMappedField = mappedField;
 	}
 
-	protected ColumnBuilder(String columnName, String definition, TableBuilder builder) {
+	protected ColumnBuilder(String columnName, String definition, Table table) {
 		mName = columnName;
 		mDefinition = definition;
-		mTableBuilder = builder;
+		mTable = table;
 	}
 
 	public ColumnBuilder notNull() {
@@ -101,21 +101,6 @@ public class ColumnBuilder extends BaseColumnBuilder {
 		return this;
 	}
 
-	public ColumnBuilder foreignKey(String columnName) {
-		return foreignKey(columnName, OnDelete.CASCADE);
-	}
-
-	public ColumnBuilder foreignKey(String columnName, OnDelete onDelete) {
-		if (!mTableBuilder.hasColumn(columnName)) {
-			throw new RuntimeException(new NoSuchFieldException(columnName));
-		}
-		mDefinition += " REFERENCES " + mTableBuilder.getTableName() + "(" + columnName + ") "
-				+ "ON DELETE " + onDelete.name().replace('_', ' ');
-		indexed(false, true);
-
-		return this;
-	}
-
 	public ColumnBuilder indexed(boolean unique, boolean ascendant) {
 		mIndexed = true;
 		mIndexIsUnique = unique;
@@ -129,25 +114,15 @@ public class ColumnBuilder extends BaseColumnBuilder {
 		return this;
 	}
 
-	public TableBuilder end() {
-		mTableBuilder.addColumnBuilder(this);
-		return mTableBuilder;
-	}
-
-	@Override
-	protected String getName() {
-		return mName;
-	}
-
-	@Override
-	protected Column build(int index, Table table) {
-		Column column = new Column(index, mName, table, mDefinition, mNotNull);
+	public Column end() {
+		Column column = new Column(mTable.nextColumnIndex(), mName, mTable, mDefinition, mNotNull);
 		if (mMappedField != null) {
 			column.setMappedField(mMappedField);
 		}
 		if (mIndexed) {
 			column.setIndexed(mIndexIsUnique, mIndexIsAscendant);
 		}
+		mTable.addColumn(column);
 
 		return column;
 	}

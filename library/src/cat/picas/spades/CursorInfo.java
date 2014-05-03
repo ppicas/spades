@@ -21,6 +21,8 @@ import android.os.Parcelable;
 
 public class CursorInfo implements Parcelable {
 
+	public static final int INVALID_INDEX = -1;
+
 	public static final Creator<CursorInfo> CREATOR = new CursorInfoCreator();
 
 	private boolean[] mHasTables;
@@ -43,11 +45,11 @@ public class CursorInfo implements Parcelable {
 	}
 
 	public boolean hasColumn(Column column) {
-		return mColumnIndexes[column.getTable().index][column.index] != -1;
+		return mColumnIndexes[column.getTable().index][column.index] != INVALID_INDEX;
 	}
 
 	public boolean hasColumn(int tableIndex, int columnIndex) {
-		return mColumnIndexes[tableIndex][columnIndex] != -1;
+		return mColumnIndexes[tableIndex][columnIndex] != INVALID_INDEX;
 	}
 
 	public int getColumnIndex(Column column) {
