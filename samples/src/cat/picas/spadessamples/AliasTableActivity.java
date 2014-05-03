@@ -26,9 +26,6 @@ import cat.picas.spadessamples.adapter.CouplesCursorAdapter;
 import cat.picas.spadessamples.model.DatabaseHelper;
 import cat.picas.spadessamples.model.PersonDao;
 
-import static cat.picas.spadessamples.model.PersonDao.SpouseDao;
-import static cat.picas.spadessamples.model.PersonDao.TABLE;
-
 public class AliasTableActivity extends ListActivity {
 
 	private DatabaseHelper mHelper;
@@ -41,9 +38,9 @@ public class AliasTableActivity extends ListActivity {
 		mHelper = new DatabaseHelper(this);
 		SQLiteDatabase db = mHelper.getReadableDatabase();
 
-		Query query = new Query(TABLE)
-				.leftJoin(SpouseDao.TABLE, "%s = %s", SpouseDao.ID, PersonDao.SPOUSE_ID)
-				.select(PersonDao.NAME, SpouseDao.NAME);
+		Query query = new Query(PersonDao.TABLE)
+				.leftJoin(PersonDao.TABLE.alias(), "%s = %s", PersonDao.ID.alias(), PersonDao.SPOUSE_ID)
+				.select(PersonDao.NAME, PersonDao.NAME.alias());
 
 		mCursor = query.execute(db);
 

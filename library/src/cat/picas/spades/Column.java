@@ -26,6 +26,16 @@ public class Column {
 		}
 
 		@Override
+		public ColumnId alias() {
+			return (ColumnId) super.alias();
+		}
+
+		@Override
+		public ColumnId alias(int aliasId) {
+			return (ColumnId) super.alias(aliasId);
+		}
+
+		@Override
 		protected ColumnId clone(Table table, int index) {
 			return new ColumnId(index, name, table);
 		}
@@ -77,6 +87,14 @@ public class Column {
 
 	public boolean indexIsAscendant() {
 		return mIndexIsAscendant;
+	}
+
+	public Column alias() {
+		return mTable.alias().getColumn(index);
+	}
+
+	public Column alias(int aliasId) {
+		return mTable.alias(aliasId).getColumn(index);
 	}
 
 	protected void setMappedField(MappedField mappedField) {

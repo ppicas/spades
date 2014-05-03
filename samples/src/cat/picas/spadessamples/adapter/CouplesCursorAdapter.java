@@ -27,8 +27,6 @@ import cat.picas.spadessamples.R;
 import cat.picas.spadessamples.model.Person;
 import cat.picas.spadessamples.model.PersonDao;
 
-import static cat.picas.spadessamples.model.PersonDao.SpouseDao;
-
 public class CouplesCursorAdapter extends ResourceCursorAdapter {
 
 	private CursorInfo mCursorInfo;
@@ -41,7 +39,7 @@ public class CouplesCursorAdapter extends ResourceCursorAdapter {
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		Person person = PersonDao.MAPPER.createFromCursor(cursor, mCursorInfo);
-		Person couple = SpouseDao.MAPPER.createFromCursor(cursor, mCursorInfo);
+		Person couple = PersonDao.MAPPER.alias().createFromCursor(cursor, mCursorInfo);
 
 		TextView nameView = (TextView) view.findViewById(R.id.name);
 		TextView spouseNameView = (TextView) view.findViewById(R.id.spouse_name);

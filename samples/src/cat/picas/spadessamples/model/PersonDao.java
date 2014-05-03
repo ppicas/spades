@@ -54,7 +54,7 @@ public class PersonDao extends Dao<Person> {
 	public static final Column HEIGHT = TABLE.getColumn("height");
 	public static final Column WEIGHT = TABLE.getColumn("weight");
 
-	public static final EntityMapper<Person> MAPPER = new AutoEntityMapper<Person>(TABLE);
+	public static final AutoEntityMapper<Person> MAPPER = new AutoEntityMapper<Person>(TABLE);
 
 	private HashMapFetchStrategy<Person> mHashMapFetchStrategy;
 
@@ -77,16 +77,5 @@ public class PersonDao extends Dao<Person> {
 			person.contactPoints.fetchAndAddOne(cursor, cursorInfo);
 		}
 	};
-
-	public static class SpouseDao {
-
-		public static final Table TABLE = PersonDao.TABLE.alias();
-
-		public static final ColumnId ID = TABLE.getColumnId();
-
-		public static final Column NAME = TABLE.getColumn(PersonDao.NAME.name);
-
-		public static final EntityMapper<Person> MAPPER = new AutoEntityMapper<Person>(TABLE);
-	}
 
 }

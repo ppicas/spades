@@ -16,14 +16,15 @@
 
 package cat.picas.spades;
 
+import android.database.sqlite.SQLiteDatabase;
+import android.util.SparseArray;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
-import android.database.sqlite.SQLiteDatabase;
 import cat.picas.spades.Column.ColumnId;
 
 public class Table {
@@ -35,6 +36,8 @@ public class Table {
 	private final List<Column> mColumns = new ArrayList<Column>();
 	private final Map<String, Column> mColumnsNameMap = new HashMap<String, Column>();
 	private ColumnId mColumnId;
+	private Table mDefaultAlias;
+	private SparseArray<Table> mAliases;
 
 	protected Table(int index, String name, Class<? extends Entity> entityClass) {
 		this.index = index;
@@ -75,13 +78,20 @@ public class Table {
 	}
 
 	public Table alias() {
-		Tables tables = Tables.getInstance();
-		Table table = new Table(tables.nextTableIndex(), name, mEntity);
-		table.setColumnId(mColumnId.clone(table, mColumnId.index));
-		for (Column column : mColumns) {
-			table.addColumn(column.clone(table, column.index));
+		if (mDefaultAlias == null) {
+			mDefaultAlias = newAlias();
 		}
-		tables.addTable(table, false);
+		return mDefaultAlias;
+	}
+
+	public Table alias(int aliasId) {
+		if (mAliases == null) {
+			mAliases = new SparseArray<Table>();
+		}
+		Table table = mAliases.get(aliasId);
+		if (table == null) {
+			table = newAlias();
+		}
 		return table;
 	}
 
@@ -136,6 +146,17 @@ public class Table {
 		StringBuilder indexName = new  StringBuilder(name.length() + 10 + 3);
 		indexName.append(name).append("_auto_idx_").append(num);
 		return indexName.toString();
+	}
+
+	private Table newAlias() {
+		Tables tables = Tables.getInstance();
+		Table table = new Table(tables.nextTableIndex(), name, mEntity);
+		table.setColumnId(mColumnId.clone(table, mColumnId.index));
+		for (Column column : mColumns) {
+			table.addColumn(column.clone(table, column.index));
+		}
+		tables.addTable(table, false);
+		return table;
 	}
 
 }

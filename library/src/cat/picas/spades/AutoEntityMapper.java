@@ -77,6 +77,14 @@ public class AutoEntityMapper<T extends Entity> extends EntityMapper<T> {
 		}
 	}
 
+	public AutoEntityMapper<T> alias() {
+		return new AutoEntityMapper<T>(getTable().alias());
+	}
+
+	public AutoEntityMapper<T> alias(int aliasId) {
+		return new AutoEntityMapper<T>(getTable().alias(1));
+	}
+
 	/**
 	 * Auto fetch RelatedParent mapped fields.
 	 *
