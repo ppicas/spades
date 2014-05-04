@@ -16,27 +16,16 @@
 
 package cat.picas.spadessamples.model;
 
-import cat.picas.spades.Entity;
+import cat.picas.spades.AbstractEntity;
 import cat.picas.spades.RelatedParent;
 
-public class ContactPoint implements Entity {
+public class ContactPoint extends AbstractEntity {
 
 	public final RelatedParent<Person> person = new RelatedParent<Person>(PersonDao.ID, PersonDao.MAPPER);
 
-	private Long mId;
 	private String mName;
 	private String mEmail;
 	private String mPhone;
-
-	@Override
-	public Long getEntityId() {
-		return mId;
-	}
-
-	@Override
-	public void setEntityId(Long id) {
-		mId = id;
-	}
 
 	public String getName() {
 		return mName;

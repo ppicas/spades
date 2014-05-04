@@ -16,25 +16,14 @@
 
 package cat.picas.spadessamples.model.inheritance;
 
-import cat.picas.spades.Entity;
+import cat.picas.spades.AbstractEntity;
 import cat.picas.spades.RelatedParent;
 
-public class Restaurant implements Entity {
+public class Restaurant extends AbstractEntity {
 
 	public final RelatedParent<Place> place = new RelatedParent<Place>(PlaceDao.ID, PlaceDao.MAPPER);
 
-	private Long mId;
 	private int mMichelineStars;
-
-	@Override
-	public Long getEntityId() {
-		return mId;
-	}
-
-	@Override
-	public void setEntityId(Long id) {
-		mId = id;
-	}
 
 	public int getMichelineStars() {
 		return mMichelineStars;

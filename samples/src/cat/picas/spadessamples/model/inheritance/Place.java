@@ -16,24 +16,13 @@
 
 package cat.picas.spadessamples.model.inheritance;
 
-import cat.picas.spades.Entity;
+import cat.picas.spades.AbstractEntity;
 
-public class Place implements Entity {
+public class Place extends AbstractEntity {
 
-	private Long mId;
 	private String mName;
 	private String mAddress;
 	private Type mType;
-
-	@Override
-	public Long getEntityId() {
-		return mId;
-	}
-
-	@Override
-	public void setEntityId(Long id) {
-		mId = id;
-	}
 
 	public String getName() {
 		return mName;

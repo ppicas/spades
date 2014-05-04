@@ -18,11 +18,11 @@ package cat.picas.spadessamples.model;
 
 import java.util.Date;
 
-import cat.picas.spades.Entity;
+import cat.picas.spades.AbstractEntity;
 import cat.picas.spades.RelatedParent;
 import cat.picas.spades.RelatedList;
 
-public class Person implements Entity {
+public class Person extends AbstractEntity {
 
 	public enum Gender {
 		MALE,
@@ -34,22 +34,11 @@ public class Person implements Entity {
 	public final RelatedList<ContactPoint> contactPoints = new RelatedList<ContactPoint>(this,
 			ContactPointDao.PERSON_ID, ContactPointDao.MAPPER);
 
-	private Long mId;
 	private String mName;
 	private Date mBirthDate;
 	private Gender mGender;
 	private double mHeight;
 	private int mWeight;
-
-	@Override
-	public Long getEntityId() {
-		return mId;
-	}
-
-	@Override
-	public void setEntityId(Long id) {
-		mId = id;
-	}
 
 	public String getName() {
 		return mName;
